@@ -7,7 +7,7 @@ public class PuppetCameraScript : MonoBehaviour {
     public bool camLockedOn = false;
 
     private PuppetScript Owner;
-    private Animator Animetor;
+    //private Animator Animetor;
     private Quaternion camRot;
     public Vector3 camOffsetPos;
     public Vector3 camOffsetRot;
@@ -22,7 +22,7 @@ public class PuppetCameraScript : MonoBehaviour {
     public void Initialize(PuppetScript _sender)
     {
         Owner = _sender;
-        Animetor = _sender.Animetor;
+        //Animetor = _sender.Animetor;
 
         camSpeed = _sender.camSpeed;
         followCam = GameObject.FindGameObjectWithTag("MainCamera");

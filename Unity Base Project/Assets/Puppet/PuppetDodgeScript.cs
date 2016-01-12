@@ -6,7 +6,7 @@ public class PuppetDodgeScript : MonoBehaviour {
     public float DgeTmrCur;
 
     private PuppetScript Owner;
-    private Animator Animetor;
+    //private Animator Animetor;
     private Quaternion orgRot;
     private float DgeTmrMax;
     private float rotationSpeed;
@@ -22,7 +22,7 @@ public class PuppetDodgeScript : MonoBehaviour {
     public void Initialize(PuppetScript _sender)
     {
         Owner = _sender;
-        Animetor = _sender.Animetor;
+        //Animetor = _sender.Animetor;
 
         DgeTmrMax = _sender.DgeTmrMax;
         DgeTmrCur = 0.0f;
