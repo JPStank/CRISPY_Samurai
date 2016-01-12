@@ -25,6 +25,7 @@ public class PuppetScript : MonoBehaviour
     public PuppetDodgeScript dodgeScript;
     public PuppetCameraScript camScript;
     public Animator Animetor;
+	public Dictionary<string, float> animTimers;
     public float moveSpeed;
     public float camSpeed;
     public float AtkTmrMax;
@@ -43,7 +44,6 @@ public class PuppetScript : MonoBehaviour
     private int debugGrdType = 0;
     private float debugGrdTmr = 0.0f;
 
-	public Dictionary<string, float> animTimers;
 
     // Use this for initialization
     void Start()
@@ -64,23 +64,38 @@ public class PuppetScript : MonoBehaviour
 		animTimers["SlashRTL"] = 2.033f;
 
         Object temp = GetComponent<PuppetAttackScript>();
-        attackScript = (PuppetAttackScript)temp;
+		if (attackScript == null)
+		{
+			attackScript = (PuppetAttackScript)temp;
+		}
 
-        temp = GetComponent<PuppetGuardScript>();
-        guardScript = (PuppetGuardScript)temp;
+		if (guardScript == null)
+		{
+			temp = GetComponent<PuppetGuardScript>();
+			guardScript = (PuppetGuardScript)temp;
+		}
 
-        temp = GetComponent<PuppetDodgeScript>();
-        dodgeScript = (PuppetDodgeScript)temp;
+		if (dodgeScript == null)
+		{
+			temp = GetComponent<PuppetDodgeScript>();
+			dodgeScript = (PuppetDodgeScript)temp;
+		}
 
-        temp = GetComponent<PuppetCameraScript>();
-        camScript = (PuppetCameraScript)temp;
+		if (camScript == null)
+		{
+			temp = GetComponent<PuppetCameraScript>();
+			camScript = (PuppetCameraScript)temp;
+		}
 
-        temp = GetComponent<Animator>();
-        Animetor = (Animator)temp;
+		if (Animetor == null)
+		{
+			temp = GetComponent<Animator>();
+			Animetor = (Animator)temp;
+		}
 
         lastState = curState = State.IDLE;
         moveSpeed = 10.0f;
-        camSpeed = 50.0f;
+        camSpeed = 8.0f;
         AtkTmrMax = 1.0f;
         DgeTmrMax = 0.5f;
         GrdTmrMax = 0.2f;
@@ -95,8 +110,7 @@ public class PuppetScript : MonoBehaviour
 
         debugAngle = 0.0f;
 
-		if(camScript != null)
-			camScript.Initialize(this);
+        camScript.Initialize(this);
         attackScript.Initialize(this);
         dodgeScript.Initialize(this);
         guardScript.Initialize(this);
@@ -108,16 +122,18 @@ public class PuppetScript : MonoBehaviour
 
         DoDegub();
 
-		if (tag == "Player")
-			camScript.UpdateCam();
+		//if (tag == "Player")
+			//camScript.UpdateCam();
 
     }
 
+	// DoDegub()
+	// Does the degubs for the testing on the features
     private void DoDegub()
     {
         if (debugMove || debugCamera)
         {
-            debugAngle += Time.deltaTime;
+            debugAngle += Time.deltaTime * 2.0f;
             if (debugAngle >= 2.0f * Mathf.PI)
                 debugAngle -= 2.0f * Mathf.PI;
         }
@@ -225,30 +241,45 @@ public class PuppetScript : MonoBehaviour
         curState = _nextState;
         return 1;
     }
-
+	
+	// Move Function
+	// Moves in direction of _dir.x and _dir.z
     public int Move(Vector3 _dir)
     {
         if (ChangeState(State.MOVING) == -1)
             return -1;
-
+		
+		// error check the input
+		if (_dir.x > 1.0f)
+			_dir.x = 1.0f;
+		else if (_dir.x < -1.0f)
+			_dir.x = -1.0f;
+			
+		if (_dir.z > 1.0f)
+			_dir.z = 1.0f;
+		else if (_dir.z < -1.0f)
+			_dir.z = -1.0f;
+			
+		// scale the input to time and our speed
         _dir.x *= Time.deltaTime;
         _dir.z *= Time.deltaTime;
         _dir.x *= moveSpeed;
         _dir.z *= moveSpeed;
 
-		if (_dir.magnitude > 0.1f)
-			Animetor.Play("Walk Forward");
         // change rotation to match camera Y, translate, then return to actual rotation
         Vector3 oldPos = transform.position;
         Quaternion orgRot = transform.rotation;
-        Quaternion camRot = camScript.followCam.transform.rotation;
-        camRot.x = orgRot.x;
-        camRot.z = orgRot.z;
-        transform.rotation = camRot;
+		if (tag == "Player")
+		{
+			Quaternion camRot = camScript.followCam.transform.rotation;
+			camRot.x = orgRot.x;
+			camRot.z = orgRot.z;
+			transform.rotation = camRot;
+		}
         transform.Translate(_dir.x, 0.0f, _dir.z);
         transform.rotation = orgRot;
-        //transform.Rotate(0.0f, _dir.x, 0.0f); // rotate around the Y based upon the input's X
-        // need to implement rotation based upon current rotation and direction input
+        
+		// the puppet faces the direction it is moving in
         Vector3 dir = transform.position - oldPos;
         Vector3 towards = transform.position + dir;
         transform.LookAt(towards);
