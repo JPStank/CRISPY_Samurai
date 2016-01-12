@@ -87,9 +87,6 @@ public class PuppetScript : MonoBehaviour
 			camScript = (PuppetCameraScript)temp;
 		}
 
-        //temp = GetComponent<Animator>();
-        //Animetor = (Animator)temp;
-
 		lastState = curState = State.IDLE;
 		moveSpeed = 10.0f;
 		camSpeed = 8.0f;
