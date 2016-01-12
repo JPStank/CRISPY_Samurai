@@ -12,6 +12,7 @@ public class BehaviourTree : MonoBehaviour
     int behaviourCount;
     int currentBehaviour;
     bool currentlyBehaving = false;
+    float behaviourTimer;
     PuppetScript playerPuppet;
     GameObject player;
 
@@ -27,14 +28,23 @@ public class BehaviourTree : MonoBehaviour
 
     void Start()
     {
-        behaviourCount = 0;
         currentBehaviour = 0;
         puppet = gameObject.GetComponent<PuppetScript>();
         player = GameObject.FindGameObjectWithTag("Player");
         agent = gameObject.GetComponent<NavMeshAgent>();
         behaviours = new List<AIBehaviour>();
+        FuckYouUnity();
+        behaviourTimer = 0.0f;
     }
 
+    public void FuckYouUnity()
+    {
+        if (behaviours == null)
+        {
+            behaviours = new List<AIBehaviour>();
+            behaviourCount = 0;
+        }
+    }
     //public BehaviourTree(PuppetScript _puppet)
     //{
     //
@@ -101,9 +111,43 @@ public class BehaviourTree : MonoBehaviour
 
                     }
                     break;
-                case AI_STATE.GUARD:
+                case AI_STATE.GUARD_LEFT:
                     {
-
+                        puppet.GuardLeft();
+                        behaviourTimer += Time.deltaTime;
+                        if(behaviourTimer >= behaviours[currentBehaviour].floatData)
+                        {
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                            currentlyBehaving = false;
+                        }
+                        else
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
+                    }
+                    break;
+                case AI_STATE.GUARD_RIGHT:
+                    {
+                        puppet.GuardRight();
+                        behaviourTimer += Time.deltaTime;
+                        if (behaviourTimer >= behaviours[currentBehaviour].floatData)
+                        {
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                            currentlyBehaving = false;
+                        }
+                        else
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
+                    }
+                    break;
+                case AI_STATE.GUARD_TOP:
+                    {
+                        puppet.GuardUpwards();
+                        behaviourTimer += Time.deltaTime;
+                        if (behaviourTimer >= behaviours[currentBehaviour].floatData)
+                        {
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                            currentlyBehaving = false;
+                        }
+                        else
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
                     }
                     break;
                 case AI_STATE.SLASH_TOP:
@@ -154,6 +198,19 @@ public class BehaviourTree : MonoBehaviour
                             behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
                     }
                     break;
+                case AI_STATE.WINDOW_OF_OPPORTUNITY:
+                    {
+                        behaviourTimer += Time.deltaTime;
+                        if (behaviourTimer >= behaviours[currentBehaviour].floatData)
+                        {
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                            currentlyBehaving = false;
+                            behaviourTimer = 0.0f;
+                        }
+                        else
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
+                    }
+                    break;
             }
 
         }
@@ -163,6 +220,7 @@ public class BehaviourTree : MonoBehaviour
     public bool AddBehaviour(AIBehaviour _behaviour)
     {
         behaviours.Add(_behaviour);
+        behaviours[behaviourCount].complete = COMPLETION_STATE.NOT_STARTED;
         behaviourCount++;
 
         return true;

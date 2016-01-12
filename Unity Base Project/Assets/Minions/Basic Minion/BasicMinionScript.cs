@@ -8,6 +8,7 @@ public class BasicMinionScript : MonoBehaviour
 
     public BehaviourTree behaviourTree;
     ENEMY_STATE enemyState;
+    public LayerMask playerLayer;
     [SerializeField]
     PuppetScript puppet;
     GameObject player;
@@ -29,6 +30,7 @@ public class BasicMinionScript : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         noticeArea = gameObject.GetComponent<SphereCollider>();
         behaviourTree = gameObject.GetComponent<BehaviourTree>();
+        behaviourTree.FuckYouUnity(); 
         foreach (GameObject patrolPoint in patrolPoints)
         {
             behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.PATROL, patrolPoint.transform.position, 0.0f));    
@@ -55,7 +57,9 @@ public class BasicMinionScript : MonoBehaviour
                 return;
             }
 
-            if((gameObject.transform.position - player.transform.position).magnitude > behaviourTree.StoppingDistance() && !behaviourTree.isBehaving())
+            if (((gameObject.transform.position - player.transform.position).magnitude > behaviourTree.StoppingDistance() ||
+                Physics.Raycast(new Ray(gameObject.transform.position, gameObject.transform.forward), 10.0f, playerLayer)) &&
+                !behaviourTree.isBehaving())
             {
                 behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.MOVE_TO_PLAYER, 3.0f));
                 readyToIterate = true;

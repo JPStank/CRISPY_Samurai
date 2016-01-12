@@ -7,7 +7,7 @@ public class PuppetAttackScript : MonoBehaviour {
     public float AtkTmrCur;
 
     private PuppetScript Owner;
-    private Animator Animetor;
+    //private Animator Animetor;
     private float AtkTmrMax;
 
 
@@ -21,7 +21,7 @@ public class PuppetAttackScript : MonoBehaviour {
     public void Initialize(PuppetScript _sender)
     {
         Owner = _sender;
-        Animetor = _sender.Animetor;
+        //Animetor = _sender.Animetor;
 
         AtkTmrMax = _sender.AtkTmrMax;
         AtkTmrCur = 0.0f;
@@ -53,7 +53,7 @@ public class PuppetAttackScript : MonoBehaviour {
     public int SlashVert(PuppetScript _sender)
     {
         //Trigger animation
-        Animetor.Play("Down Slash");
+        animation.Play("Down Slash");
 		AtkTmrCur = _sender.animTimers["SlashVert"];
 
         return 1;
@@ -64,7 +64,7 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int SlashLTR(PuppetScript _sender)
     {
-        Animetor.Play("Right Slash");
+        animation.Play("Right Slash");
         AtkTmrCur = _sender.animTimers["SlashLTR"];
         return 1;
     }
@@ -74,7 +74,7 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int SlashRTL(PuppetScript _sender)
     {
-        Animetor.Play("Left Slash");
+        animation.Play("Left Slash");
         AtkTmrCur = _sender.animTimers["SlashRTL"];
         return 1;
     }
@@ -84,8 +84,8 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int Thrust(PuppetScript _sender)
     {
-        Animetor.Play("Down Slash");
-        AtkTmrCur = Animetor.animation.clip.length;
+        animation.Play("Down Slash");
+        //AtkTmrCur = animation.animation.clip.length;
         return 1;
     }
 
@@ -94,8 +94,8 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int Kick(PuppetScript _sender)
     {
-        Animetor.Play("Down Slash");
-        AtkTmrCur = Animetor.animation.clip.length;
+        animation.Play("Down Slash");
+        //AtkTmrCur = Animetor.animation.clip.length;
         return 1;
     }
 
