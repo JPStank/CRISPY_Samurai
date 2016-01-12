@@ -8,7 +8,7 @@ public class DemoAttack : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-	
+	//stuff
 	}
 	
 	// Update is called once per frame
