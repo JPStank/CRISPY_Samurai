@@ -6,15 +6,10 @@ public class PlayerInput : MonoBehaviour
 	public float speed = 2.0f;
 	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 1.0f;
 	public PuppetScript puppet;
-	GameObject test;
-
-	[SerializeField]
-	Camera myCamera;
 
 	// Use this for initialization
 	void Start()
 	{
-		//test = this.gameObject;
 		puppet = gameObject.GetComponent<PuppetScript>();
 	}
 
@@ -22,6 +17,7 @@ public class PlayerInput : MonoBehaviour
 	void Update()
 	{
 		HandleInput();
+		//stuff
 	}
 
 	void HandleInput()
@@ -69,37 +65,27 @@ public class PlayerInput : MonoBehaviour
 				if (lHorizontal < -deadZone)
 				{
 					puppet.SlashRTL();
-					Debug.Log("RIGHT SLASH!");
 				}
 				else if (lHorizontal > deadZone)
 				{
 					puppet.SlashLTR();
-					Debug.Log("LEFT SLASH!");
 				}
 				else if (lVertical < deadZone)
 				{
 					puppet.SlashVert();
-					Debug.Log("TOP SLASH!");
 				}
-
-				//bufferTime = maxTime;
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet thrust
-				Debug.Log("THRUST!");
-				//bufferTime = maxTime;
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet kick
-				Debug.Log("KICK!");
-				//bufferTime = maxTime;
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet dodge
-				Debug.Log("DODGE!");
 				if (lHorizontal > deadZone)
 					puppet.DodgeRight();
 				else if (lHorizontal < -deadZone)
@@ -108,7 +94,6 @@ public class PlayerInput : MonoBehaviour
 					puppet.DodgeForward();
 				else
 					puppet.DodgeBackwards();
-				//bufferTime = maxTime;
 			}
 		//}
 		//else

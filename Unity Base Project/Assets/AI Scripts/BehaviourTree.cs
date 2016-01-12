@@ -32,7 +32,6 @@ public class BehaviourTree : MonoBehaviour
         puppet = gameObject.GetComponent<PuppetScript>();
         player = GameObject.FindGameObjectWithTag("Player");
         agent = gameObject.GetComponent<NavMeshAgent>();
-        behaviours = new List<AIBehaviour>();
         FuckYouUnity();
         behaviourTimer = 0.0f;
     }
@@ -219,6 +218,7 @@ public class BehaviourTree : MonoBehaviour
 
     public bool AddBehaviour(AIBehaviour _behaviour)
     {
+        FuckYouUnity();
         behaviours.Add(_behaviour);
         behaviours[behaviourCount].complete = COMPLETION_STATE.NOT_STARTED;
         behaviourCount++;
@@ -228,6 +228,7 @@ public class BehaviourTree : MonoBehaviour
 
     public bool AddBehaviourNow(AIBehaviour _behaviour)
     {
+        FuckYouUnity();
         _behaviour.SetIterationCount(1);
         behaviours.Insert(currentBehaviour, _behaviour);
         behaviourCount++;

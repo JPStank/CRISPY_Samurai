@@ -396,4 +396,18 @@ public class PuppetScript : MonoBehaviour
 			return -1;
 	}
 
+	//Placeholder function, does nothing
+	public void ResolveHit(PuppetScript.State otherState)
+	{
+		//public string[,] animTable;
+		/*HOW TO SET UP A 2D ARRAY*/
+		/*METHOD1*/
+		//animTable = new string[,] { { "00", "01", "02" }, { "10", "11", "12" }, { "20", "21", "22" } };
+		/*METHOD2*/
+		//animTable = new string[18, 18];
+		//animTable[(int)PuppetScript.State.IDLE, (int)PuppetScript.State.IDLE] = "IDLE";
+
+		/*EXAMPLE IMPLEMENTATION*/
+		// animation.Play(animTable[(int)curState, (int)otherState]);
+	}
 }
