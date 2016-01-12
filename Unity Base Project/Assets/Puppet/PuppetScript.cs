@@ -24,7 +24,6 @@ public class PuppetScript : MonoBehaviour
 	public PuppetGuardScript guardScript;
 	public PuppetDodgeScript dodgeScript;
 	public PuppetCameraScript camScript;
-	public Animator Animetor;
 	public Dictionary<string, float> animTimers;
 	public float moveSpeed;
 	public float camSpeed;
@@ -88,11 +87,8 @@ public class PuppetScript : MonoBehaviour
 			camScript = (PuppetCameraScript)temp;
 		}
 
-		if (Animetor == null)
-		{
-			temp = GetComponent<Animator>();
-			Animetor = (Animator)temp;
-		}
+        //temp = GetComponent<Animator>();
+        //Animetor = (Animator)temp;
 
 		lastState = curState = State.IDLE;
 		moveSpeed = 10.0f;
@@ -267,9 +263,11 @@ public class PuppetScript : MonoBehaviour
 		_dir.x *= moveSpeed;
 		_dir.z *= moveSpeed;
 
-		// change rotation to match camera Y, translate, then return to actual rotation
-		Vector3 oldPos = transform.position;
-		Quaternion orgRot = transform.rotation;
+		if (_dir.magnitude > 0.01f)
+			animation.Play("Walk Forward");
+        // change rotation to match camera Y, translate, then return to actual rotation
+        Vector3 oldPos = transform.position;
+        Quaternion orgRot = transform.rotation;
 		if (tag == "Player")
 		{
 			Quaternion camRot = camScript.followCam.transform.rotation;

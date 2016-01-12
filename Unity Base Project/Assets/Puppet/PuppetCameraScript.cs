@@ -13,7 +13,6 @@ public class PuppetCameraScript : MonoBehaviour
 	public Vector3 rockedOffsetPos;
 
 	private PuppetScript Owner;
-	private Animator Animetor;
 	private Quaternion camRot;
 	private float camSpeed;
 	private float peekTmr = 0.0f;
@@ -28,7 +27,6 @@ public class PuppetCameraScript : MonoBehaviour
 	public void Initialize(PuppetScript _sender)
 	{
 		Owner = _sender;
-		Animetor = _sender.Animetor;
 
 		camSpeed = _sender.camSpeed;
 		followCam = GameObject.FindGameObjectWithTag("MainCamera");

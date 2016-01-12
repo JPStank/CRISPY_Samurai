@@ -7,7 +7,7 @@ public class PuppetGuardScript : MonoBehaviour {
 
     private PuppetScript Owner;
     private PuppetScript.State lastGrdDir;
-    private Animator Animetor;
+    //private Animator Animetor;
     private float GrdTmrMax;
 	// Use this for initialization
 	void Start () {
@@ -17,7 +17,7 @@ public class PuppetGuardScript : MonoBehaviour {
     public void Initialize(PuppetScript _sender)
     {
         Owner = _sender;
-        Animetor = _sender.Animetor;
+        //Animetor = _sender.Animetor;
 
         GrdTmrMax = _sender.GrdTmrMax;
         GrdTmrCur = 0.0f;
@@ -60,7 +60,7 @@ public class PuppetGuardScript : MonoBehaviour {
     {
         GrdTmrCur = GrdTmrMax;
         lastGrdDir = PuppetScript.State.GRD_TOP;
-		Animetor.Play("Block Up");
+        animation.Play("Block Up");
         return 1;
     }
 
@@ -71,7 +71,7 @@ public class PuppetGuardScript : MonoBehaviour {
     {
         GrdTmrCur = GrdTmrMax;
         lastGrdDir = PuppetScript.State.GRD_LEFT;
-		Animetor.Play("Block");
+        animation.Play("Block");
         return 1;
     }
 
@@ -82,7 +82,7 @@ public class PuppetGuardScript : MonoBehaviour {
     {
         GrdTmrCur = GrdTmrMax;
         lastGrdDir = PuppetScript.State.GRD_RIGHT;
-		Animetor.Play("Block");
+        animation.Play("Block");
         return 1;
     }
 
