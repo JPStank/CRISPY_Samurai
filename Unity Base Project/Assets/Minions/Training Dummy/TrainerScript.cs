@@ -27,6 +27,12 @@ public class TrainerScript : MonoBehaviour
             case TRAINER_TYPE.GUARD_LEFT:
                 behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_LEFT, 1.5f));
                 break;
+            case TRAINER_TYPE.GUARD_RIGHT:
+                behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_RIGHT, 1.5f));
+                break;
+            case TRAINER_TYPE.GUARD_TOP:
+                behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_TOP, 1.5f));
+                break;
         }
 
         behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.WINDOW_OF_OPPORTUNITY, 1.5f));
