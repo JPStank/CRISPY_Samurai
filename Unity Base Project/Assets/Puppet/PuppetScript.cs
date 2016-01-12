@@ -263,7 +263,7 @@ public class PuppetScript : MonoBehaviour
         _dir.x *= moveSpeed;
         _dir.z *= moveSpeed;
 
-		if (_dir.magnitude > 0.1f)
+		if (_dir.magnitude > 0.01f)
 			animation.Play("Walk Forward");
         // change rotation to match camera Y, translate, then return to actual rotation
         Vector3 oldPos = transform.position;
