@@ -107,7 +107,8 @@ public class PuppetScript : MonoBehaviour
 
 		debugAngle = 0.0f;
 
-		camScript.Initialize(this);
+		if (tag == "Player")
+			camScript.Initialize(this);
 		attackScript.Initialize(this);
 		dodgeScript.Initialize(this);
 		guardScript.Initialize(this);
