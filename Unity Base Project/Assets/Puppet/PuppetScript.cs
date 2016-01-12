@@ -362,5 +362,9 @@ public class PuppetScript : MonoBehaviour
             return -1;
     }
 
-
+	//Placeholder function, does nothing
+	public void ResolveHit(PuppetScript.State otherState)
+	{
+		// animation.Play(animTable[(int)curState, (int)otherState]);
+	}
 }
