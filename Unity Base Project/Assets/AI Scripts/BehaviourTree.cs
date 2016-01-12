@@ -84,7 +84,7 @@ public class BehaviourTree : MonoBehaviour
                     break;
                 case AI_STATE.PATROL:
                     {
-                        Debug.Log(agent.remainingDistance);
+                        //Debug.Log(agent.remainingDistance);
                         agent.stoppingDistance = behaviours[currentBehaviour].floatData;
                         agent.SetDestination(behaviours[currentBehaviour].positionData);
                         if ((gameObject.transform.position - behaviours[currentBehaviour].positionData).magnitude < agent.stoppingDistance + 0.5f)
