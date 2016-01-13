@@ -8,6 +8,7 @@ public class BehaviourTree : MonoBehaviour
 {
     public NavMeshAgent agent;
     public PuppetScript puppet;
+    NavMeshPath path;
     List<AIBehaviour> behaviours;
     int behaviourCount;
     int currentBehaviour;
@@ -75,6 +76,7 @@ public class BehaviourTree : MonoBehaviour
         if (behaviours[currentBehaviour].complete != COMPLETION_STATE.COMPLETE)
         {
             currentlyBehaving = true;
+            Vector3 direction = Vector3.zero;
             switch (behaviours[currentBehaviour].state)
             {
                 case AI_STATE.IDLE:
@@ -84,12 +86,15 @@ public class BehaviourTree : MonoBehaviour
                     break;
                 case AI_STATE.PATROL:
                     {
-                        //Debug.Log(agent.remainingDistance);
+                        Debug.Log(gameObject.transform.position + " " + behaviours[currentBehaviour].positionData);
                         agent.stoppingDistance = behaviours[currentBehaviour].floatData;
                         agent.SetDestination(behaviours[currentBehaviour].positionData);
+                        if(!animation.IsPlaying("Walk Forward"))
+                            animation.Play("Walk Forward");
                         if ((gameObject.transform.position - behaviours[currentBehaviour].positionData).magnitude < agent.stoppingDistance + 0.5f)
                         {
                             behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                            animation.Play("Idle");
                             currentlyBehaving = false;
                         }
                         else
@@ -100,14 +105,36 @@ public class BehaviourTree : MonoBehaviour
                     {
                         agent.stoppingDistance = behaviours[currentBehaviour].floatData;
                         agent.SetDestination(player.transform.position);
+                        if (!animation.IsPlaying("Walk Forward"))
+                            animation.Play("Walk Forward");
                         if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
+                        {
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                            animation.Play("Idle");
+                            currentlyBehaving = false;
+                        }
+                        else
+                            behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
+
+                    }
+                    break;
+                case AI_STATE.TURN_TO_PLAYER:
+                    {
+                        agent.updateRotation = false;
+                        Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;// behaviours[currentBehaviour].positionData;
+                        Vector3 AIPosition = gameObject.transform.position;
+                        playerPosition.y = 0;
+                        AIPosition.y = 0;
+                        Quaternion lookDir = Quaternion.LookRotation(playerPosition - AIPosition);
+                        lookDir.y = transform.rotation.y;
+                        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDir, behaviours[currentBehaviour].floatData * Time.deltaTime);
+                        if (transform.rotation == lookDir)
                         {
                             behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
                             currentlyBehaving = false;
                         }
                         else
                             behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
-
                     }
                     break;
                 case AI_STATE.GUARD_LEFT:
