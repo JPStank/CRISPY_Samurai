@@ -35,7 +35,8 @@ public class Weapon : MonoBehaviour
 		if (other.transform.tag == "Weapon")
 		{
 			Instantiate(sparkEffect, other.contacts[0].point, Quaternion.identity);
-			owner.ResolveHit(other.gameObject.GetComponent<Weapon>().owner.curState);
+			if(other.gameObject.GetComponent<Weapon>() != null)
+				owner.ResolveHit(other.gameObject.GetComponent<Weapon>().owner.curState);
 		}
 	}
 
