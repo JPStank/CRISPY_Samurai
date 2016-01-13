@@ -23,6 +23,8 @@ public class BloodyBag : MonoBehaviour
         if (other.transform.tag == "Weapon")
         {
             Instantiate(bloodEffect, other.contacts[0].point, bloodEffect.transform.rotation);
+
+			//other.gameObject.GetComponent<>();
         }
     }
 }
