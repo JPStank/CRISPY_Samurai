@@ -11,7 +11,7 @@ public class PuppetScript : MonoBehaviour
 		ATK_VERT, ATK_LTR, ATK_RTL, ATK_STAB, ATK_KICK,
 		PARRY,
 		GRD_TOP, GRD_LEFT, GRD_RIGHT,
-		DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK
+		DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK, NUMSTATES
 	}
 	public enum Dir
 	{
@@ -36,6 +36,7 @@ public class PuppetScript : MonoBehaviour
 	public bool debugGuard = false;
 	public bool rockedOn = false;
 
+	private string[,] animTable;
 	private Vector3 moveTest;
 	private Vector3 camTest;
 	private float debugAngle;
@@ -94,6 +95,7 @@ public class PuppetScript : MonoBehaviour
 		DgeTmrMax = 0.5f;
 		GrdTmrMax = 0.2f;
 
+		InitAnimTable();
 
 		moveTest = Vector3.zero;
 		moveTest.x = 1.0f;
@@ -109,6 +111,31 @@ public class PuppetScript : MonoBehaviour
 		attackScript.Initialize(this);
 		dodgeScript.Initialize(this);
 		guardScript.Initialize(this);
+	}
+	void InitAnimTable()
+	{
+		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
+		animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
+		animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
+		animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
+		"Idle";
+		animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
+		"Block Up Hit";
+		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+		"React Front";
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
+		"React Side";
+		
+		animTable[(int)State.IDLE, (int)State.IDLE] =
+		animTable[(int)State.MOVING, (int)State.MOVING] =
+		"Twerk";
+
 	}
 
 	// Update is called once per frame
@@ -214,6 +241,8 @@ public class PuppetScript : MonoBehaviour
 	{
 		if (attackScript.AtkTmrCur != 0.0f || dodgeScript.DgeTmrCur != 0.0f)
 			return -1;
+		if (_nextState == State.IDLE)
+			animation.Play("Idle");
 		if (_nextState == State.MOVING && curState != State.IDLE && curState != State.MOVING)
 			return -1;
 		if ((_nextState == State.GRD_TOP && curState != State.PARRY
@@ -231,6 +260,7 @@ public class PuppetScript : MonoBehaviour
 			|| (_nextState == State.GRD_LEFT && curState == State.PARRY)
 			|| (_nextState == State.GRD_RIGHT && curState == State.PARRY))
 			return -1;
+		
 
 		lastState = curState;
 		curState = _nextState;
@@ -241,6 +271,8 @@ public class PuppetScript : MonoBehaviour
 	// Moves in direction of _dir.x and _dir.z
 	public int Move(Vector3 _dir)
 	{
+		if (_dir == Vector3.zero)
+			return ChangeState(State.IDLE);
 		if (ChangeState(State.MOVING) == -1)
 			return -1;
 
@@ -408,5 +440,8 @@ public class PuppetScript : MonoBehaviour
 
 		/*EXAMPLE IMPLEMENTATION*/
 		// animation.Play(animTable[(int)curState, (int)otherState]);
+		string toPlay = animTable[(int)curState, (int)otherState];
+		if (toPlay != "")
+			animation.Play();
 	}
 }

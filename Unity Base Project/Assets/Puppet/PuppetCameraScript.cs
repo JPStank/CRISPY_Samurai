@@ -106,15 +106,15 @@ public class PuppetCameraScript : MonoBehaviour
 		_dir.x *= camSpeed * 20.0f;
 		_dir.y *= camSpeed;
 
+		// free camera movement
 		if (!Owner.rockedOn)
 		{
 			camTarg.transform.rotation = camRot;
 			camTarg.transform.Rotate(0.0f, _dir.x, 0.0f);
 			camRot = camTarg.transform.rotation;
 		}
-		else
+		else // movement while locked on
 		{
-			//camTarg.transform.Translate(_dir.x, 0.0f, 0.0f);
 			rockedOffsetPos.x += _dir.x * 0.2f;
 
 			if (rockedOffsetPos.x < -2.0f)
