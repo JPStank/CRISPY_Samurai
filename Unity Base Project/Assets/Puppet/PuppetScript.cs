@@ -293,8 +293,10 @@ public class PuppetScript : MonoBehaviour
 		_dir.x *= moveSpeed;
 		_dir.z *= moveSpeed;
 
-		if (_dir.magnitude > 0.01f)
-			animation.Play("Walk Forward");
+        if (_dir.magnitude > 0.01f)
+            animation.Play("Walk Forward");
+        else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
+            animation.Play("Idle");
         // change rotation to match camera Y, translate, then return to actual rotation
         Vector3 oldPos = transform.position;
         Quaternion orgRot = transform.rotation;
