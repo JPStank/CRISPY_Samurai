@@ -52,7 +52,7 @@ public class PlayerInput : MonoBehaviour
 		}
 		else
 		{
-			Vector3 camDir = new Vector3(rHorizontal, rVertical, 0.0f);
+			Vector3 camDir = new Vector3(rHorizontal, -rVertical, 0.0f);
 			puppet.MoveCamera(camDir);
 		}
 
