@@ -10,14 +10,14 @@ public class Weapon : MonoBehaviour
 	//damage and other goodies
 
 	// Use this for initialization
-	void Start()
-	{
-		
-	}
+	//void Start()
+	//{
+	//	
+	//}
 
 	// Update is called once per frame
-	void Update()
-	{
+	//void Update()
+	//{
 		//if(Input.GetKeyDown(KeyCode.Alpha1))
 		//{
 		//	Debug.Log(animTable[0, 0]);
@@ -28,7 +28,7 @@ public class Weapon : MonoBehaviour
 		//	Debug.Log(animTable[0, 1]);
 		//	Debug.Log(animTable[(int)PuppetScript.State.IDLE, (int)PuppetScript.State.MOVING]);
 		//}
-	}
+	//}
 
 	void OnCollisionEnter(Collision other)
 	{
