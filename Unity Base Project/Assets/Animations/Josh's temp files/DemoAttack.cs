@@ -16,39 +16,49 @@ public class DemoAttack : MonoBehaviour
 
         if (animation.isPlaying == false)
         {
-            animation.Play("Idle");
+            //animation.Play("Idle");
         }
 
-        // TODO: Substitue these arbritary inputs to the actual actions
-        if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN) ||
-            Input.GetKeyDown(KeyCode.LeftArrow))
+
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            animation.Play("Left Slash");
+            animation.Play("Walk Left");
         }
-        else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN) ||
-            Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.P))
         {
-            animation.Play("Right Slash");
+            animation.Play("Walk Right");
         }
-        else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN) ||
-        Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            animation.Play("Down Slash");
-        }
-        else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_L, InputChecker.BUTTON_STATE.DOWN) ||
-        Input.GetKeyDown(KeyCode.O))
-        {
-            animation.Play("React Side");
-        }
-        else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN) ||
-        Input.GetKeyDown(KeyCode.P))
-        {
-            animation.Play("React Front");
-        }
-        else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN) ||
-        Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            transform.Rotate(Vector3.up, 180.0f);
-        }
+
+        //// TODO: Substitue these arbritary inputs to the actual actions
+        //if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN) ||
+        //    Input.GetKeyDown(KeyCode.LeftArrow))
+        //{
+        //    animation.Play("Left Slash");
+        //}
+        //else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN) ||
+        //    Input.GetKeyDown(KeyCode.RightArrow))
+        //{
+        //    animation.Play("Right Slash");
+        //}
+        //else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN) ||
+        //Input.GetKeyDown(KeyCode.DownArrow))
+        //{
+        //    animation.Play("Down Slash");
+        //}
+        //else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_L, InputChecker.BUTTON_STATE.DOWN) ||
+        //Input.GetKeyDown(KeyCode.O))
+        //{
+        //    animation.Play("React Side");
+        //}
+        //else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN) ||
+        //Input.GetKeyDown(KeyCode.P))
+        //{
+        //    animation.Play("React Front");
+        //}
+        //else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN) ||
+        //Input.GetKeyDown(KeyCode.UpArrow))
+        //{
+        //    transform.Rotate(Vector3.up, 180.0f);
+        //}
     }
 }
