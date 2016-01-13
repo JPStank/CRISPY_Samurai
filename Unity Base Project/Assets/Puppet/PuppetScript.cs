@@ -214,6 +214,8 @@ public class PuppetScript : MonoBehaviour
 	{
 		if (attackScript.AtkTmrCur != 0.0f || dodgeScript.DgeTmrCur != 0.0f)
 			return -1;
+		if (_nextState == State.IDLE)
+			animation.Play("Idle");
 		if (_nextState == State.MOVING && curState != State.IDLE && curState != State.MOVING)
 			return -1;
 		if ((_nextState == State.GRD_TOP && curState != State.PARRY
@@ -231,6 +233,7 @@ public class PuppetScript : MonoBehaviour
 			|| (_nextState == State.GRD_LEFT && curState == State.PARRY)
 			|| (_nextState == State.GRD_RIGHT && curState == State.PARRY))
 			return -1;
+		
 
 		lastState = curState;
 		curState = _nextState;
@@ -241,6 +244,8 @@ public class PuppetScript : MonoBehaviour
 	// Moves in direction of _dir.x and _dir.z
 	public int Move(Vector3 _dir)
 	{
+		if (_dir == Vector3.zero)
+			return ChangeState(State.IDLE);
 		if (ChangeState(State.MOVING) == -1)
 			return -1;
 
