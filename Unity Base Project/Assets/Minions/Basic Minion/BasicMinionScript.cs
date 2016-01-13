@@ -50,6 +50,7 @@ public class BasicMinionScript : MonoBehaviour
         }
         else
         {
+            //Debug.Log(behaviourTree)
             if(readyToIterate)
             {
                 if (behaviourTree.IterateTree() == COMPLETION_STATE.COMPLETE)
@@ -57,9 +58,16 @@ public class BasicMinionScript : MonoBehaviour
                 return;
             }
 
-            if (((gameObject.transform.position - player.transform.position).magnitude > behaviourTree.StoppingDistance() ||
-                Physics.Raycast(new Ray(gameObject.transform.position, gameObject.transform.forward), 10.0f, playerLayer)) &&
-                !behaviourTree.isBehaving())
+            //Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+            //Vector3 AIForward = transform.forward;
+            //float angleToPlayer = Vector3.Angle(AIForward, playerDirection);
+            //
+            //if (angleToPlayer > 5.0f)
+            //{
+            //    behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.TURN_TO_PLAYER, 1.0f));
+            //    readyToIterate = true;
+            //}
+            if ((gameObject.transform.position - player.transform.position).magnitude > behaviourTree.StoppingDistance() && !behaviourTree.isBehaving())
             {
                 behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.MOVE_TO_PLAYER, 3.0f));
                 readyToIterate = true;
