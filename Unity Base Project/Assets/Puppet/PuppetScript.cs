@@ -46,6 +46,21 @@ public class PuppetScript : MonoBehaviour
 	private int debugGrdType = 0;
 	private float debugGrdTmr = 0.0f;
 
+    public bool canHit = false;
+
+   void ActivateHit()
+    {
+        canHit = true;
+    }
+    void DisableHit()
+    {
+        canHit = false;
+    }
+    public void SetHit(bool h)
+    {
+        canHit = h;
+    }
+
 
 	// Use this for initialization
 	void Start()

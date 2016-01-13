@@ -36,9 +36,11 @@ public class Weapon : MonoBehaviour
 		{
 			Instantiate(sparkEffect, other.contacts[0].point, Quaternion.identity);
 		}
-		else if (other.transform.tag == "Player"
+		else if ((other.transform.tag == "Player"
 			|| other.transform.tag == "Enemy")
+            && owner.canHit)
 		{
+            owner.canHit = false;
 			if (other.gameObject.GetComponentInChildren<Weapon>() != null)
 			{
 				owner.ResolveHit(other.gameObject.GetComponentInChildren<Weapon>().owner.curState);
