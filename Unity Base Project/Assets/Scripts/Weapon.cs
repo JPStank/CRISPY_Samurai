@@ -35,8 +35,16 @@ public class Weapon : MonoBehaviour
 		if (other.transform.tag == "Weapon")
 		{
 			Instantiate(sparkEffect, other.contacts[0].point, Quaternion.identity);
-			if(other.gameObject.GetComponent<Weapon>() != null)
-				owner.ResolveHit(other.gameObject.GetComponent<Weapon>().owner.curState);
+		}
+		else if (other.transform.tag == "Player"
+			|| other.transform.tag == "Enemy")
+		{
+			if (other.gameObject.GetComponentInChildren<Weapon>() != null)
+			{
+				owner.ResolveHit(other.gameObject.GetComponentInChildren<Weapon>().owner.curState);
+				if (other.gameObject.GetComponent<PuppetScript>() != null)
+					other.gameObject.GetComponent<PuppetScript>().ResolveHit(owner.curState);
+			}
 		}
 	}
 
