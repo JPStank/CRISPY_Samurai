@@ -136,7 +136,7 @@ public class PuppetCameraScript : MonoBehaviour
 				}
 				if (peekTmr == 0.0f)
 				{
-					rockedOffsetPos = Vector3.Lerp( rockedOffsetPos, Vector3.zero, Time.deltaTime * 2.0f);
+					//rockedOffsetPos = Vector3.Lerp( rockedOffsetPos, Vector3.zero, Time.deltaTime * 2.0f);
 				}
 			}
 			else
