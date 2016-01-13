@@ -6,6 +6,7 @@ public class PlayerInput : MonoBehaviour
 	public float speed = 2.0f;
 	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 1.0f;
 	public PuppetScript puppet;
+	public GameObject swordSwish;
 
 	// Use this for initialization
 	void Start()
@@ -61,7 +62,8 @@ public class PlayerInput : MonoBehaviour
 		if(InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
 			|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
 		{
-			puppet.rockedOn = !puppet.rockedOn;
+			//puppet.rockedOn = !puppet.rockedOn;
+			puppet.ToggleLockon();
 		}
 
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
@@ -70,14 +72,17 @@ public class PlayerInput : MonoBehaviour
 			if (lHorizontal < -deadZone)
 			{
 				puppet.SlashRTL();
+				//Instantiate(swordSwish, puppet.transform.position, Quaternion.identity);
 			}
 			else if (lHorizontal > deadZone)
 			{
 				puppet.SlashLTR();
+				//Instantiate(swordSwish, puppet.transform.position, Quaternion.identity);
 			}
 			else if (lVertical < deadZone)
 			{
 				puppet.SlashVert();
+				//Instantiate(swordSwish, puppet.transform.position, Quaternion.identity);
 			}
 		}
 		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
