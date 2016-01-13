@@ -3,13 +3,26 @@ using System.Collections;
 
 public class DemoAttack : MonoBehaviour 
 {
+    public GameObject bDirty;
 
 	// Use this for initialization
 	void Start () 
     {
 	//stuff
-	}
+        bDirty.SetActive(false);
+    }
 	
+
+    void ActivateDirty()
+    {
+        bDirty.SetActive(true);
+    }
+
+    void DisableDirty()
+    {
+        bDirty.SetActive(false);
+    }
+
 	// Update is called once per frame
 	void Update () 
     {

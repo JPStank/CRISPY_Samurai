@@ -1,0 +1,13 @@
+FRAMES FOR EVENTS!!!!
+
+Down Slash:
+	Activate - 22
+	Disable - 28
+	
+Left Slash:
+	Activate - 25
+	Disable - 31
+	
+Right Slash:
+	Activate - 21
+	Disable - 29
