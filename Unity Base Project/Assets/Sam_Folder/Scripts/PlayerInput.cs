@@ -34,7 +34,7 @@ public class PlayerInput : MonoBehaviour
 
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
 		{
-			if(rHorizontal > deadZone)
+			if (rHorizontal > deadZone)
 			{
 				//guard right
 				puppet.GuardRight();
@@ -52,49 +52,54 @@ public class PlayerInput : MonoBehaviour
 		}
 		else
 		{
-			Vector3 camDir = new Vector3(rHorizontal, rVertical, 0.0f);
+			Vector3 camDir = new Vector3(rHorizontal, -rVertical, 0.0f);
 			puppet.MoveCamera(camDir);
 		}
 
 		//if (bufferTime <= 0.0f)
 		//{
+		if(InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
+			|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
+		{
+			puppet.rockedOn = !puppet.rockedOn;
+		}
 
-			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
+		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
+		{
+			//puppet slash
+			if (lHorizontal < -deadZone)
 			{
-				//puppet slash
-				if (lHorizontal < -deadZone)
-				{
-					puppet.SlashRTL();
-				}
-				else if (lHorizontal > deadZone)
-				{
-					puppet.SlashLTR();
-				}
-				else if (lVertical < deadZone)
-				{
-					puppet.SlashVert();
-				}
+				puppet.SlashRTL();
 			}
-			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
+			else if (lHorizontal > deadZone)
 			{
-				//puppet thrust
+				puppet.SlashLTR();
 			}
-			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN))
+			else if (lVertical < deadZone)
 			{
-				//puppet kick
+				puppet.SlashVert();
 			}
-			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
-			{
-				//puppet dodge
-				if (lHorizontal > deadZone)
-					puppet.DodgeRight();
-				else if (lHorizontal < -deadZone)
-					puppet.DodgeLeft();
-				else if (lVertical < -deadZone)
-					puppet.DodgeForward();
-				else
-					puppet.DodgeBackwards();
-			}
+		}
+		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
+		{
+			//puppet thrust
+		}
+		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN))
+		{
+			//puppet kick
+		}
+		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
+		{
+			//puppet dodge
+			if (lHorizontal > deadZone)
+				puppet.DodgeRight();
+			else if (lHorizontal < -deadZone)
+				puppet.DodgeLeft();
+			else if (lVertical < -deadZone)
+				puppet.DodgeForward();
+			else
+				puppet.DodgeBackwards();
+		}
 		//}
 		//else
 		//{
