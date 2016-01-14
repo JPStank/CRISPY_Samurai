@@ -28,7 +28,7 @@ public class DemoAttack : MonoBehaviour
     {
         if (animation.isPlaying == false)
         {
-            //animation.Play("Idle");
+            animation.Play("Idle");
         }
 
 
@@ -39,6 +39,36 @@ public class DemoAttack : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.P))
         {
             animation.Play("Walk Right");
+        }
+        else if (Input.GetKeyDown(KeyCode.U))
+        {
+            animation["New Down Slash"].time = 0.36667f;
+
+            animation.Play("New Down Slash");
+        }
+        else if (Input.GetKeyDown(KeyCode.I))
+        {
+            animation.Play("Down Slash");
+        }
+        else if (Input.GetKeyDown(KeyCode.J))
+        {
+            animation["New Left Slash"].time = 0.6f;
+
+            animation.Play("New Left Slash");
+        }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            animation.Play("Left Slash");
+        }
+        else if (Input.GetKeyDown(KeyCode.N))
+        {
+            animation["New Right Slash"].time = 0.63333f;
+
+            animation.Play("New Right Slash");
+        }
+        else if (Input.GetKeyDown(KeyCode.M))
+        {
+            animation.Play("Right Slash");
         }
 
         //// TODO: Substitue these arbritary inputs to the actual actions
