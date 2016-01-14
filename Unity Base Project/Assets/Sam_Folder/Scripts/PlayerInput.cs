@@ -66,6 +66,11 @@ public class PlayerInput : MonoBehaviour
 			//puppet.ToggleLockon();
 		}
 
+		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BACK, InputChecker.BUTTON_STATE.DOWN))
+		{
+			Application.LoadLevel("Menu_Scene");
+		}
+
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
 		{
 			//puppet slash
