@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	// New things, added by Dakota 1/13 7:22pm
+	public GameObject degubber;
+	public float curBalance = 100;
+	public float maxBalance = 100;
 
 	public enum State
 	{
@@ -13,6 +17,7 @@ public class PuppetScript : MonoBehaviour
 		GRD_TOP, GRD_LEFT, GRD_RIGHT,
 		DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK, NUMSTATES
 	}
+
 	public enum Dir
 	{
 		FORWARD = 0, RIGHT, BACKWARD, LEFT
@@ -65,6 +70,14 @@ public class PuppetScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		// New things, added by Dakota 1/13 whatever PM
+		// Needed a reference to the player in the meat script to decrement balance
+		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
+
+		for (int i = 0; i < meats.Length; i++)
+			meats[i].player = gameObject;
+		//
+
 		animTimers = new Dictionary<string, float>();
 		animTimers["Idle"] = 1.833f;
 		animTimers["Walk"] = 1.1f;
@@ -338,6 +351,16 @@ public class PuppetScript : MonoBehaviour
 
 		lastState = curState;
 		curState = _nextState;
+
+		// New things, added by Dakota 1/13 whatever PM
+		// Degub Stuff
+		if (lastState != curState)
+		{
+			if (degubber)
+				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + curState.ToString());
+		}
+		//
+
 		return 1;
 	}
 
@@ -517,12 +540,20 @@ public class PuppetScript : MonoBehaviour
 		string toPlay = animTable[(int)curState, (int)otherState];
 		if (toPlay != null)
 		{
+			//if (degubber)
+				//degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
+
 			animation.Play(toPlay);
 
 			if (toPlay == "Idle")
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
+			{
+				// New things, added by Dakota 1/13 whatever PM
+				canHit = false;
+				//
 				ChangeState(State.FLINCH);
+			}
 		}
 	}
 }

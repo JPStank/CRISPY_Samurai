@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PuppetCameraScript : MonoBehaviour
 {
+	// New things, added by Dakota 1/13 8:46pm
+	public bool invertY = false;
+	public bool invertX = false;
 
 	public GameObject followCam;
 	public GameObject camTarg;
@@ -105,6 +108,11 @@ public class PuppetCameraScript : MonoBehaviour
 		_dir.y *= Time.deltaTime;
 		_dir.x *= camSpeed * 20.0f;
 		_dir.y *= camSpeed;
+
+		if (invertY)
+			_dir.y *= -1;
+		if (invertX)
+			_dir.x *= -1;
 
 		// free camera movement
 		if (!Owner.rockedOn)

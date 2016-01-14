@@ -40,7 +40,7 @@ public class GuardTest : MonoBehaviour
             Top.color = Color.white;
 
             action = true;
-            debugger.GetComponent<DebugMonitor>().UpdateText("Guard Right!");
+            //debugger.GetComponent<DebugMonitor>().UpdateText("Guard Right!");
         }
         else if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0 &&
            InputChecker.GetAxis(InputChecker.PLAYER_NUMBER.ONE, InputChecker.JOYSTICK.RIGHT, InputChecker.AXIS.X) < 0 && !action)
@@ -50,7 +50,7 @@ public class GuardTest : MonoBehaviour
             Top.color = Color.white;
 
             action = true;
-            debugger.GetComponent<DebugMonitor>().UpdateText("Guard Left!");
+           // debugger.GetComponent<DebugMonitor>().UpdateText("Guard Left!");
 
         }
         else if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0 &&
@@ -61,7 +61,7 @@ public class GuardTest : MonoBehaviour
             Top.color = Color.red;
 
             action = true;
-            debugger.GetComponent<DebugMonitor>().UpdateText("Guard Top!");
+           // debugger.GetComponent<DebugMonitor>().UpdateText("Guard Top!");
         }
 	}
 }
