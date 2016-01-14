@@ -521,6 +521,7 @@ public class PuppetScript : MonoBehaviour
 			return 1;
 		}
 
+
 		lastState = curState;
 		curState = _nextState;
 
@@ -562,8 +563,23 @@ public class PuppetScript : MonoBehaviour
 		_dir.x *= moveSpeed;
 		_dir.z *= moveSpeed;
 
-		if (_dir.magnitude > 0.01f)
+
+		if (_dir.magnitude > 0.01f && !rockedOn)
+		{
 			animation.Play("Walk Forward");
+		}
+		else if (_dir.magnitude > 0.01f && rockedOn)
+		{
+			if (Mathf.Abs(_dir.x) > Mathf.Abs(_dir.z))
+			{
+				if (_dir.x < 0.0f)
+					animation.Play("Walk Left");
+				else if (_dir.x > 0.0f)
+					animation.Play("Walk Right");
+			}
+			else
+				animation.Play("Walk Forward");
+		}
 		else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
 			animation.Play("Idle");
 		// change rotation to match camera Y, translate, then return to actual rotation

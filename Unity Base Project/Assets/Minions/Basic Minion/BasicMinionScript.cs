@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 enum ENEMY_STATE { PATROL, ATTACK};
+public enum ENEMY_DIFFICULTY { EASY, MEDIUM, HARD};
+public enum ENEMY_BEHAVIOUR { SLASH_LEFT, SLASH_RIGHT, SLASH_TOP, THRUST, GUARD_LEFT, GUARD_RIGHT, GUARD_TOP, WINDOW_OF_OPPORTUNITY };
 
 public class BasicMinionScript : MonoBehaviour 
 {
@@ -12,6 +15,8 @@ public class BasicMinionScript : MonoBehaviour
     [SerializeField]
     PuppetScript puppet;
     GameObject player;
+    public ENEMY_DIFFICULTY difficulty;
+    public ENEMY_BEHAVIOUR[] behaviourList;
     SphereCollider noticeArea;
     public bool patrolling = true;
     bool readyToIterate = false;
@@ -89,16 +94,57 @@ public class BasicMinionScript : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.tag == "Weapon")
+        if(col.tag == "Player")
         {
+            int diffConv = 0;
+            switch (difficulty)
+	        {
+		        case ENEMY_DIFFICULTY.EASY:
+                    diffConv = 1;
+                    break;
+                case ENEMY_DIFFICULTY.MEDIUM:
+                    diffConv = 2;
+                    break;
+                case ENEMY_DIFFICULTY.HARD:
+                    diffConv = 3;
+                    break;
+	        }
             patrolling = false;
             noticeArea.enabled = false;
             readyToIterate = true;
             behaviourTree.ClearTree();
             behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.MOVE_TO_PLAYER, 3.0f));
-            behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.SLASH_LEFT));
-            behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.SLASH_RIGHT));
-            behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.SLASH_TOP));
+            foreach (ENEMY_BEHAVIOUR behaviour in behaviourList)
+            {
+                switch (behaviour)
+                {
+                    case ENEMY_BEHAVIOUR.SLASH_LEFT:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.SLASH_LEFT));
+                        break;
+                    case ENEMY_BEHAVIOUR.SLASH_RIGHT:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.SLASH_RIGHT));
+                        break;
+                    case ENEMY_BEHAVIOUR.SLASH_TOP:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.SLASH_TOP));
+                        break;
+                    case ENEMY_BEHAVIOUR.THRUST:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.THRUST));
+                        break;
+                    case ENEMY_BEHAVIOUR.GUARD_LEFT:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_LEFT, 1.0f * diffConv));
+                        break;
+                    case ENEMY_BEHAVIOUR.GUARD_RIGHT:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_RIGHT, 1.0f * diffConv));
+                        break;
+                    case ENEMY_BEHAVIOUR.GUARD_TOP:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_TOP, 1.0f * diffConv));
+                        break;
+                    case ENEMY_BEHAVIOUR.WINDOW_OF_OPPORTUNITY:
+                        behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.WINDOW_OF_OPPORTUNITY, 1.0f - 0.25f * diffConv));
+                        break;
+                }
+            }
+            behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.WINDOW_OF_OPPORTUNITY, 1.0f - 0.25f * diffConv));
         }
     }
 }
