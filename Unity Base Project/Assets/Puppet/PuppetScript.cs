@@ -131,7 +131,7 @@ public class PuppetScript : MonoBehaviour
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
 		"React Side";
-		
+
 		animTable[(int)State.IDLE, (int)State.IDLE] =
 		animTable[(int)State.MOVING, (int)State.MOVING] =
 		"Twerk";
@@ -260,7 +260,7 @@ public class PuppetScript : MonoBehaviour
 			|| (_nextState == State.GRD_LEFT && curState == State.PARRY)
 			|| (_nextState == State.GRD_RIGHT && curState == State.PARRY))
 			return -1;
-		
+
 
 		lastState = curState;
 		curState = _nextState;
@@ -293,13 +293,28 @@ public class PuppetScript : MonoBehaviour
 		_dir.x *= moveSpeed;
 		_dir.z *= moveSpeed;
 
-        if (_dir.magnitude > 0.01f)
-            animation.Play("Walk Forward");
-        else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
-            animation.Play("Idle");
-        // change rotation to match camera Y, translate, then return to actual rotation
-        Vector3 oldPos = transform.position;
-        Quaternion orgRot = transform.rotation;
+
+		if (_dir.magnitude > 0.01f && !rockedOn)
+		{
+			animation.Play("Walk Forward");
+		}
+		else if (_dir.magnitude > 0.01f && rockedOn)
+		{
+			if (Mathf.Abs(_dir.x) > Mathf.Abs(_dir.z))
+			{
+				if (_dir.x < 0.0f)
+					animation.Play("Walk Left");
+				else if (_dir.x > 0.0f)
+					animation.Play("Walk Right");
+			}
+			else
+				animation.Play("Walk Forward");
+		}
+		else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
+			animation.Play("Idle");
+		// change rotation to match camera Y, translate, then return to actual rotation
+		Vector3 oldPos = transform.position;
+		Quaternion orgRot = transform.rotation;
 		if (tag == "Player")
 		{
 			Quaternion camRot = camScript.followCam.transform.rotation;

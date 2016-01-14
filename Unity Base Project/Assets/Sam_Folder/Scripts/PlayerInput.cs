@@ -62,8 +62,8 @@ public class PlayerInput : MonoBehaviour
 		if(InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
 			|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
 		{
-			//puppet.rockedOn = !puppet.rockedOn;
-			puppet.ToggleLockon();
+			puppet.rockedOn = !puppet.rockedOn;
+			//puppet.ToggleLockon();
 		}
 
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
