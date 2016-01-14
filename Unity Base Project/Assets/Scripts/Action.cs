@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Action : MonoBehaviour
 {
-
+    bool behaving = false;
 	// Use this for initialization
 	void Start ()
 	{
@@ -16,8 +16,13 @@ public class Action : MonoBehaviour
 		
 	}
 
-	virtual public void Execute()
+	virtual public COMPLETION_STATE Execute()
 	{
-
+        return COMPLETION_STATE.INVALID;
 	}
+
+    public bool isBehaving()
+    {
+        return behaving;
+    }
 }
