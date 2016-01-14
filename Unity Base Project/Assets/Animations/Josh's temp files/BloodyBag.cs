@@ -15,22 +15,19 @@ public class BloodyBag : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-	
 	}
 
     void OnCollisionEnter(Collision other)
     {
         if (other.transform.tag == "Weapon")
         {
-            Weapon w = other.gameObject.GetComponent<Weapon>();
-            if (w)
-            {
-                if (w.owner.canHit)
-                {
-                    w.owner.canHit = false;
-                    Instantiate(bloodEffect, other.contacts[0].point, bloodEffect.transform.rotation);                    
-                }
-            }
+			Weapon temp = other.gameObject.GetComponent<Weapon>();
+			if (temp && temp.owner.canHit)
+			{
+				//temp.owner.canHit = false;
+				Instantiate(bloodEffect, other.contacts[0].point, bloodEffect.transform.rotation);
+			}
+
 			//other.gameObject.GetComponent<>();
         }
     }
