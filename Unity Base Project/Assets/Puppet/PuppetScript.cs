@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	// New things, added by Dakota 1/13 7:22pm
+	public GameObject degubber;
+	public float curBalance = 100;
+	public float maxBalance = 100;
 
 	public enum State
 	{
@@ -13,6 +17,7 @@ public class PuppetScript : MonoBehaviour
 		GRD_TOP, GRD_LEFT, GRD_RIGHT,
 		DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK, NUMSTATES
 	}
+
 	public enum Dir
 	{
 		FORWARD = 0, RIGHT, BACKWARD, LEFT
@@ -37,6 +42,7 @@ public class PuppetScript : MonoBehaviour
 	public bool rockedOn = false;
 
 	private string[,] animTable;
+	private bool[,] stateTable;
 	private Vector3 moveTest;
 	private Vector3 camTest;
 	private float debugAngle;
@@ -45,10 +51,33 @@ public class PuppetScript : MonoBehaviour
 	private int debugGrdType = 0;
 	private float debugGrdTmr = 0.0f;
 
+    public bool canHit = false;
+
+   void ActivateHit()
+    {
+        canHit = true;
+    }
+    void DisableHit()
+    {
+        canHit = false;
+    }
+    public void SetHit(bool h)
+    {
+        canHit = h;
+    }
+
 
 	// Use this for initialization
 	void Start()
 	{
+		// New things, added by Dakota 1/13 whatever PM
+		// Needed a reference to the player in the meat script to decrement balance
+		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
+
+		for (int i = 0; i < meats.Length; i++)
+			meats[i].player = gameObject;
+		//
+
 		animTimers = new Dictionary<string, float>();
 		animTimers["Idle"] = 1.833f;
 		animTimers["Walk"] = 1.1f;
@@ -96,6 +125,7 @@ public class PuppetScript : MonoBehaviour
 		GrdTmrMax = 0.2f;
 
 		InitAnimTable();
+		InitStateTable();
 
 		moveTest = Vector3.zero;
 		moveTest.x = 1.0f;
@@ -125,28 +155,83 @@ public class PuppetScript : MonoBehaviour
 		"Block Up Hit";
 		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
 		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
+		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
+		animTable[(int)State.ATK_VERT, (int)State.ATK_VERT] =
+		animTable[(int)State.ATK_RTL, (int)State.ATK_VERT] =
+		animTable[(int)State.ATK_LTR, (int)State.ATK_VERT] =
 		"React Front";
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
+		animTable[(int)State.IDLE, (int)State.ATK_RTL] =
+		animTable[(int)State.MOVING, (int)State.ATK_RTL] =
+		animTable[(int)State.IDLE, (int)State.ATK_LTR] =
+		animTable[(int)State.MOVING, (int)State.ATK_LTR] =
+		animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
+		animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
+		animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
+		animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
+		animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
+		animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
 		"React Side";
 
+		
 		animTable[(int)State.IDLE, (int)State.IDLE] =
 		animTable[(int)State.MOVING, (int)State.MOVING] =
 		"Twerk";
 
 	}
+	 void InitStateTable()
+	{
+		stateTable = new bool[(int)State.NUMSTATES, (int)State.NUMSTATES];
+		//stateTable[(int)State.DGE_BACK, (int)State.DGE_BACK] =
+		//stateTable[(int)State.DGE_BACK, (int)State.DGE_FORWARD] =
+		//stateTable[(int)State.DGE_BACK, (int)State.DGE_LEFT] =
+		//stateTable[(int)State.DGE_BACK, (int)State.DGE_RIGHT] =
+		//stateTable[(int)State.DGE_FORWARD, (int)State.DGE_BACK] =
+		//stateTable[(int)State.DGE_FORWARD, (int)State.DGE_FORWARD] =
+		//stateTable[(int)State.DGE_FORWARD, (int)State.DGE_LEFT] =
+		//stateTable[(int)State.DGE_FORWARD, (int)State.DGE_RIGHT] =
+		//stateTable[(int)State.DGE_LEFT, (int)State.DGE_BACK] =
+		//stateTable[(int)State.DGE_LEFT, (int)State.DGE_FORWARD] =
+		//stateTable[(int)State.DGE_LEFT, (int)State.DGE_LEFT] =
+		//stateTable[(int)State.DGE_LEFT, (int)State.DGE_RIGHT] =
+		//stateTable[(int)State.DGE_RIGHT, (int)State.DGE_BACK] =
+		//stateTable[(int)State.DGE_RIGHT, (int)State.DGE_FORWARD] =
+		//stateTable[(int)State.DGE_RIGHT, (int)State.DGE_LEFT] =
+		//stateTable[(int)State.DGE_RIGHT, (int)State.DGE_RIGHT] =
+		//	false;
+
+		stateTable[(int)State.MOVING, (int)State.IDLE] =
+		stateTable[(int)State.FLINCH, (int)State.IDLE] =
+		stateTable[(int)State.STUN, (int)State.IDLE] =
+		stateTable[(int)State.ATK_VERT, (int)State.IDLE] =
+		stateTable[(int)State.ATK_LTR, (int)State.IDLE] =
+		stateTable[(int)State.ATK_RTL, (int)State.IDLE] =
+		stateTable[(int)State.ATK_STAB, (int)State.IDLE] =
+		stateTable[(int)State.ATK_KICK, (int)State.IDLE] =
+		stateTable[(int)State.PARRY, (int)State.IDLE] =
+		stateTable[(int)State.GRD_TOP, (int)State.IDLE] =
+		stateTable[(int)State.GRD_LEFT, (int)State.IDLE] =
+		stateTable[(int)State.GRD_RIGHT, (int)State.IDLE] =
+		stateTable[(int)State.DGE_BACK, (int)State.IDLE] =
+		stateTable[(int)State.DGE_FORWARD, (int)State.IDLE] =
+		stateTable[(int)State.DGE_LEFT, (int)State.IDLE] =
+		stateTable[(int)State.DGE_RIGHT, (int)State.IDLE] =
+			true;
+	}
 
 	// Update is called once per frame
 	void Update()
 	{
+		if (curState == State.FLINCH && animation.isPlaying == false)
+		{
+			ChangeState(State.IDLE);
+		}
 
 		DoDegub();
-
-		//if (tag == "Player")
-		//camScript.UpdateCam();
-
 	}
 
 	// DoDegub()
@@ -239,8 +324,10 @@ public class PuppetScript : MonoBehaviour
 	// returns 1 on success
 	public int ChangeState(State _nextState)
 	{
-		if (attackScript.AtkTmrCur != 0.0f || dodgeScript.DgeTmrCur != 0.0f)
-			return -1;
+		//if (attackScript.AtkTmrCur != 0.0f || dodgeScript.DgeTmrCur != 0.0f)
+		//	return -1;
+		//if (stateTable[(int)curState, (int)_nextState] == false)
+			//return -1;
 		if (_nextState == State.IDLE)
 			animation.Play("Idle");
 		if (_nextState == State.MOVING && curState != State.IDLE && curState != State.MOVING)
@@ -264,6 +351,16 @@ public class PuppetScript : MonoBehaviour
 
 		lastState = curState;
 		curState = _nextState;
+
+		// New things, added by Dakota 1/13 whatever PM
+		// Degub Stuff
+		if (lastState != curState)
+		{
+			if (degubber)
+				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + curState.ToString());
+		}
+		//
+
 		return 1;
 	}
 
@@ -271,7 +368,7 @@ public class PuppetScript : MonoBehaviour
 	// Moves in direction of _dir.x and _dir.z
 	public int Move(Vector3 _dir)
 	{
-		if (_dir == Vector3.zero)
+		if (_dir == Vector3.zero && (curState == State.MOVING || curState == State.IDLE))
 			return ChangeState(State.IDLE);
 		if (ChangeState(State.MOVING) == -1)
 			return -1;
@@ -456,7 +553,22 @@ public class PuppetScript : MonoBehaviour
 		/*EXAMPLE IMPLEMENTATION*/
 		// animation.Play(animTable[(int)curState, (int)otherState]);
 		string toPlay = animTable[(int)curState, (int)otherState];
-		if (toPlay != "")
-			animation.Play();
+		if (toPlay != null)
+		{
+			//if (degubber)
+				//degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
+
+			animation.Play(toPlay);
+
+			if (toPlay == "Idle")
+				ChangeState(State.IDLE);
+			if (toPlay == "React Front" || toPlay == "React Side")
+			{
+				// New things, added by Dakota 1/13 whatever PM
+				canHit = false;
+				//
+				ChangeState(State.FLINCH);
+			}
+		}
 	}
 }

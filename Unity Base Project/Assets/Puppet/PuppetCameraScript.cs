@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PuppetCameraScript : MonoBehaviour
 {
+	// New things, added by Dakota 1/13 8:46pm
+	public bool invertY = false;
+	public bool invertX = false;
 
 	public GameObject followCam;
 	public GameObject camTarg;
@@ -89,7 +92,7 @@ public class PuppetCameraScript : MonoBehaviour
 				camTarg.transform.position = Vector3.Lerp(camTarg.transform.position, pos, Time.deltaTime * camSpeed);
 			}
 
-			// puts the camera itself on a pole in the offsets direction from the target
+			// puts the camera itself on a pole in the offset's direction from the target
 			pos += camOffsetPos.y * camTarg.transform.up;
 			pos += camOffsetPos.z * camTarg.transform.forward;
 			followCam.transform.position = pos;
@@ -105,6 +108,11 @@ public class PuppetCameraScript : MonoBehaviour
 		_dir.y *= Time.deltaTime;
 		_dir.x *= camSpeed * 20.0f;
 		_dir.y *= camSpeed;
+
+		if (invertY)
+			_dir.y *= -1;
+		if (invertX)
+			_dir.x *= -1;
 
 		// free camera movement
 		if (!Owner.rockedOn)
@@ -170,7 +178,28 @@ public class PuppetCameraScript : MonoBehaviour
 	// returns 1 on success
 	public int ToggleLockon()
 	{
+		if (Owner.curState == PuppetScript.State.DGE_BACK
+			|| Owner.curState == PuppetScript.State.DGE_FORWARD
+			|| Owner.curState == PuppetScript.State.DGE_LEFT
+			|| Owner.curState == PuppetScript.State.DGE_RIGHT)
+			return -1;
+
+		if (!camLockedOn)
+		{
+			Vector3 orgPos = camTarg.transform.position;
+			Vector3 tempPos = transform.position;
+			tempPos -= 1.0f * transform.forward;
+			camTarg.transform.position = tempPos;
+			camTarg.transform.LookAt(transform);
+			camTarg.transform.position = orgPos;
+		}
+		else
+		{
+			camRot = camTarg.transform.rotation;
+		}
+
 		camLockedOn = !camLockedOn;
+		Owner.rockedOn = camLockedOn;
 		return 1;
 	}
 }

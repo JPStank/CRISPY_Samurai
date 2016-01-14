@@ -13,7 +13,7 @@ public class BasicMinionScript : MonoBehaviour
     PuppetScript puppet;
     GameObject player;
     SphereCollider noticeArea;
-    bool patrolling = true;
+    public bool patrolling = true;
     bool readyToIterate = false;
     bool windowOfOpportunity = false;
 
@@ -58,18 +58,25 @@ public class BasicMinionScript : MonoBehaviour
                 return;
             }
 
-            //Vector3 playerDirection = player.transform.position - gameObject.transform.position;
-            //Vector3 AIForward = transform.forward;
-            //float angleToPlayer = Vector3.Angle(AIForward, playerDirection);
-            //
-            //if (angleToPlayer > 5.0f)
-            //{
-            //    behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.TURN_TO_PLAYER, 1.0f));
-            //    readyToIterate = true;
-            //}
-            if ((gameObject.transform.position - player.transform.position).magnitude > behaviourTree.StoppingDistance() && !behaviourTree.isBehaving())
+            Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+            Vector3 AIForward = transform.forward;
+            float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
+
+            //Debug.Log(angleToPlayer + " Minion Script");
+
+            if (angleToPlayer > 15.0f &&
+                !behaviourTree.isBehaving() &&
+                (gameObject.transform.position - player.transform.position).magnitude < behaviourTree.StoppingDistance() &&
+                (gameObject.transform.position - player.transform.position).magnitude > 0.78f)
             {
-                behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.MOVE_TO_PLAYER, 3.0f));
+                Debug.Log((gameObject.transform.position - player.transform.position).magnitude);
+                behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.TURN_TO_PLAYER, 3.0f));
+                readyToIterate = true;
+            }
+
+            else if ((gameObject.transform.position - player.transform.position).magnitude > behaviourTree.StoppingDistance() && !behaviourTree.isBehaving())
+            {
+                behaviourTree.AddBehaviourNow(new AIBehaviour(AI_STATE.MOVE_TO_PLAYER, 2.5f));
                 readyToIterate = true;
             }
 
@@ -82,7 +89,7 @@ public class BasicMinionScript : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.tag == "Player")
+        if(col.tag == "Weapon")
         {
             patrolling = false;
             noticeArea.enabled = false;

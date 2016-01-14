@@ -35,6 +35,8 @@ public class BehaviourTree : MonoBehaviour
         agent = gameObject.GetComponent<NavMeshAgent>();
         FuckYouUnity();
         behaviourTimer = 0.0f;
+        //agent.updatePosition = false;
+        //agent.updateRotation = false;
     }
 
     public void FuckYouUnity()
@@ -52,7 +54,7 @@ public class BehaviourTree : MonoBehaviour
 
     public COMPLETION_STATE IterateTree()
     {
-
+        Debug.Log(behaviours[currentBehaviour].state + " " + behaviours.Count);
         if (behaviours[currentBehaviour].complete == COMPLETION_STATE.COMPLETE)
         {
             if(behaviours[currentBehaviour].iterationCount > 0)
@@ -89,6 +91,11 @@ public class BehaviourTree : MonoBehaviour
                         Debug.Log(gameObject.transform.position + " " + behaviours[currentBehaviour].positionData);
                         agent.stoppingDistance = behaviours[currentBehaviour].floatData;
                         agent.SetDestination(behaviours[currentBehaviour].positionData);
+                        //NavMeshPath path = agent.path;
+                        //direction = path.corners[1] - path.corners[0];
+                        //direction.Normalize();
+                        //gameObject.transform.Translate(direction);
+                        //puppet.Move(direction);
                         if(!animation.IsPlaying("Walk Forward"))
                             animation.Play("Walk Forward");
                         if ((gameObject.transform.position - behaviours[currentBehaviour].positionData).magnitude < agent.stoppingDistance + 0.5f)
@@ -121,20 +128,23 @@ public class BehaviourTree : MonoBehaviour
                 case AI_STATE.TURN_TO_PLAYER:
                     {
                         agent.updateRotation = false;
-                        Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;// behaviours[currentBehaviour].positionData;
+                        agent.updatePosition = false;
+                        Vector3 playerPosition = player.transform.position;// behaviours[currentBehaviour].positionData;
                         Vector3 AIPosition = gameObject.transform.position;
-                        playerPosition.y = 0;
-                        AIPosition.y = 0;
-                        Quaternion lookDir = Quaternion.LookRotation(playerPosition - AIPosition);
-                        lookDir.y = transform.rotation.y;
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDir, behaviours[currentBehaviour].floatData * Time.deltaTime);
-                        if (transform.rotation == lookDir)
+                        playerPosition.y = AIPosition.y;
+                        Vector3 toPlayer = playerPosition - AIPosition;
+                        toPlayer.Normalize();
+                        transform.forward = Vector3.RotateTowards(transform.forward, toPlayer, behaviours[currentBehaviour].floatData * Time.deltaTime, 0.0f);
+                        float angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
+                        behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
+                        currentlyBehaving = false;
+                        //Debug.Log("Finished Turning");
+                        agent.updatePosition = true;
+                        agent.updateRotation = true;
+                        if (angleToPlayer < 15.0f/*transform.forward.normalized == toPlayer.normalized*/)
                         {
-                            behaviours[currentBehaviour].complete = COMPLETION_STATE.COMPLETE;
-                            currentlyBehaving = false;
+                            PurgeTempBehaviours();
                         }
-                        else
-                            behaviours[currentBehaviour].complete = COMPLETION_STATE.IN_PROGRESS;
                     }
                     break;
                 case AI_STATE.GUARD_LEFT:
@@ -278,6 +288,14 @@ public class BehaviourTree : MonoBehaviour
             behaviours[index].complete = COMPLETION_STATE.NOT_STARTED;
         }
         currentBehaviour = 0;
-        
+    }
+
+    void PurgeTempBehaviours()
+    {
+        while (behaviours[currentBehaviour].iterationCount >= 0)
+        {
+            behaviours.RemoveAt(currentBehaviour);
+            behaviourCount--;
+        }
     }
 }
