@@ -26,7 +26,6 @@ public class DemoAttack : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-
         if (animation.isPlaying == false)
         {
             //animation.Play("Idle");
