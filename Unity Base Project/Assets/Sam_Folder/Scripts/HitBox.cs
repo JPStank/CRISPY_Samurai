@@ -23,10 +23,13 @@ public class HitBox : MonoBehaviour
 
 	public void Attack()
 	{
-		foreach(GameObject victim in targets)
+		foreach (GameObject victim in targets)
 		{
-			if(victim.GetComponent<PuppetScript>() != null)
+			if (victim.GetComponent<PuppetScript>() != null)
+			{
 				victim.GetComponent<PuppetScript>().ResolveHit(owner.curState);
+				owner.ResolveHit(victim.GetComponent<PuppetScript>().curState);
+			}
 		}
 	}
 
