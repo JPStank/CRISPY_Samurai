@@ -192,10 +192,14 @@ public class PuppetCameraScript : MonoBehaviour
 			camTarg.transform.position = tempPos;
 			camTarg.transform.LookAt(transform);
 			camTarg.transform.position = orgPos;
+
+			Owner.moveSpeed = Owner.def_moveSpeed * Owner.lockMoveSpeedMod;
 		}
 		else
 		{
 			camRot = camTarg.transform.rotation;
+
+			Owner.moveSpeed = Owner.def_moveSpeed;
 		}
 
 		camLockedOn = !camLockedOn;
