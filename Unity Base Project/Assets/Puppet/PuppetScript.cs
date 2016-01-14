@@ -70,6 +70,7 @@ public class PuppetScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		// New things, added by Dakota 1/13 whatever PM
 		// Needed a reference to the player in the meat script to decrement balance
 		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
 
@@ -351,12 +352,14 @@ public class PuppetScript : MonoBehaviour
 		lastState = curState;
 		curState = _nextState;
 
+		// New things, added by Dakota 1/13 whatever PM
 		// Degub Stuff
 		if (lastState != curState)
 		{
 			if (degubber)
 				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + curState.ToString());
 		}
+		//
 
 		return 1;
 	}
@@ -546,7 +549,9 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
+				// New things, added by Dakota 1/13 whatever PM
 				canHit = false;
+				//
 				ChangeState(State.FLINCH);
 			}
 		}
