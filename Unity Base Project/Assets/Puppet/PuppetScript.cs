@@ -571,4 +571,11 @@ public class PuppetScript : MonoBehaviour
 			}
 		}
 	}
+
+	public HitBox cube;
+	// Sam: activate our attack hitbox
+	void Attack()
+	{
+		cube.Attack();
+	}
 }
