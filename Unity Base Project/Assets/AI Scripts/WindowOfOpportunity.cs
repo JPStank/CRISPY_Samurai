@@ -17,8 +17,9 @@ public class WindowOfOpportunity : Action
 
     public override COMPLETION_STATE Execute()
     {
+        //if(puppet.curState != PuppetScript.State.FLINCH)
         timer += Time.deltaTime;
-        if(timer >= TimerMax)
+        if(timer >= TimerMax && puppet.curState != PuppetScript.State.FLINCH)
         {
             timer = 0;
             return COMPLETION_STATE.COMPLETE;
