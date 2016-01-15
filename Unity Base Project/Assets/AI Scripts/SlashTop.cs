@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SlashRight : Action {
+public class SlashTop : Action {
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start()
+	{
+
 	}
 	
 	// Update is called once per frame
@@ -17,13 +18,13 @@ public class SlashRight : Action {
     {
         if (!behaving)
         {
-            puppet.SlashLTR();
+            puppet.SlashVert();
             behaving = true;
         }
 
-        if (!animation.IsPlaying("Right Slash"))
+        if (!animation.IsPlaying("Down Slash"))
         {
-            Debug.Log("Completed Right Slash");
+            Debug.Log("Completed Top Slash");
             behaving = false;
             return COMPLETION_STATE.COMPLETE;
         }

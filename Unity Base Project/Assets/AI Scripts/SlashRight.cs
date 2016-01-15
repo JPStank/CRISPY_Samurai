@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SlashLeft : Action 
-{
+public class SlashRight : Action {
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
+
 	}
 	
 	// Update is called once per frame
@@ -18,13 +18,13 @@ public class SlashLeft : Action
     {
         if (!behaving)
         {
-            puppet.SlashRTL();
+            puppet.SlashLTR();
             behaving = true;
         }
 
-        if (!animation.IsPlaying("Left Slash"))
+        if (!animation.IsPlaying("Right Slash"))
         {
-            Debug.Log("Completed Left Slash");
+            Debug.Log("Completed Right Slash");
             behaving = false;
             return COMPLETION_STATE.COMPLETE;
         }
