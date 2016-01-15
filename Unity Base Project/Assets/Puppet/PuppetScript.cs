@@ -737,6 +737,10 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
+
+				curBalance -= 25;
+				if (curBalance < 0.0f)
+					curBalance = 0.0f;
 				// New things, added by Dakota 1/13 whatever PM
 				canHit = false;
 				//
