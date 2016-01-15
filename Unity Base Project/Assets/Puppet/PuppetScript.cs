@@ -78,6 +78,9 @@ public class PuppetScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		animation["New Down Slash"].time = 0.36667f;
+		animation["New Left Slash"].time = 0.6f;
+		animation["New Right Slash"].time = 0.63333f;
 		// New things, added by Dakota 1/13 whatever PM
 		// Needed a reference to the player in the meat script to decrement balance
 		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
@@ -731,11 +734,20 @@ public class PuppetScript : MonoBehaviour
 			//if (degubber)
 			//degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
 
-			animation.Play(toPlay);
+			if (toPlay == "New Left Slash" || toPlay == "New Right Slash" || toPlay == "New Down Slash")
+			{
+				
+				animation.Play(toPlay);				
+			}
+			else
+			{
+				animation.Play(toPlay);
+			}
+
 
 			if (toPlay == "Idle")
 				ChangeState(State.IDLE);
-			if (toPlay == "React Front" || toPlay == "React Side" && gameObject.tag != "Enemy" && (lastState != State.ATK_LTR || lastState != State.ATK_RTL || lastState != State.ATK_VERT))
+			if (toPlay == "React Front" || toPlay == "React Side")
 			{
 
 				curBalance -= 25;
