@@ -382,11 +382,10 @@ public class PuppetScript : MonoBehaviour
 			ChangeState(State.IDLE);
 		}
 
-		// only search for targets before we lock on to one.
+		// only search for targets if we are the player.
 		if (transform.tag == "Player")
 		{
-			//if (!rockedOn)
-				FindTarg();
+			FindTarg();
 			if (rockedOn)
 			{
 				Vector3 target = curTarg.transform.position;
@@ -405,15 +404,15 @@ public class PuppetScript : MonoBehaviour
 
 		if (badguys != null)
 		{
-			curTarg = badguys[0];
-			float dist = Vector3.SqrMagnitude(curTarg.transform.position - transform.position);
-			float curDist = dist;
+			float dist;
+			float curDist = dist = 0x0FFFFFFF;
 			foreach (GameObject badguy in badguys)
 			{
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
 				if (curDist < dist)
 				{
-					curTarg = badguy;
+					if (!rockedOn)
+						curTarg = badguy;
 					dist = curDist;
 				}
 			}
@@ -437,6 +436,11 @@ public class PuppetScript : MonoBehaviour
 				if (rockedOn)
 					ToggleLockon();
 			}
+		}
+		else if (Targeting_CubeSpawned != null)
+		{
+			Destroy(Targeting_CubeSpawned);
+			Targeting_CubeSpawned = null;
 		}
 	}
 
@@ -789,6 +793,15 @@ public class PuppetScript : MonoBehaviour
 				curBalance -= 25;
 				if (curBalance < 0.0f)
 					curBalance = 0.0f;
+
+				if (gameObject.tag == "Enemy")
+				{
+					PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
+					playerPuppet.curBalance += 12.5f;
+					if (playerPuppet.curBalance > playerPuppet.maxBalance)
+						playerPuppet.curBalance = playerPuppet.maxBalance;
+				}
+
 				// New things, added by Dakota 1/13 whatever PM
 				canHit = false;
 				//
