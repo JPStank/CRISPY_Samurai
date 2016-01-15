@@ -411,7 +411,8 @@ public class PuppetScript : MonoBehaviour
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
 				if (curDist < dist)
 				{
-					curTarg = badguy;
+					if (!rockedOn)
+						curTarg = badguy;
 					dist = curDist;
 				}
 			}
@@ -435,6 +436,11 @@ public class PuppetScript : MonoBehaviour
 				if (rockedOn)
 					ToggleLockon();
 			}
+		}
+		else if (Targeting_CubeSpawned != null)
+		{
+			Destroy(Targeting_CubeSpawned);
+			Targeting_CubeSpawned = null;
 		}
 	}
 
