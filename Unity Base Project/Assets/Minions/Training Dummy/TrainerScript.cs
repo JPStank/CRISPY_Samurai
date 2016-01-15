@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum TRAINER_TYPE { ATTACK_TOP, ATTACK_LEFT, ATTACK_RIGHT, GUARD_TOP, GUARD_LEFT, GUARD_RIGHT };
+public enum TRAINER_TYPE { ATTACK_TOP, ATTACK_LEFT, ATTACK_RIGHT, GUARD_TOP, GUARD_LEFT, GUARD_RIGHT, IDLE };
 public class TrainerScript : MonoBehaviour 
 {
     public BehaviourTree behaviourTree;
@@ -33,6 +33,8 @@ public class TrainerScript : MonoBehaviour
             case TRAINER_TYPE.GUARD_TOP:
                 behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.GUARD_TOP, 1.5f));
                 break;
+			case TRAINER_TYPE.IDLE:
+				break;
         }
 
         behaviourTree.AddBehaviour(new AIBehaviour(AI_STATE.WINDOW_OF_OPPORTUNITY, 1.5f));
