@@ -734,16 +734,7 @@ public class PuppetScript : MonoBehaviour
 			//if (degubber)
 			//degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
 
-			if (toPlay == "New Left Slash" || toPlay == "New Right Slash" || toPlay == "New Down Slash")
-			{
-				
-				animation.Play(toPlay);				
-			}
-			else
-			{
-				animation.Play(toPlay);
-			}
-
+			animation.Play(toPlay);
 
 			if (toPlay == "Idle")
 				ChangeState(State.IDLE);
