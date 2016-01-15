@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class AI_Controller : MonoBehaviour
 {
-	public enum ATTACK_TYPE { LEFT, RIGHT, TOP, THRUST };
+    public enum ATTACK_TYPE { LEFT, RIGHT, TOP, THRUST, WINDOW_SHORT, WINDOW_MEDIUM, WINDOW_LONG };
 
 	NavMeshAgent agent;
 	GameObject player;
@@ -17,6 +17,8 @@ public class AI_Controller : MonoBehaviour
 	public bool inRange = false;
 	public Action currentAction;
 	int nextAction;
+
+    public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -57,6 +59,33 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.THRUST:
 
 					break;
+                case ATTACK_TYPE.WINDOW_SHORT:
+                    {
+                        WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
+                        move.animation = animation;
+                        move.puppet = puppet;
+                        move.TimerMax = shortTimer;
+                        actions.Add(move);
+                    }
+                    break;
+                case ATTACK_TYPE.WINDOW_MEDIUM:
+                    {
+                        WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
+                        move.animation = animation;
+                        move.puppet = puppet;
+                        move.TimerMax = mediumTimer;
+                        actions.Add(move);
+                    }
+                    break;
+                case ATTACK_TYPE.WINDOW_LONG:
+                    {
+                        WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
+                        move.animation = animation;
+                        move.puppet = puppet;
+                        move.TimerMax = longTimer;
+                        actions.Add(move);
+                    }
+                    break;
 			}
 		}
 		currentAction = actions[0];
