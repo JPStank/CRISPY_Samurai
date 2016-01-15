@@ -159,6 +159,7 @@ public class AI_Controller : MonoBehaviour
                 else
                 {
                     inRange = true;
+					agent.Stop();
                 }
 
                 if (inRange || currentAction.isBehaving())

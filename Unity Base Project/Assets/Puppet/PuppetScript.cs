@@ -32,9 +32,10 @@ public class PuppetScript : MonoBehaviour
 	public Dictionary<string, float> animTimers;
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
-	private GameObject Targeting_CubeSpawned;
+	private GameObject Targeting_CubeSpawned = null;
 	public GameObject[] badguys;
 	public Vector3 targOffset;
+	public float targMaxDist;
 	public float def_moveSpeed;
 	public float moveSpeed;
 	public float lockMoveSpeedMod;
@@ -78,6 +79,9 @@ public class PuppetScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		animation["New Down Slash"].time = 0.36667f;
+		animation["New Left Slash"].time = 0.6f;
+		animation["New Right Slash"].time = 0.63333f;
 		// New things, added by Dakota 1/13 whatever PM
 		// Needed a reference to the player in the meat script to decrement balance
 		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
@@ -128,14 +132,14 @@ public class PuppetScript : MonoBehaviour
 
 		lastState = curState = State.IDLE;
 		if (targOffset == Vector3.zero)
-		{
 			targOffset.y = 2.0f;
-		}
+		if (targMaxDist == 0.0f)
+			targMaxDist = 200.0f;
 		if (moveSpeed == 0.0f)
 			moveSpeed = 5.0f;
 		def_moveSpeed = moveSpeed;
 		if (lockMoveSpeedMod == 0.0f)
-			lockMoveSpeedMod = 0.4f;
+			lockMoveSpeedMod = 0.3f;
 		if (camSpeed == 0.0f)
 			camSpeed = 8.0f;
 		def_camSpeed = camSpeed;
@@ -223,7 +227,7 @@ public class PuppetScript : MonoBehaviour
 		stateTable[(int)State.DGE_LEFT, (int)State.IDLE] =
 		stateTable[(int)State.DGE_RIGHT, (int)State.IDLE] =
 		stateTable[(int)State.DGE_BACK, (int)State.IDLE] =
-		stateTable[(int)State.DANCE, (int)State.IDLE] =
+			//stateTable[(int)State.DANCE, (int)State.IDLE] =
 			true;
 		// a call to go into moving will only succeed under rare circumstances
 		stateTable[(int)State.IDLE, (int)State.MOVING] =
@@ -324,7 +328,7 @@ public class PuppetScript : MonoBehaviour
 		// can guard from other guards and parries as well as necessary base states
 		stateTable[(int)State.IDLE, (int)State.GRD_TOP] =
 		stateTable[(int)State.MOVING, (int)State.GRD_TOP] =
-		//stateTable[(int)State.PARRY, (int)State.GRD_TOP] =
+			//stateTable[(int)State.PARRY, (int)State.GRD_TOP] =
 		stateTable[(int)State.GRD_TOP, (int)State.GRD_TOP] =
 		stateTable[(int)State.GRD_LEFT, (int)State.GRD_TOP] =
 		stateTable[(int)State.GRD_RIGHT, (int)State.GRD_TOP] =
@@ -332,7 +336,7 @@ public class PuppetScript : MonoBehaviour
 			true;
 		stateTable[(int)State.IDLE, (int)State.GRD_LEFT] =
 		stateTable[(int)State.MOVING, (int)State.GRD_LEFT] =
-		//stateTable[(int)State.PARRY, (int)State.GRD_LEFT] =
+			//stateTable[(int)State.PARRY, (int)State.GRD_LEFT] =
 		stateTable[(int)State.GRD_TOP, (int)State.GRD_LEFT] =
 		stateTable[(int)State.GRD_LEFT, (int)State.GRD_LEFT] =
 		stateTable[(int)State.GRD_RIGHT, (int)State.GRD_LEFT] =
@@ -340,7 +344,7 @@ public class PuppetScript : MonoBehaviour
 			true;
 		stateTable[(int)State.IDLE, (int)State.GRD_RIGHT] =
 		stateTable[(int)State.MOVING, (int)State.GRD_RIGHT] =
-		//stateTable[(int)State.PARRY, (int)State.GRD_RIGHT] =
+			//stateTable[(int)State.PARRY, (int)State.GRD_RIGHT] =
 		stateTable[(int)State.GRD_TOP, (int)State.GRD_RIGHT] =
 		stateTable[(int)State.GRD_LEFT, (int)State.GRD_RIGHT] =
 		stateTable[(int)State.GRD_RIGHT, (int)State.GRD_RIGHT] =
@@ -378,9 +382,17 @@ public class PuppetScript : MonoBehaviour
 			ChangeState(State.IDLE);
 		}
 
-		// only search for targets before we lock on to one.
-		if (!rockedOn && transform.tag == "Player")
+		// only search for targets if we are the player.
+		if (transform.tag == "Player")
+		{
 			FindTarg();
+			if (rockedOn)
+			{
+				Vector3 target = curTarg.transform.position;
+				target.y = transform.position.y;
+				transform.LookAt(target);
+			}
+		}
 
 		DoDegub();
 	}
@@ -392,24 +404,43 @@ public class PuppetScript : MonoBehaviour
 
 		if (badguys != null)
 		{
-			curTarg = badguys[0];
-			float dist = Vector3.SqrMagnitude(curTarg.transform.position - transform.position);
-			float curDist = dist;
+			float dist;
+			float curDist = dist = 0x0FFFFFFF;
 			foreach (GameObject badguy in badguys)
 			{
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
 				if (curDist < dist)
 				{
-					curTarg = badguy;
+					if (!rockedOn)
+						curTarg = badguy;
 					dist = curDist;
 				}
 			}
-			if (Targeting_CubeSpawned == null)
+			// only have a target if within distance
+			if (dist < targMaxDist)
 			{
-				Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
+				if (Targeting_CubeSpawned == null)
+				{
+					Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
+				}
+				Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
+				Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
 			}
-			Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
-			Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
+			else 
+			{
+				if (Targeting_CubeSpawned != null)
+				{
+					Destroy(Targeting_CubeSpawned);
+					Targeting_CubeSpawned = null;
+				}
+				if (rockedOn)
+					ToggleLockon();
+			}
+		}
+		else if (Targeting_CubeSpawned != null)
+		{
+			Destroy(Targeting_CubeSpawned);
+			Targeting_CubeSpawned = null;
 		}
 	}
 
@@ -541,6 +572,8 @@ public class PuppetScript : MonoBehaviour
 	// Moves in direction of _dir.x and _dir.z
 	public int Move(Vector3 _dir)
 	{
+		if (_dir == Vector3.zero && curState == State.DANCE)
+			return -1;
 		if (_dir == Vector3.zero && (curState == State.MOVING || curState == State.IDLE))
 			return ChangeState(State.IDLE);
 		if (ChangeState(State.MOVING) == -1)
@@ -613,6 +646,25 @@ public class PuppetScript : MonoBehaviour
 
 	public int ToggleLockon()
 	{
+		if (curTarg != null)
+		{
+			float dist = Vector3.SqrMagnitude(curTarg.transform.position - transform.position);
+			if (dist > targMaxDist && !rockedOn)
+				return -1;
+		}
+		else return -1;
+
+		if (Targeting_CubeSpawned != null && !rockedOn)
+		{
+			if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
+				Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 10.0f;
+		}
+		else if (Targeting_CubeSpawned != null)
+		{
+			if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
+				Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 1.0f;
+		}
+
 		return camScript.ToggleLockon();
 	}
 
@@ -735,12 +787,21 @@ public class PuppetScript : MonoBehaviour
 
 			if (toPlay == "Idle")
 				ChangeState(State.IDLE);
-			if (toPlay == "React Front" || toPlay == "React Side" && gameObject.tag != "Enemy" && (lastState != State.ATK_LTR || lastState != State.ATK_RTL || lastState != State.ATK_VERT))
+			if (toPlay == "React Front" || toPlay == "React Side")
 			{
 
 				curBalance -= 25;
 				if (curBalance < 0.0f)
 					curBalance = 0.0f;
+
+				if (gameObject.tag == "Enemy")
+				{
+					PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
+					playerPuppet.curBalance += 12.5f;
+					if (playerPuppet.curBalance > playerPuppet.maxBalance)
+						playerPuppet.curBalance = playerPuppet.maxBalance;
+				}
+
 				// New things, added by Dakota 1/13 whatever PM
 				canHit = false;
 				//

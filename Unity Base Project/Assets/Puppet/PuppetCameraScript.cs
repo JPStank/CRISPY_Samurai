@@ -11,13 +11,17 @@ public class PuppetCameraScript : MonoBehaviour
 	public GameObject camTarg;
 	public bool camLockedOn = false;
 	public Vector3 camOffsetPos;
-	public Vector3 defOffsetPos;
+	public Vector3 def_OffsetPos;
 	public Vector3 targOffsetPos;
+	public Vector3 def_rockedOffsetPos;
 	public Vector3 rockedOffsetPos;
+	public float rockedMinMax;
 
 	private PuppetScript Owner;
 	private Quaternion camRot;
+	private float def_camSpeed;
 	private float camSpeed;
+	private float last_camSpeed;
 	private float peekTmr = 0.0f;
 
 	// Use this for initialization
@@ -32,6 +36,7 @@ public class PuppetCameraScript : MonoBehaviour
 		Owner = _sender;
 
 		camSpeed = _sender.camSpeed;
+		def_camSpeed = camSpeed;
 		followCam = GameObject.FindGameObjectWithTag("MainCamera");
 		camTarg = GameObject.FindGameObjectWithTag("CamTarg");
 		camRot = followCam.transform.rotation;
@@ -43,19 +48,24 @@ public class PuppetCameraScript : MonoBehaviour
 			camOffsetPos.y = 1.0f;
 			camOffsetPos.z = -4.0f;
 		}
-		defOffsetPos = camOffsetPos;
+		def_OffsetPos = camOffsetPos;
 		if (targOffsetPos == Vector3.zero)
 		{
 			targOffsetPos.x = 0.0f;
-			targOffsetPos.y = 1.0f;
+			targOffsetPos.y = 1.5f;
 			targOffsetPos.z = 0.0f;
 		}
-		//if (rockedOffsetPos == Vector3.zero)
-		//{
-		//	targOffsetPos.x = 0.0f;
-		//	targOffsetPos.y = 0.0f;
-		//	targOffsetPos.z = 0.0f;
-		//}
+		if (rockedOffsetPos == Vector3.zero)
+		{
+			rockedOffsetPos.x = 1.5f;
+			rockedOffsetPos.y = 0.0f;
+			rockedOffsetPos.z = 0.0f;
+		}
+		def_rockedOffsetPos = rockedOffsetPos;
+		if (rockedMinMax == 0.0f)
+		{
+			rockedMinMax = 2.0f;
+		}
 	}
 
 	// Update is called once per frame
@@ -83,19 +93,27 @@ public class PuppetCameraScript : MonoBehaviour
 			// Lerp camTarg to where it should be in reference to the puppet
 			Vector3 pos = transform.position;
 			pos += targOffsetPos.y * camTarg.transform.up;
-			camTarg.transform.position = Vector3.Lerp(camTarg.transform.position, pos, Time.deltaTime * camSpeed);
+			camTarg.transform.position = Vector3.Lerp(camTarg.transform.position, pos, Time.deltaTime * def_camSpeed);
 
 			// additional funcitonality for rocking on (and out)
 			if (Owner.rockedOn)
 			{
-				pos += rockedOffsetPos;
-				camTarg.transform.position = Vector3.Lerp(camTarg.transform.position, pos, Time.deltaTime * camSpeed);
+				// adjust the offset
+				pos += rockedOffsetPos.x * camTarg.transform.right;
+				pos += rockedOffsetPos.y * camTarg.transform.up;
+				pos += rockedOffsetPos.z * camTarg.transform.forward;
+				camTarg.transform.position = Vector3.Lerp(camTarg.transform.position, pos, Time.deltaTime * def_camSpeed);
+
+				Vector3 targPos = Owner.curTarg.transform.position + Owner.targOffset;
+				targPos.y = camTarg.transform.position.y;
+				camTarg.transform.LookAt(Vector3.Lerp(camTarg.transform.position, targPos, Time.deltaTime * def_camSpeed));
+				camRot = camTarg.transform.rotation;
 			}
 
 			// puts the camera itself on a pole in the offset's direction from the target
 			pos += camOffsetPos.y * camTarg.transform.up;
 			pos += camOffsetPos.z * camTarg.transform.forward;
-			followCam.transform.position = pos;
+			followCam.transform.position = Vector3.Lerp(followCam.transform.position, pos, Time.deltaTime * def_camSpeed);
 
 			// does the rotations for us
 			followCam.transform.LookAt(camTarg.transform);
@@ -104,6 +122,10 @@ public class PuppetCameraScript : MonoBehaviour
 
 	public int MoveCamera(Vector3 _dir)
 	{
+		if (_dir == Vector3.zero)
+			camSpeed = 0.0f;
+		camSpeed = Mathf.Lerp(camSpeed, def_camSpeed, Time.deltaTime * 5.0f);
+
 		_dir.x *= Time.deltaTime;
 		_dir.y *= Time.deltaTime;
 		_dir.x *= camSpeed * 20.0f;
@@ -123,12 +145,13 @@ public class PuppetCameraScript : MonoBehaviour
 		}
 		else // movement while locked on
 		{
-			rockedOffsetPos.x += _dir.x * 0.2f;
+			// adjust the amount and error check it
+			rockedOffsetPos.x += _dir.x * 0.05f;
 
-			if (rockedOffsetPos.x < -2.0f)
-				rockedOffsetPos.x = -2.0f;
-			else if (rockedOffsetPos.x > 2.0f)
-				rockedOffsetPos.x = 2.0f;
+			if (rockedOffsetPos.x < def_rockedOffsetPos.x - rockedMinMax)
+				rockedOffsetPos.x = def_rockedOffsetPos.x - rockedMinMax;
+			else if (rockedOffsetPos.x > def_rockedOffsetPos.x + rockedMinMax)
+				rockedOffsetPos.x = def_rockedOffsetPos.x + rockedMinMax;
 
 
 			if (_dir.x == 0.0f)
@@ -138,22 +161,16 @@ public class PuppetCameraScript : MonoBehaviour
 				{
 					peekTmr -= Time.deltaTime;
 					if (peekTmr <= 0.0f)
-					{
 						peekTmr = 0.0f;
-					}
 				}
 				if (peekTmr == 0.0f)
-				{
-					rockedOffsetPos = Vector3.Lerp( rockedOffsetPos, Vector3.zero, Time.deltaTime * 2.0f);
-				}
+					rockedOffsetPos = Vector3.Lerp( rockedOffsetPos, def_rockedOffsetPos, Time.deltaTime * 1.5f);
 			}
 			else
-			{
 				peekTmr = 0.3f;
-			}
 		}
 
-
+		// adjust the ammount and error check it
 		camOffsetPos.y += _dir.y;
 		camOffsetPos.z += _dir.y;
 
