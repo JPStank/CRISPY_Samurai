@@ -10,10 +10,10 @@ public class HitBox : MonoBehaviour
 	PuppetScript owner;
 
 	// Use this for initialization
-	//void Start()
-	//{
-	//
-	//}
+	void Start()
+	{
+		gameObject.layer = owner.gameObject.layer;
+	}
 
 	// Update is called once per frame
 	//void Update()
