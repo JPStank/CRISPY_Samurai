@@ -389,7 +389,9 @@ public class PuppetScript : MonoBehaviour
 				FindTarg();
 			if (rockedOn)
 			{
-				transform.LookAt(curTarg.transform);
+				Vector3 target = curTarg.transform.position;
+				target.y = transform.position.y;
+				transform.LookAt(target);
 			}
 		}
 
