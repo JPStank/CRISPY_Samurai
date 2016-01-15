@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Action : MonoBehaviour
+public class Action : ScriptableObject
 {
     protected bool behaving = false;
-    protected PuppetScript puppet;
+    public PuppetScript puppet;
+	public Animation animation;
 	// Use this for initialization
-	void Start ()
+	public void Start()
 	{
-        puppet = GetComponent<PuppetScript>();
+
 	}
 	
 	// Update is called once per frame

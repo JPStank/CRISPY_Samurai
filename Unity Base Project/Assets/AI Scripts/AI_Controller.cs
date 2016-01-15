@@ -3,17 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 public class AI_Controller : MonoBehaviour
 {
+    public enum ATTACK_TYPE { LEFT, RIGHT, TOP, THRUST, WINDOW_SHORT, WINDOW_MEDIUM, WINDOW_LONG };
+
 	NavMeshAgent agent;
 	GameObject player;
 	PuppetScript puppet;
 
-	List<Action> actions;
+	//public List<Action> actions;
+	public List<ATTACK_TYPE> attacks;
+	public List<Action> actions;
 
 	bool alive = true;
-	bool inRange = false;
-	bool behaving = false;
-	Action currentAction;
+	public bool inRange = false;
+	public Action currentAction;
 	int nextAction;
+
+    public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -21,8 +26,69 @@ public class AI_Controller : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
-		currentAction = actions[0];
 		nextAction = 1;
+		actions = new List<Action>();
+		foreach (ATTACK_TYPE attack in attacks)
+		{
+			switch (attack)
+			{
+				case ATTACK_TYPE.LEFT:
+					{
+						SlashLeft move = ScriptableObject.CreateInstance<SlashLeft>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
+				case ATTACK_TYPE.RIGHT:
+					{
+						SlashRight move = ScriptableObject.CreateInstance<SlashRight>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
+				case ATTACK_TYPE.TOP:
+					{
+						SlashTop move = ScriptableObject.CreateInstance<SlashTop>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
+				case ATTACK_TYPE.THRUST:
+
+					break;
+                case ATTACK_TYPE.WINDOW_SHORT:
+                    {
+                        WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
+                        move.animation = animation;
+                        move.puppet = puppet;
+                        move.TimerMax = shortTimer;
+                        actions.Add(move);
+                    }
+                    break;
+                case ATTACK_TYPE.WINDOW_MEDIUM:
+                    {
+                        WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
+                        move.animation = animation;
+                        move.puppet = puppet;
+                        move.TimerMax = mediumTimer;
+                        actions.Add(move);
+                    }
+                    break;
+                case ATTACK_TYPE.WINDOW_LONG:
+                    {
+                        WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
+                        move.animation = animation;
+                        move.puppet = puppet;
+                        move.TimerMax = longTimer;
+                        actions.Add(move);
+                    }
+                    break;
+			}
+		}
+		currentAction = actions[0];
 	}
 	
 	// Update is called once per frame
@@ -30,6 +96,20 @@ public class AI_Controller : MonoBehaviour
 	{
 		if (alive)
 		{
+			// Checking player dir and distance
+			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			Vector3 AIForward = transform.forward;
+			float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
+
+			if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+			{
+				inRange = false;
+			}
+			else
+			{
+				inRange = true;
+			}
+
 			if (inRange || currentAction.isBehaving())
 			{
 				if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
@@ -38,7 +118,7 @@ public class AI_Controller : MonoBehaviour
 					currentAction = actions[nextAction];
 					nextAction++;
 
-					if (nextAction > actions.Count)
+					if (nextAction >= actions.Count)
 					{
 						nextAction = 0;
 					}
@@ -95,7 +175,7 @@ public class AI_Controller : MonoBehaviour
 
 				if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
 				{
-					inRange = true;
+					//inRange = true;
 					animation.Play("Idle");
 				}				
 			}
