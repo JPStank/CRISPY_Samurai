@@ -3,16 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 public class AI_Controller : MonoBehaviour
 {
+	public enum ATTACK_TYPE { LEFT, RIGHT, TOP, THRUST };
+
 	NavMeshAgent agent;
 	GameObject player;
 	PuppetScript puppet;
 
-	List<Action> actions;
+	//public List<Action> actions;
+	public List<ATTACK_TYPE> attacks;
+	public List<Action> actions;
 
 	bool alive = true;
-	bool inRange = false;
-	bool behaving = false;
-	Action currentAction;
+	public bool inRange = false;
+	public Action currentAction;
 	int nextAction;
 
 	// Use this for initialization
@@ -21,8 +24,42 @@ public class AI_Controller : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
-		currentAction = actions[0];
 		nextAction = 1;
+		actions = new List<Action>();
+		foreach (ATTACK_TYPE attack in attacks)
+		{
+			switch (attack)
+			{
+				case ATTACK_TYPE.LEFT:
+					{
+						SlashLeft move = ScriptableObject.CreateInstance<SlashLeft>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
+				case ATTACK_TYPE.RIGHT:
+					{
+						SlashRight move = ScriptableObject.CreateInstance<SlashRight>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
+				case ATTACK_TYPE.TOP:
+					{
+						SlashTop move = ScriptableObject.CreateInstance<SlashTop>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
+				case ATTACK_TYPE.THRUST:
+
+					break;
+			}
+		}
+		currentAction = actions[0];
 	}
 	
 	// Update is called once per frame
@@ -38,7 +75,7 @@ public class AI_Controller : MonoBehaviour
 					currentAction = actions[nextAction];
 					nextAction++;
 
-					if (nextAction > actions.Count)
+					if (nextAction >= actions.Count)
 					{
 						nextAction = 0;
 					}
@@ -95,7 +132,7 @@ public class AI_Controller : MonoBehaviour
 
 				if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
 				{
-					inRange = true;
+					//inRange = true;
 					animation.Play("Idle");
 				}				
 			}

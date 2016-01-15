@@ -4,8 +4,9 @@ using System.Collections;
 public class SlashTop : Action {
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start()
+	{
+
 	}
 	
 	// Update is called once per frame
