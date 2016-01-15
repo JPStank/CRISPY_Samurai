@@ -4,7 +4,7 @@ using System.Collections;
 public class AttackRange : MonoBehaviour
 {
 
-	public AI_Controller controller;
+	public GameObject Enemy;
 
 	// Use this for initialization
 	void Start ()
@@ -20,11 +20,11 @@ public class AttackRange : MonoBehaviour
 
 	void OnCollisionEnter(Collision col)
 	{
-		controller.SetRange(true);
+		Enemy.GetComponent<AI_Controller>().SetRange(true);
 	}
 
 	void OnCollisionExit(Collision col)
 	{
-		controller.SetRange(false);
+		Enemy.GetComponent<AI_Controller>().SetRange(false);
 	}
 }

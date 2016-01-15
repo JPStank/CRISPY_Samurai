@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerInput : MonoBehaviour
 {
-	public float speed = 2.0f;
+	//public float speed = 2.0f;
 	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 1.0f;
 	public PuppetScript puppet;
 	public GameObject swordSwish;

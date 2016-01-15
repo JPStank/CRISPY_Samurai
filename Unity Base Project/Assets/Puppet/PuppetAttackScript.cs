@@ -10,6 +10,7 @@ public class PuppetAttackScript : MonoBehaviour {
     //private Animator Animetor;
     private float AtkTmrMax;
 
+	public float attackSpeed = 1.0f;
 
 	// Use this for initialization
 	void Start () 
@@ -53,8 +54,9 @@ public class PuppetAttackScript : MonoBehaviour {
     public int SlashVert(PuppetScript _sender)
     {
         //Trigger animation
+		animation["Down Slash"].speed = attackSpeed;
         animation.Play("Down Slash");
-		AtkTmrCur = _sender.animTimers["SlashVert"];
+		AtkTmrCur = _sender.animTimers["SlashVert"] / animation["Down Slash"].speed;
 
         return 1;
     }
@@ -64,8 +66,10 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int SlashLTR(PuppetScript _sender)
     {
+		animation["Right Slash"].speed = attackSpeed;
+
         animation.Play("Right Slash");
-        AtkTmrCur = _sender.animTimers["SlashLTR"];
+		AtkTmrCur = _sender.animTimers["SlashLTR"] / animation["Right Slash"].speed;
         return 1;
     }
 
@@ -74,8 +78,10 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int SlashRTL(PuppetScript _sender)
     {
+		animation["Left Slash"].speed = attackSpeed;
+
         animation.Play("Left Slash");
-        AtkTmrCur = _sender.animTimers["SlashRTL"];
+		AtkTmrCur = _sender.animTimers["SlashRTL"] / animation["Left Slash"].speed;
         return 1;
     }
 

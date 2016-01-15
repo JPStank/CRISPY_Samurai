@@ -79,6 +79,9 @@ public class PuppetScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		animation["New Down Slash"].time = 0.36667f;
+		animation["New Left Slash"].time = 0.6f;
+		animation["New Right Slash"].time = 0.63333f;
 		// New things, added by Dakota 1/13 whatever PM
 		// Needed a reference to the player in the meat script to decrement balance
 		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
@@ -780,6 +783,10 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
+
+				curBalance -= 25;
+				if (curBalance < 0.0f)
+					curBalance = 0.0f;
 				// New things, added by Dakota 1/13 whatever PM
 				canHit = false;
 				//
@@ -792,6 +799,7 @@ public class PuppetScript : MonoBehaviour
 	// Sam: activate our attack hitbox
 	void Attack()
 	{
-		cube.Attack();
+        if (cube)
+		    cube.Attack();
 	}
 }
