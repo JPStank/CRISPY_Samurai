@@ -735,7 +735,7 @@ public class PuppetScript : MonoBehaviour
 
 			if (toPlay == "Idle")
 				ChangeState(State.IDLE);
-			if (toPlay == "React Front" || toPlay == "React Side")
+			if (toPlay == "React Front" || toPlay == "React Side" && gameObject.tag != "Enemy" && (lastState != State.ATK_LTR || lastState != State.ATK_RTL || lastState != State.ATK_VERT))
 			{
 
 				curBalance -= 25;
