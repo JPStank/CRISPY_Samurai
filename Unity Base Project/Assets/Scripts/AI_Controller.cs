@@ -67,6 +67,20 @@ public class AI_Controller : MonoBehaviour
 	{
 		if (alive)
 		{
+			// Checking player dir and distance
+			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			Vector3 AIForward = transform.forward;
+			float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
+
+			if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+			{
+				inRange = false;
+			}
+			else
+			{
+				inRange = true;
+			}
+
 			if (inRange || currentAction.isBehaving())
 			{
 				if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
