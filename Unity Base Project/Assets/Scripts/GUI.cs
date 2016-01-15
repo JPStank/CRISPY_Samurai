@@ -56,7 +56,7 @@ public class GUI : MonoBehaviour
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_L, InputChecker.BUTTON_STATE.DOWN))
 		{
 			//action = true;
-			player.ChangeState(PuppetScript.State.DEAD);
+			player.ChangeState(PuppetScript.State.DANCE);
 			player.animation.Play(dances[Random.Range(0, dances.Count)]);
 			//GameObject.FindGameObjectWithTag("Player").GetComponent<Animation>().Play("Twerk");
 		}

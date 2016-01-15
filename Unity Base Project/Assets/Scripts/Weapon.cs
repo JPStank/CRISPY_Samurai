@@ -35,10 +35,10 @@ public class Weapon : MonoBehaviour
 		//{
 		//	bc.enabled = owner.canHit;
 		//}
-		for (int i = 0; i < cols.Length; i++)
-		{
-			cols[i].enabled = owner.canHit;
-		}
+		//for (int i = 0; i < cols.Length; i++)
+		//{
+		//	cols[i].enabled = owner.canHit;
+		//}
 	}
 
 	void OnCollisionEnter(Collision other)
