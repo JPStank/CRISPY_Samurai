@@ -65,8 +65,13 @@ public class AI_Controller : MonoBehaviour
                         break;
                     }
                 case ATTACK_TYPE.THRUST:
-
-                    break;
+					{
+						ThrustForward move = ScriptableObject.CreateInstance<ThrustForward>();
+						move.animation = animation;
+						move.puppet = puppet;
+						actions.Add(move);
+						break;
+					}
 				case ATTACK_TYPE.GUARD_LEFT:
 					{
 						GuardLeft move = ScriptableObject.CreateInstance<GuardLeft>();

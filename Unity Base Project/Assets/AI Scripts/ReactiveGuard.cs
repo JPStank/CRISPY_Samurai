@@ -49,6 +49,7 @@ public class ReactiveGuard : Action
 				puppet.DodgeLeft();
 				break;
 			case PuppetScript.State.ATK_KICK:
+				puppet.DodgeRight();
 				break;
 			case PuppetScript.State.DANCE:
 				if (puppet.curState != PuppetScript.State.DANCE)
