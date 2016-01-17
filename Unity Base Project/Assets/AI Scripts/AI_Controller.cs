@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class AI_Controller : MonoBehaviour
 {
-    public enum ATTACK_TYPE { LEFT, RIGHT, TOP, THRUST, WINDOW_SHORT, WINDOW_MEDIUM, WINDOW_LONG };
+    public enum ATTACK_TYPE { LEFT, RIGHT, TOP, THRUST, GUARD_LEFT, GUARD_RIGHT, GUARD_TOP, REACTIVE_GUARD, WINDOW_SHORT, WINDOW_MEDIUM, WINDOW_LONG };
 
     NavMeshAgent agent;
     GameObject player;
@@ -26,7 +26,7 @@ public class AI_Controller : MonoBehaviour
     public Action currentAction;
     int nextAction;
 
-    public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f;
+    public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
 
     // Use this for initialization
     void Start()
@@ -67,6 +67,43 @@ public class AI_Controller : MonoBehaviour
                 case ATTACK_TYPE.THRUST:
 
                     break;
+				case ATTACK_TYPE.GUARD_LEFT:
+					{
+						GuardLeft move = ScriptableObject.CreateInstance<GuardLeft>();
+						move.animation = animation;
+						move.puppet = puppet;
+						move.GuardTimerMax = guardTimer;
+						actions.Add(move);
+					}
+					break;
+				case ATTACK_TYPE.GUARD_RIGHT:
+					{
+						GuardRight move = ScriptableObject.CreateInstance<GuardRight>();
+						move.animation = animation;
+						move.puppet = puppet;
+						move.GuardTimerMax = guardTimer;
+						actions.Add(move);
+					}
+					break;
+				case ATTACK_TYPE.GUARD_TOP:
+					{
+						GuardTop move = ScriptableObject.CreateInstance<GuardTop>();
+						move.animation = animation;
+						move.puppet = puppet;
+						move.GuardTimerMax = guardTimer;
+						actions.Add(move);
+					}
+					break;
+				case ATTACK_TYPE.REACTIVE_GUARD:
+					{
+						ReactiveGuard move = ScriptableObject.CreateInstance<ReactiveGuard>();
+						move.animation = animation;
+						move.puppet = puppet;
+						move.GuardTimerMax = guardTimer;
+						move.playerPuppet = player.GetComponent<PuppetScript>();
+						actions.Add(move);
+					}
+					break;
                 case ATTACK_TYPE.WINDOW_SHORT:
                     {
                         WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
