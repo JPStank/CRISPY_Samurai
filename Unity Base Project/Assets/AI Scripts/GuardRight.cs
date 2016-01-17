@@ -22,12 +22,13 @@ public class GuardRight : Action
 		if (!behaving)
 		{
 			behaving = true;
-			puppet.GuardRight();
 		}
+		puppet.GuardRight();
 
 		timer += Time.deltaTime;
 		if (timer >= GuardTimerMax)
 		{
+			timer = 0.0f;
 			animation.Play("Idle");
 			puppet.ChangeState(PuppetScript.State.IDLE);
 			behaving = false;

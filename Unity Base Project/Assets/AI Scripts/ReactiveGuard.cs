@@ -10,12 +10,10 @@ public class ReactiveGuard : Action
 	float timer = 0.0f;
 
 	// Use this for initialization
-	void Start()
+	public void Start()
 	{
-		dances = new List<string>();
-		dances[0] = "Twerk";
-		dances[1] = "Gangnam Style";
-		dances[2] = "Robot";
+		//dances = new List<string>();
+		
 	}
 
 	// Update is called once per frame
@@ -26,7 +24,7 @@ public class ReactiveGuard : Action
 
 	public override COMPLETION_STATE Execute()
 	{
-		if(!behaving)
+		if (!behaving)
 		{
 			behaving = true;
 		}
@@ -53,17 +51,22 @@ public class ReactiveGuard : Action
 			case PuppetScript.State.ATK_KICK:
 				break;
 			case PuppetScript.State.DANCE:
-				puppet.ChangeState(PuppetScript.State.DANCE);
-				animation.Play(dances[Random.Range(0, dances.Count)]);
+				if (puppet.curState != PuppetScript.State.DANCE)
+				{
+					puppet.ChangeState(PuppetScript.State.DANCE);
+					animation.Play(dances[Random.Range(0, dances.Count)]);
+				}
 				break;
 			default:
 				break;
 		}
 
-		timer += Time.deltaTime;
+		if(puppet.curState != PuppetScript.State.DANCE)
+			timer += Time.deltaTime;
 
-		if (timer >= GuardTimerMax)
+		if (timer >= GuardTimerMax && playerPuppet.curState == PuppetScript.State.IDLE)
 		{
+			timer = 0.0f;
 			animation.Play("Idle");
 			puppet.ChangeState(PuppetScript.State.IDLE);
 			behaving = false;
