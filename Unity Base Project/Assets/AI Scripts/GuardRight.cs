@@ -22,8 +22,8 @@ public class GuardRight : Action
 		if (!behaving)
 		{
 			behaving = true;
-			puppet.GuardRight();
 		}
+		puppet.GuardRight();
 
 		timer += Time.deltaTime;
 		if (timer >= GuardTimerMax)

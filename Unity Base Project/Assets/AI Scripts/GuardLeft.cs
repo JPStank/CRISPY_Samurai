@@ -19,14 +19,14 @@ public class GuardLeft : Action
 
 	public override COMPLETION_STATE Execute()
 	{
-		if(!behaving)
+		if (!behaving)
 		{
 			behaving = true;
-			puppet.GuardLeft();
 		}
+		puppet.GuardLeft();
 
 		timer += Time.deltaTime;
-		if(timer >= GuardTimerMax)
+		if (timer >= GuardTimerMax)
 		{
 			timer = 0.0f;
 			animation.Play("Idle");
