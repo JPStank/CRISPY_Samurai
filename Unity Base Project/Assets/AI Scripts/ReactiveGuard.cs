@@ -10,12 +10,10 @@ public class ReactiveGuard : Action
 	float timer = 0.0f;
 
 	// Use this for initialization
-	void Start()
+	public void Start()
 	{
-		dances = new List<string>();
-		dances[0] = "Twerk";
-		dances[1] = "Gangnam Style";
-		dances[2] = "Robot";
+		//dances = new List<string>();
+		
 	}
 
 	// Update is called once per frame

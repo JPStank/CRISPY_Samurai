@@ -10,7 +10,7 @@ public class GUI : MonoBehaviour
 	public Image guardLeft, guardRight, guardTop, balance;
 	private PuppetScript player;
 
-	private List<string> dances;
+	public List<string> dances;
 
 	bool action = true;
 	// Use this for initialization
