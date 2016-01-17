@@ -101,6 +101,10 @@ public class AI_Controller : MonoBehaviour
 						move.puppet = puppet;
 						move.GuardTimerMax = guardTimer;
 						move.playerPuppet = player.GetComponent<PuppetScript>();
+						move.dances = new List<string>();
+						move.dances.Add("Twerk");
+						move.dances.Add("Gangnam Style");
+						move.dances.Add("Robot");
 						actions.Add(move);
 					}
 					break;
@@ -204,13 +208,16 @@ public class AI_Controller : MonoBehaviour
                     if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
                     {
                         // Increment the action
-                        currentAction = actions[nextAction];
-                        nextAction++;
+						if (actions.Count > 1)
+						{
+							currentAction = actions[nextAction];
+							nextAction++;
 
-                        if (nextAction >= actions.Count)
-                        {
-                            nextAction = 0;
-                        }
+							if (nextAction >= actions.Count)
+							{
+								nextAction = 0;
+							}
+						}
                     }
                 }
 

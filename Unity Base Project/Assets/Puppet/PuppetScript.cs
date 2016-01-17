@@ -791,8 +791,14 @@ public class PuppetScript : MonoBehaviour
 			{
 
 				curBalance -= 25;
-				if (curBalance < 0.0f)
+				if (curBalance <= 0.0f)
+				{
+					gameObject.layer = 10;
+					animation.Play("Death");
+					ChangeState(State.DEAD);
 					curBalance = 0.0f;
+					return;
+				}
 
 				if (gameObject.tag == "Enemy")
 				{

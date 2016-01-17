@@ -22,12 +22,14 @@ public class GuardTop : Action
 		if (!behaving)
 		{
 			behaving = true;
-			puppet.GuardUpwards();
 		}
+			
+		puppet.GuardUpwards();
 
 		timer += Time.deltaTime;
 		if (timer >= GuardTimerMax)
 		{
+			timer = 0.0f;
 			animation.Play("Idle");
 			puppet.ChangeState(PuppetScript.State.IDLE);
 			behaving = false;
