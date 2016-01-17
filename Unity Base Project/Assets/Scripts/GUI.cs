@@ -10,7 +10,7 @@ public class GUI : MonoBehaviour
 	public Image guardLeft, guardRight, guardTop, balance;
 	private PuppetScript player;
 
-	private List<string> dances;
+	public List<string> dances;
 
 	bool action = true;
 	// Use this for initialization
@@ -20,7 +20,11 @@ public class GUI : MonoBehaviour
 
 		dances[0] = "Twerk";
 		dances[1] = "Gangnam Style";
-		dances[2] = "Robot";
+        dances[2] = "Robot";
+        dances[3] = "Thriller 1";
+        dances[4] = "Thriller 2";
+        dances[5] = "Thriller 3";
+        dances[6] = "Thriller 4";
 	}
 	
 	// Update is called once per frame
