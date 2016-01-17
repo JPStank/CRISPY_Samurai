@@ -28,6 +28,7 @@ public class GuardLeft : Action
 		timer += Time.deltaTime;
 		if(timer >= GuardTimerMax)
 		{
+			timer = 0.0f;
 			animation.Play("Idle");
 			puppet.ChangeState(PuppetScript.State.IDLE);
 			behaving = false;
