@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	public GameObject swordSwish;
+
     // New things, added by Dakota 1/13 7:22pm
     public GameObject degubber;
     public float curBalance = 100;
@@ -900,4 +902,9 @@ public class PuppetScript : MonoBehaviour
     {
         otherBox = null;
     }
+
+	public void PlaySwish()
+	{
+		Instantiate(swordSwish, transform.position, Quaternion.identity);
+	}
 }
