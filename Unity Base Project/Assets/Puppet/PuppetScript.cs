@@ -62,6 +62,8 @@ public class PuppetScript : MonoBehaviour
 
 	public bool canHit = false;
 
+    public bool godMode = false;
+
 	void ActivateHit()
 	{
 		canHit = true;
@@ -401,13 +403,23 @@ public class PuppetScript : MonoBehaviour
 	// find the most relevant enemy and assign him as our current target.
 	private void FindTarg()
 	{
-
+		badguys = GameObject.FindGameObjectsWithTag("Enemy");
+		curTarg = null;
 		if (badguys != null)
 		{
 			float dist;
 			float curDist = dist = 0x0FFFFFFF;
 			foreach (GameObject badguy in badguys)
 			{
+				if (badguy.GetComponent<PuppetScript>().curState == State.DEAD)
+				{
+					if (Targeting_CubeSpawned != null)
+					{
+						Destroy(Targeting_CubeSpawned);
+						Targeting_CubeSpawned = null;
+					}
+					continue;
+				}
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
 				if (curDist < dist)
 				{
@@ -417,24 +429,27 @@ public class PuppetScript : MonoBehaviour
 				}
 			}
 			// only have a target if within distance
-			if (dist < targMaxDist)
+			if (curTarg != null)
 			{
-				if (Targeting_CubeSpawned == null)
+				if (dist < targMaxDist)
 				{
-					Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
+					if (Targeting_CubeSpawned == null)
+					{
+						Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
+					}
+					Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
+					Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
 				}
-				Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
-				Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
-			}
-			else 
-			{
-				if (Targeting_CubeSpawned != null)
+				else
 				{
-					Destroy(Targeting_CubeSpawned);
-					Targeting_CubeSpawned = null;
+					if (Targeting_CubeSpawned != null)
+					{
+						Destroy(Targeting_CubeSpawned);
+						Targeting_CubeSpawned = null;
+					}
+					if (rockedOn)
+						ToggleLockon();
 				}
-				if (rockedOn)
-					ToggleLockon();
 			}
 		}
 		else if (Targeting_CubeSpawned != null)
@@ -552,6 +567,8 @@ public class PuppetScript : MonoBehaviour
 			return 1;
 		}
 
+		if (_nextState == State.DEAD)
+			NotifyNextOfKin();
 
 		lastState = curState;
 		curState = _nextState;
@@ -625,8 +642,16 @@ public class PuppetScript : MonoBehaviour
 			camRot.z = orgRot.z;
 			transform.rotation = camRot;
 		}
+		// cant collide with this?
 		transform.Translate(_dir.x, 0.0f, _dir.z);
-		transform.rotation = orgRot;
+
+		// will collide but presents a whole bunch of new issues
+		//Vector3 vel = Vector3.zero;
+		//vel.y = rigidbody.velocity.y;
+		//vel = _dir.x * 100.0f * camScript.followCam.transform.right;
+		//vel = _dir.z * 100.0f * camScript.followCam.transform.forward;
+		//rigidbody.velocity = vel;
+		//transform.rotation = orgRot;
 
 		// the puppet faces the direction it is moving in
 		if (!rockedOn)
@@ -789,8 +814,10 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
-
-				curBalance -= 25;
+                if (!godMode)
+                {
+				    curBalance -= 25;
+                }
 				if (curBalance <= 0.0f)
 				{
 					gameObject.layer = 10;
@@ -822,5 +849,24 @@ public class PuppetScript : MonoBehaviour
 	{
         if (cube)
 		    cube.Attack();
+	}
+
+	//Sam: the enemy's hitbox that we are owned by
+	HitBox otherBox;
+	//Sam: tell the otherbox we are no longer among the living
+	void NotifyNextOfKin()
+	{
+		if(otherBox)
+			otherBox.RemoveFromList(gameObject);
+	}
+
+	public void SetOtherBox(HitBox other)
+	{
+		otherBox = other;
+	}
+
+	public void RemoveOtherBox()
+	{
+		otherBox = null;
 	}
 }

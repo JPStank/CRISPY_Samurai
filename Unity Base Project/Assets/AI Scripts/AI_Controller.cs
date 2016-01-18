@@ -151,7 +151,7 @@ public class AI_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (alive)
+        if (puppet.curState != PuppetScript.State.DEAD)
         {
             if (patrolling)
             {

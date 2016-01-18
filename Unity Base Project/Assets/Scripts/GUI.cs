@@ -18,9 +18,13 @@ public class GUI : MonoBehaviour
 	{
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
 
-		dances[0] = "Twerk";
-		dances[1] = "Gangnam Style";
-		dances[2] = "Robot";
+		dances.Add("Twerk");
+		dances.Add("Gangnam Style");
+        dances.Add("Robot");
+        dances.Add("Thriller 1");
+        dances.Add("Thriller 2");
+        dances.Add("Thriller 3");
+        dances.Add("Thriller 4");
 	}
 	
 	// Update is called once per frame
