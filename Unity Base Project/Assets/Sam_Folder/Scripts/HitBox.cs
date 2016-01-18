@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class HitBox : MonoBehaviour
 {
-	public List<GameObject> targets;
+	//public List<GameObject> targets;
+	LinkedList<GameObject> targets;
 
 	[SerializeField]
 	PuppetScript owner;
@@ -12,6 +13,7 @@ public class HitBox : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		targets = new LinkedList<GameObject>();
 		gameObject.layer = owner.gameObject.layer;
 	}
 
@@ -23,17 +25,14 @@ public class HitBox : MonoBehaviour
 
 	public void Attack()
 	{
-		for (int i = 0; i < targets.Count; i++)
+		foreach(GameObject victim in targets)
 		{
-			if (targets[i] != null)
+			if(victim != null)
 			{
-				if (targets[i].GetComponent<PuppetScript>() != null)
+				if(victim.GetComponent<PuppetScript>() != null)
 				{
-					if (targets[i].GetComponent<PuppetScript>().curState != PuppetScript.State.DEAD)
-					{
-						targets[i].GetComponent<PuppetScript>().ResolveHit(owner.curState);
-						owner.ResolveHit(targets[i].GetComponent<PuppetScript>().curState);
-					}
+					victim.GetComponent<PuppetScript>().ResolveHit(owner.curState);
+					owner.ResolveHit(victim.GetComponent<PuppetScript>().curState);
 				}
 			}
 		}
@@ -53,7 +52,7 @@ public class HitBox : MonoBehaviour
 		{
 			if (!targets.Contains(other.gameObject))
 			{
-				targets.Add(other.gameObject);
+				targets.AddLast(other.gameObject);
 				other.gameObject.GetComponent<PuppetScript>().SetOtherBox(this);
 			}
 		}
@@ -75,7 +74,7 @@ public class HitBox : MonoBehaviour
 	//Sam: shouldn't need to ever call this function
 	public void AddToList(GameObject obj)
 	{
-		targets.Add(obj);
+		targets.AddLast(obj);
 	}
 
 	public void RemoveFromList(GameObject obj)
