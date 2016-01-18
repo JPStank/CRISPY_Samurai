@@ -32,6 +32,7 @@ public class PuppetScript : MonoBehaviour
 	public Dictionary<string, float> animTimers;
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
+	public Armor armor;
 	private GameObject Targeting_CubeSpawned = null;
 	public GameObject[] badguys;
 	public Vector3 targOffset;
@@ -821,7 +822,32 @@ public class PuppetScript : MonoBehaviour
 			{
                 if (!godMode)
                 {
-				    curBalance -= 25;
+					bool armorBlocked = false;
+					if(armor != null)
+					{
+						Armor.ARMOR_PIECE pieceAffected = Armor.ARMOR_PIECE.INVALID;
+						switch (otherState)
+						{
+							case State.ATK_VERT:
+								pieceAffected = Armor.ARMOR_PIECE.TOP;
+								break;
+							case State.ATK_LTR:
+								pieceAffected = Armor.ARMOR_PIECE.RIGHT;
+								break;
+							case State.ATK_RTL:
+								pieceAffected = Armor.ARMOR_PIECE.LEFT;
+								break;
+							case State.ATK_STAB:
+								pieceAffected = Armor.ARMOR_PIECE.CHEST;
+								break;
+						}
+						if (pieceAffected != Armor.ARMOR_PIECE.INVALID)
+							armorBlocked = armor.ProcessHit(pieceAffected);
+						else
+							Debug.Log("Invalid armor checking! Please debug and investigate!");
+					}
+					if(!armorBlocked)
+						curBalance -= 25;
                 }
 				if (curBalance <= 0.0f)
 				{
