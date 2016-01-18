@@ -73,8 +73,6 @@ public class PlayerInput : MonoBehaviour
 
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
 		{
-			MailMan.TriggerEvent("test");
-
 			//puppet slash
 			if (lHorizontal < -deadZone)
 			{
