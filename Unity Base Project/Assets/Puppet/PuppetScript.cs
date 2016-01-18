@@ -33,7 +33,7 @@ public class PuppetScript : MonoBehaviour
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
 	private GameObject Targeting_CubeSpawned = null;
-	public GameObject[] badguys;
+	public List<GameObject> badguys;
 	public Vector3 targOffset;
 	public float targMaxDist;
 	public float def_moveSpeed;
@@ -130,7 +130,14 @@ public class PuppetScript : MonoBehaviour
 			temp = GetComponent<PuppetCameraScript>();
 			camScript = (PuppetCameraScript)temp;
 		}
-		badguys = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] badguyArray = null;
+		badguyArray = GameObject.FindGameObjectsWithTag("Enemy");
+
+        badguys = new List<GameObject>();
+        foreach(GameObject b in badguyArray)
+        {
+            badguys.Add(b);
+        }
 
 		lastState = curState = State.IDLE;
 		if (targOffset == Vector3.zero)
@@ -388,7 +395,7 @@ public class PuppetScript : MonoBehaviour
 		if (transform.tag == "Player")
 		{
 			FindTarg();
-			if (rockedOn)
+			if (rockedOn && curTarg)
 			{
 				Vector3 target = curTarg.transform.position;
 				target.y = transform.position.y;
@@ -399,19 +406,35 @@ public class PuppetScript : MonoBehaviour
 		DoDegub();
 	}
 
+    IEnumerator RepopulateList()
+    {
+        yield return 0; // this forces puppet script to wait one frame, check for enemies after they had chance to spawn
+        
+        GameObject[] badguyArray = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach(GameObject b in badguyArray)
+        {
+            badguys.Add(b);
+        }
+    }
+
 	// FindTarg()
 	// find the most relevant enemy and assign him as our current target.
 	private void FindTarg()
 	{
-		badguys = GameObject.FindGameObjectsWithTag("Enemy");
+		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
+        if (badguys.Count <= 0)
+        {
+            StartCoroutine("RepopulateList");
+        }
 		curTarg = null;
-		if (badguys != null)
+		if (badguys != null && badguys.Count > 0)
 		{
 			float dist;
 			float curDist = dist = 0x0FFFFFFF;
 			foreach (GameObject badguy in badguys)
 			{
-				if (badguy.GetComponent<PuppetScript>().curState == State.DEAD)
+				if (badguy != null && badguy.GetComponent<PuppetScript>().curState == State.DEAD)
 				{
 					if (Targeting_CubeSpawned != null)
 					{
@@ -458,6 +481,11 @@ public class PuppetScript : MonoBehaviour
 			Targeting_CubeSpawned = null;
 		}
 	}
+
+    public void RemoveEnemy(GameObject e)
+    {
+        badguys.Remove(e);
+    }
 
 	// DoDegub()
 	// Does the degubs for the testing on the features
