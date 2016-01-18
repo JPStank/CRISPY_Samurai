@@ -422,69 +422,6 @@ public class PuppetScript : MonoBehaviour
 	// find the most relevant enemy and assign him as our current target.
 	private void FindTarg()
 	{
-		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
-        if (badguys.Count <= 0)
-        {
-            StartCoroutine("RepopulateList");
-        }
-		curTarg = null;
-		if (badguys != null && badguys.Count > 0)
-		{
-			float dist;
-			float curDist = dist = 0x0FFFFFFF;
-			foreach (GameObject badguy in badguys)
-			{
-				if (badguy != null && badguy.GetComponent<PuppetScript>().curState == State.DEAD)
-				{
-					if (Targeting_CubeSpawned != null)
-					{
-						Destroy(Targeting_CubeSpawned);
-						Targeting_CubeSpawned = null;
-					}
-					rockedOn = false;
-					continue;
-				}
-				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
-				if (curDist < dist)
-				{
-					//if (!rockedOn)
-					curTarg = badguy;
-					dist = curDist;
-				}
-			}
-			// only have a target if within distance
-			if (curTarg != null)
-			{
-				if (dist < targMaxDist)
-				{
-					if (Targeting_CubeSpawned == null)
-					{
-						Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
-					}
-					Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
-					Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
-				}
-				else
-				{
-					if (Targeting_CubeSpawned != null)
-					{
-						Destroy(Targeting_CubeSpawned);
-						Targeting_CubeSpawned = null;
-					}
-					if (rockedOn)
-						ToggleLockon();
-				}
-			}
-		}
-		else if (Targeting_CubeSpawned != null)
-		{
-			Destroy(Targeting_CubeSpawned);
-			Targeting_CubeSpawned = null;
-		}
-		if (badguys == null)
-		{
-			rockedOn = false;
-		}
 	}
 
     public void RemoveEnemy(GameObject e)
