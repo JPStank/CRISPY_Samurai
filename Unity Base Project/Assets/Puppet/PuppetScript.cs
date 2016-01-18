@@ -418,13 +418,14 @@ public class PuppetScript : MonoBehaviour
 						Destroy(Targeting_CubeSpawned);
 						Targeting_CubeSpawned = null;
 					}
+					rockedOn = false;
 					continue;
 				}
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
 				if (curDist < dist)
 				{
-					if (!rockedOn)
-						curTarg = badguy;
+					//if (!rockedOn)
+					curTarg = badguy;
 					dist = curDist;
 				}
 			}
@@ -456,6 +457,10 @@ public class PuppetScript : MonoBehaviour
 		{
 			Destroy(Targeting_CubeSpawned);
 			Targeting_CubeSpawned = null;
+		}
+		if (badguys == null)
+		{
+			rockedOn = false;
 		}
 	}
 
