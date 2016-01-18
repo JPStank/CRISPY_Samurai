@@ -16,10 +16,10 @@ public class HitBox : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	//void Update()
-	//{
-	//
-	//}
+	void Update()
+	{
+
+	}
 
 	public void Attack()
 	{
@@ -27,9 +27,18 @@ public class HitBox : MonoBehaviour
 		{
 			if (victim.GetComponent<PuppetScript>() != null)
 			{
-				victim.GetComponent<PuppetScript>().ResolveHit(owner.curState);
-				owner.ResolveHit(victim.GetComponent<PuppetScript>().curState);
+				if (victim.GetComponent<PuppetScript>().curState != PuppetScript.State.DEAD)
+				{
+					victim.GetComponent<PuppetScript>().ResolveHit(owner.curState);
+					owner.ResolveHit(victim.GetComponent<PuppetScript>().curState);
+				}
 			}
+		}
+
+		for(int i = 0; i < targets.Count; i++)
+		{
+			if (targets[i].GetComponent<PuppetScript>().curState == PuppetScript.State.DEAD)
+				targets.Remove(targets[i]);
 		}
 	}
 
