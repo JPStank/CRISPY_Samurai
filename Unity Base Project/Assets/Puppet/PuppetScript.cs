@@ -62,6 +62,8 @@ public class PuppetScript : MonoBehaviour
 
 	public bool canHit = false;
 
+    public bool godMode = false;
+
 	void ActivateHit()
 	{
 		canHit = true;
@@ -789,10 +791,18 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
-
-				curBalance -= 25;
-				if (curBalance < 0.0f)
+                if (!godMode)
+                {
+				    curBalance -= 25;
+                }
+				if (curBalance <= 0.0f)
+				{
+					gameObject.layer = 10;
+					animation.Play("Death");
+					ChangeState(State.DEAD);
 					curBalance = 0.0f;
+					return;
+				}
 
 				if (gameObject.tag == "Enemy")
 				{

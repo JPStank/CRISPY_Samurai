@@ -70,6 +70,7 @@ public class DemoAttack : MonoBehaviour
         {
             animation.Play("Right Slash");
         }
+        
 
         //// TODO: Substitue these arbritary inputs to the actual actions
         //if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN) ||
