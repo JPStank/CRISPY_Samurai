@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	public GameObject swordSwish;
+
     // New things, added by Dakota 1/13 7:22pm
     public GameObject degubber;
     public float curBalance = 100;
@@ -18,37 +20,38 @@ public class PuppetScript : MonoBehaviour
         DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK, DANCE, NUMSTATES
     }
 
-    public enum Dir
-    {
-        FORWARD = 0, RIGHT, BACKWARD, LEFT
-    }
-    public State lastState;
-    public State curState;
-    //public State nextState;
-    public PuppetAttackScript attackScript;
-    public PuppetGuardScript guardScript;
-    public PuppetDodgeScript dodgeScript;
-    public PuppetCameraScript camScript;
-    public Dictionary<string, float> animTimers;
-    public GameObject curTarg;
-    public GameObject Targeting_Cube;
-    private GameObject Targeting_CubeSpawned = null;
-    public GameObject[] badguys;
-    public Vector3 targOffset;
-    public float targMaxDist;
-    public float def_moveSpeed;
-    public float moveSpeed;
-    public float lockMoveSpeedMod;
-    public float def_camSpeed;
-    public float camSpeed;
-    public float AtkTmrMax;
-    public float DgeTmrMax;
-    public float GrdTmrMax;
-    public bool debugMove = false;
-    public bool debugCamera = false;
-    public bool debugDodge = false;
-    public bool debugGuard = false;
-    public bool rockedOn = false;
+	public enum Dir
+	{
+		FORWARD = 0, RIGHT, BACKWARD, LEFT
+	}
+	public State lastState;
+	public State curState;
+	//public State nextState;
+	public PuppetAttackScript attackScript;
+	public PuppetGuardScript guardScript;
+	public PuppetDodgeScript dodgeScript;
+	public PuppetCameraScript camScript;
+	public Dictionary<string, float> animTimers;
+	public GameObject curTarg;
+	public GameObject Targeting_Cube;
+	public Armor armor;
+	private GameObject Targeting_CubeSpawned = null;
+	public GameObject[] badguys;
+	public Vector3 targOffset;
+	public float targMaxDist;
+	public float def_moveSpeed;
+	public float moveSpeed;
+	public float lockMoveSpeedMod;
+	public float def_camSpeed;
+	public float camSpeed;
+	public float AtkTmrMax;
+	public float DgeTmrMax;
+	public float GrdTmrMax;
+	public bool debugMove = false;
+	public bool debugCamera = false;
+	public bool debugDodge = false;
+	public bool debugGuard = false;
+	public bool rockedOn = false;
 
     private string[,] animTable;
     private bool[,] stateTable;
@@ -821,7 +824,32 @@ public class PuppetScript : MonoBehaviour
             {
                 if (!godMode)
                 {
-                    curBalance -= 25;
+					bool armorBlocked = false;
+					if(armor != null)
+					{
+						Armor.ARMOR_PIECE pieceAffected = Armor.ARMOR_PIECE.INVALID;
+						switch (otherState)
+						{
+							case State.ATK_VERT:
+								pieceAffected = Armor.ARMOR_PIECE.TOP;
+								break;
+							case State.ATK_LTR:
+								pieceAffected = Armor.ARMOR_PIECE.RIGHT;
+								break;
+							case State.ATK_RTL:
+								pieceAffected = Armor.ARMOR_PIECE.LEFT;
+								break;
+							case State.ATK_STAB:
+								pieceAffected = Armor.ARMOR_PIECE.CHEST;
+								break;
+						}
+						if (pieceAffected != Armor.ARMOR_PIECE.INVALID)
+							armorBlocked = armor.ProcessHit(pieceAffected);
+						else
+							Debug.Log("Invalid armor checking! Please debug and investigate!");
+					}
+					if(!armorBlocked)
+						curBalance -= 25;
                 }
                 if (curBalance <= 0.0f)
                 {
@@ -874,4 +902,9 @@ public class PuppetScript : MonoBehaviour
     {
         otherBox = null;
     }
+
+	public void PlaySwish()
+	{
+		Instantiate(swordSwish, transform.position, Quaternion.identity);
+	}
 }
