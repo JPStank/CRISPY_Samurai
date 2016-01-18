@@ -554,6 +554,8 @@ public class PuppetScript : MonoBehaviour
 			return 1;
 		}
 
+		if (_nextState == State.DEAD)
+			NotifyNextOfKin();
 
 		lastState = curState;
 		curState = _nextState;
@@ -826,5 +828,24 @@ public class PuppetScript : MonoBehaviour
 	{
         if (cube)
 		    cube.Attack();
+	}
+
+	//Sam: the enemy's hitbox that we are owned by
+	HitBox otherBox;
+	//Sam: tell the otherbox we are no longer among the living
+	void NotifyNextOfKin()
+	{
+		if(otherBox)
+			otherBox.RemoveFromList(gameObject);
+	}
+
+	public void SetOtherBox(HitBox other)
+	{
+		otherBox = other;
+	}
+
+	public void RemoveOtherBox()
+	{
+		otherBox = null;
 	}
 }

@@ -16,29 +16,26 @@ public class HitBox : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
-	{
-
-	}
+	//void Update()
+	//{
+	//
+	//}
 
 	public void Attack()
 	{
-		foreach (GameObject victim in targets)
+		for (int i = 0; i < targets.Count; i++)
 		{
-			if (victim.GetComponent<PuppetScript>() != null)
+			if (targets[i] != null)
 			{
-				if (victim.GetComponent<PuppetScript>().curState != PuppetScript.State.DEAD)
+				if (targets[i].GetComponent<PuppetScript>() != null)
 				{
-					victim.GetComponent<PuppetScript>().ResolveHit(owner.curState);
-					owner.ResolveHit(victim.GetComponent<PuppetScript>().curState);
+					if (targets[i].GetComponent<PuppetScript>().curState != PuppetScript.State.DEAD)
+					{
+						targets[i].GetComponent<PuppetScript>().ResolveHit(owner.curState);
+						owner.ResolveHit(targets[i].GetComponent<PuppetScript>().curState);
+					}
 				}
 			}
-		}
-
-		for(int i = 0; i < targets.Count; i++)
-		{
-			if (targets[i].GetComponent<PuppetScript>().curState == PuppetScript.State.DEAD)
-				targets.Remove(targets[i]);
 		}
 	}
 
@@ -55,7 +52,10 @@ public class HitBox : MonoBehaviour
 			|| other.gameObject.tag == "Player")
 		{
 			if (!targets.Contains(other.gameObject))
+			{
 				targets.Add(other.gameObject);
+				other.gameObject.GetComponent<PuppetScript>().SetOtherBox(this);
+			}
 		}
 	}
 
@@ -65,7 +65,21 @@ public class HitBox : MonoBehaviour
 			|| other.gameObject.tag == "Player")
 		{
 			if (targets.Contains(other.gameObject))
+			{
 				targets.Remove(other.gameObject);
+				other.gameObject.GetComponent<PuppetScript>().RemoveOtherBox();
+			}
 		}
+	}
+
+	//Sam: shouldn't need to ever call this function
+	public void AddToList(GameObject obj)
+	{
+		targets.Add(obj);
+	}
+
+	public void RemoveFromList(GameObject obj)
+	{
+		targets.Remove(obj);
 	}
 }
