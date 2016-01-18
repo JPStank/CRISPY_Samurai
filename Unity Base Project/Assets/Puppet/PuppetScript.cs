@@ -441,13 +441,14 @@ public class PuppetScript : MonoBehaviour
 						Destroy(Targeting_CubeSpawned);
 						Targeting_CubeSpawned = null;
 					}
+					rockedOn = false;
 					continue;
 				}
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
 				if (curDist < dist)
 				{
-					if (!rockedOn)
-						curTarg = badguy;
+					//if (!rockedOn)
+					curTarg = badguy;
 					dist = curDist;
 				}
 			}
@@ -479,6 +480,10 @@ public class PuppetScript : MonoBehaviour
 		{
 			Destroy(Targeting_CubeSpawned);
 			Targeting_CubeSpawned = null;
+		}
+		if (badguys == null)
+		{
+			rockedOn = false;
 		}
 	}
 
@@ -595,6 +600,8 @@ public class PuppetScript : MonoBehaviour
 			return 1;
 		}
 
+		if (_nextState == State.DEAD)
+			NotifyNextOfKin();
 
 		lastState = curState;
 		curState = _nextState;
@@ -875,5 +882,24 @@ public class PuppetScript : MonoBehaviour
 	{
         if (cube)
 		    cube.Attack();
+	}
+
+	//Sam: the enemy's hitbox that we are owned by
+	HitBox otherBox;
+	//Sam: tell the otherbox we are no longer among the living
+	void NotifyNextOfKin()
+	{
+		if(otherBox)
+			otherBox.RemoveFromList(gameObject);
+	}
+
+	public void SetOtherBox(HitBox other)
+	{
+		otherBox = other;
+	}
+
+	public void RemoveOtherBox()
+	{
+		otherBox = null;
 	}
 }

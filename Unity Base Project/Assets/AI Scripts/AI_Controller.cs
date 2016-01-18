@@ -232,6 +232,10 @@ public class AI_Controller : MonoBehaviour
                 }
             }
         }
+		else
+		{
+
+		}
     }
 
     void SeekPlayer()
