@@ -34,7 +34,7 @@ public class EnemySpawner : MonoBehaviour
         if (p && p.curBalance <= 0.0f)
         {
             //p.ChangeState(PuppetScript.State.DEAD);
-            Destroy(currEnemy, currEnemy.GetComponent<Animation>()["Dead"].length + 0.5f);
+            Destroy(currEnemy, currEnemy.GetComponent<Animation>()["Death"].length + 0.5f);
             currEnemy = null;
 
             index++;
