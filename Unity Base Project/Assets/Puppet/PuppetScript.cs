@@ -648,8 +648,9 @@ public class PuppetScript : MonoBehaviour
 			transform.rotation = camRot;
 		}
 		// cant collide with this?
-		transform.Translate(_dir.x, 0.0f, _dir.z);
-
+		//transform.Translate(_dir.x, 0.0f, _dir.z);
+		//GetComponent<CharacterController>().Move(_dir);
+		GetComponent<Rigidbody>().velocity = _dir;
 		// will collide but presents a whole bunch of new issues
 		//Vector3 vel = Vector3.zero;
 		//vel.y = rigidbody.velocity.y;

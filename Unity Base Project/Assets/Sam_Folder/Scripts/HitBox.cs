@@ -97,12 +97,12 @@ public class HitBox : MonoBehaviour
 	//Sam: shouldn't need to ever call this function
 	public void AddToList(GameObject obj)
 	{
-		addList.Add(obj);
+		//addList.Add(obj);
 	}
 
 	public void RemoveFromList(GameObject obj)
 	{
-		if(addList.Contains(obj))
-			addList.Remove(obj);
+		//if(addList.Contains(obj))
+		//	addList.Remove(obj);
 	}
 }
