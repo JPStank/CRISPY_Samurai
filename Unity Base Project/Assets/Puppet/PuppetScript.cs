@@ -31,13 +31,16 @@ public class PuppetScript : MonoBehaviour
 	public PuppetGuardScript guardScript;
 	public PuppetDodgeScript dodgeScript;
 	public PuppetCameraScript camScript;
+	public CharacterController controller;
 	public Dictionary<string, float> animTimers;
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
 	public Armor armor;
 	private GameObject Targeting_CubeSpawned = null;
-	public GameObject[] badguys;
+	//public GameObject[] badguys;
+	public List<GameObject> badguys;
 	public Vector3 targOffset;
+	public Vector3 nextDir;
 	public float targMaxDist;
 	public float def_moveSpeed;
 	public float moveSpeed;
@@ -53,15 +56,17 @@ public class PuppetScript : MonoBehaviour
 	public bool debugGuard = false;
 	public bool rockedOn = false;
 
-    private string[,] animTable;
-    private bool[,] stateTable;
-    private Vector3 moveTest;
-    private Vector3 camTest;
-    private float debugAngle;
-    private int debugDodgeType = 0;
-    private float debugDodgeTmr = 0.0f;
-    private int debugGrdType = 0;
-    private float debugGrdTmr = 0.0f;
+	private string[,] animTable;
+	private bool[,] stateTable;
+	private Quaternion orgRot;
+	private Vector3 moveTest;
+	private Vector3 camTest;
+	private Vector3 oldPos;
+	private float debugAngle;
+	private int debugDodgeType = 0;
+	private float debugDodgeTmr = 0.0f;
+	private int debugGrdType = 0;
+	private float debugGrdTmr = 0.0f;
 
     public bool canHit = false;
 
@@ -128,12 +133,17 @@ public class PuppetScript : MonoBehaviour
             dodgeScript = (PuppetDodgeScript)temp;
         }
 
-        if (camScript == null)
-        {
-            temp = GetComponent<PuppetCameraScript>();
-            camScript = (PuppetCameraScript)temp;
-        }
-        badguys = GameObject.FindGameObjectsWithTag("Enemy");
+		if (camScript == null)
+		{
+			temp = GetComponent<PuppetCameraScript>();
+			camScript = (PuppetCameraScript)temp;
+		}
+		if (controller == null)
+		{
+			temp = GetComponent<CharacterController>();
+			controller = (CharacterController)temp;
+		}
+		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
 
         lastState = curState = State.IDLE;
         if (targOffset == Vector3.zero)
@@ -387,85 +397,131 @@ public class PuppetScript : MonoBehaviour
             ChangeState(State.IDLE);
         }
 
-        // only search for targets if we are the player.
-        if (transform.tag == "Player")
-        {
-            FindTarg();
-            if (rockedOn)
-            {
-                Vector3 target = curTarg.transform.position;
-                target.y = transform.position.y;
-                transform.LookAt(target);
-            }
-        }
+		// only search for targets if we are the player.
+		if (tag == "Player")
+		{
+			FindTarg();
+			if (rockedOn && curTarg != null)
+			{
+				Vector3 target = curTarg.transform.position;
+				target.y = transform.position.y;
+				transform.LookAt(target);
+			}
+		}
 
-        DoDegub();
-    }
+		//if (tag == "Player")
+		//{
+		//	//oldPos = transform.position;
+		//	transform.Translate(nextDir * moveSpeed);
+		//	//if (transform.position != oldPos)
+		//	//{
+		//	//	int thing = 0;
+		//	//}
+		//	transform.rotation = orgRot;
+		//	// the puppet faces the direction it is moving in
+		//	if (!rockedOn && nextDir != Vector3.zero)
+		//	{
+		//		//Vector3 dir = transform.position - oldPos;
+		//		//dir.y = 0.0f;
+		//		//Vector3 towards = (transform.position - dir) + transform.position;
+		//		//towards.y = 0.0f;
+		//		Vector3 towards = transform.position + (nextDir * moveSpeed);
+		//		towards.y = transform.position.y;
+		//		transform.LookAt(towards);
+		//	}
+		//	nextDir = Vector3.zero;
+		//}
 
-    // FindTarg()
-    // find the most relevant enemy and assign him as our current target.
-    private void FindTarg()
-    {
-        badguys = GameObject.FindGameObjectsWithTag("Enemy");
-        curTarg = null;
-        if (badguys != null)
-        {
-            float dist;
-            float curDist = dist = 0x0FFFFFFF;
-            foreach (GameObject badguy in badguys)
-            {
-                if (badguy.GetComponent<PuppetScript>().curState == State.DEAD)
-                {
-                    if (Targeting_CubeSpawned != null)
-                    {
-                        Destroy(Targeting_CubeSpawned);
-                        Targeting_CubeSpawned = null;
-                    }
-                    rockedOn = false;
-                    continue;
-                }
-                curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
-                if (curDist < dist)
-                {
-                    //if (!rockedOn)
-                    curTarg = badguy;
-                    dist = curDist;
-                }
-            }
-            // only have a target if within distance
-            if (curTarg != null)
-            {
-                if (dist < targMaxDist)
-                {
-                    if (Targeting_CubeSpawned == null)
-                    {
-                        Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
-                    }
-                    Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
-                    Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
-                }
-                else
-                {
-                    if (Targeting_CubeSpawned != null)
-                    {
-                        Destroy(Targeting_CubeSpawned);
-                        Targeting_CubeSpawned = null;
-                    }
-                    if (rockedOn)
-                        ToggleLockon();
-                }
-            }
-        }
-        else if (Targeting_CubeSpawned != null)
-        {
-            Destroy(Targeting_CubeSpawned);
-            Targeting_CubeSpawned = null;
-        }
-        if (badguys == null)
-        {
-            rockedOn = false;
-        }
-    }
+		//DoDegub();
+	}
+	//public void LateUpdate()
+	//{
+	//	transform.Translate(nextDir);
+	//	nextDir = Vector3.zero;
+	//	transform.rotation = orgRot;
+	//	// the puppet faces the direction it is moving in
+	//	if (!rockedOn)
+	//	{
+	//		Vector3 dir = transform.position - oldPos;
+	//		dir.y = 0.0f;
+	//		Vector3 towards = transform.position + dir;
+	//		transform.LookAt(towards);
+	//		oldPos = transform.position;
+	//	}
+	//}
+
+	// FindTarg()
+	// find the most relevant enemy and assign him as our current target.
+	private void FindTarg()
+	{
+		badguys.Clear();
+		GameObject[] tempbadguys = GameObject.FindGameObjectsWithTag("Enemy");
+		foreach (GameObject tempguy in tempbadguys)
+		{
+			if (tempguy.GetComponent<PuppetScript>().curState != State.DEAD)
+				badguys.Add(tempguy);
+		}
+		curTarg = null;
+		if (badguys.Count > 0)
+		{
+			float dist;
+			float curDist = dist = 0x0FFFFFFF;
+			foreach (GameObject badguy in badguys)
+			{
+				if (badguy.GetComponent<PuppetScript>().curState == State.DEAD)
+				{
+					if (Targeting_CubeSpawned != null)
+					{
+						Destroy(Targeting_CubeSpawned);
+						Targeting_CubeSpawned = null;
+					}
+					if (rockedOn)
+						ToggleLockon();
+					continue;
+				}
+				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
+				if (curDist < dist)
+				{
+					//if (!rockedOn)
+					curTarg = badguy;
+					dist = curDist;
+				}
+			}
+			// only have a target if within distance
+			if (curTarg != null)
+			{
+				if (dist < targMaxDist)
+				{
+					if (Targeting_CubeSpawned == null)
+					{
+						Targeting_CubeSpawned = (GameObject)Instantiate(Targeting_Cube, curTarg.transform.position, Quaternion.identity);
+					}
+					Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
+					Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
+				}
+				else
+				{
+					if (Targeting_CubeSpawned != null)
+					{
+						Destroy(Targeting_CubeSpawned);
+						Targeting_CubeSpawned = null;
+					}
+					if (rockedOn)
+						ToggleLockon();
+				}
+			}
+		}
+		else
+		{
+			if (Targeting_CubeSpawned != null)
+			{
+				Destroy(Targeting_CubeSpawned);
+				Targeting_CubeSpawned = null;
+			}
+			if (rockedOn)
+				ToggleLockon();
+		}
+	}
 
     // DoDegub()
     // Does the degubs for the testing on the features
@@ -593,16 +649,25 @@ public class PuppetScript : MonoBehaviour
         return 1;
     }
 
-    // Move Function
-    // Moves in direction of _dir.x and _dir.z
-    public int Move(Vector3 _dir)
-    {
-        if (_dir == Vector3.zero && curState == State.DANCE)
-            return -1;
-        if (_dir == Vector3.zero && (curState == State.MOVING || curState == State.IDLE))
-            return ChangeState(State.IDLE);
-        if (ChangeState(State.MOVING) == -1)
-            return -1;
+	//void OnTriggerStay(Collider col)
+	//{
+	//	Vector3 dir = transform.position - col.transform.position;
+	//	dir.Normalize();
+	//	//transform.position += dir;
+	//	nextDir += dir;
+	//	nextDir.Normalize();
+	//}
+
+	// Move Function
+	// Moves in direction of _dir.x and _dir.z
+	public int Move(Vector3 _dir)
+	{
+		if (_dir == Vector3.zero && curState == State.DANCE)
+			return -1;
+		if (_dir == Vector3.zero && (curState == State.MOVING || curState == State.IDLE))
+			return ChangeState(State.IDLE);
+		if (ChangeState(State.MOVING) == -1)
+			return -1;
 
         // error check the input
         if (_dir.x > 1.0f)
@@ -615,59 +680,70 @@ public class PuppetScript : MonoBehaviour
         else if (_dir.z < -1.0f)
             _dir.z = -1.0f;
 
-        // scale the input to time and our speed
-        _dir.x *= Time.deltaTime;
-        _dir.z *= Time.deltaTime;
-        _dir.x *= moveSpeed;
-        _dir.z *= moveSpeed;
+		// scale the input to time and our speed
+		_dir.x *= Time.deltaTime;
+		_dir.z *= Time.deltaTime;
+		//_dir.x *= moveSpeed;
+		//_dir.z *= moveSpeed;
 
 
-        if (_dir.magnitude > 0.01f && !rockedOn)
-        {
-            animation.Play("Walk Forward");
-        }
-        else if (_dir.magnitude > 0.01f && rockedOn)
-        {
-            if (Mathf.Abs(_dir.x) > Mathf.Abs(_dir.z))
-            {
-                if (_dir.x < 0.0f)
-                    animation.Play("Walk Left");
-                else if (_dir.x > 0.0f)
-                    animation.Play("Walk Right");
-            }
-            else
-                animation.Play("Walk Forward");
-        }
-        else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
-            animation.Play("Idle");
-        // change rotation to match camera Y, translate, then return to actual rotation
-        Vector3 oldPos = transform.position;
-        Quaternion orgRot = transform.rotation;
-        if (tag == "Player")
-        {
-            Quaternion camRot = camScript.followCam.transform.rotation;
-            camRot.x = orgRot.x;
-            camRot.z = orgRot.z;
-            transform.rotation = camRot;
-        }
-        // cant collide with this?
-        transform.Translate(_dir.x, 0.0f, _dir.z);
+		if (_dir.magnitude > 0.01f && !rockedOn)
+		{
+			animation.Play("Walk Forward");
+		}
+		else if (_dir.magnitude > 0.01f && rockedOn)
+		{
+			if (Mathf.Abs(_dir.x) > Mathf.Abs(_dir.z))
+			{
+				if (_dir.x < 0.0f)
+					animation.Play("Walk Left");
+				else if (_dir.x > 0.0f)
+					animation.Play("Walk Right");
+			}
+			else
+				animation.Play("Walk Forward");
+		}
+		else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
+			animation.Play("Idle");
+		// change rotation to match camera Y, translate, then return to actual rotation
+		//Vector3 oldPos = transform.position;
+		orgRot = transform.rotation;
+		if (tag == "Player")
+		{
+			Quaternion camRot = camScript.followCam.transform.rotation;
+			camRot.x = orgRot.x;
+			camRot.z = orgRot.z;
+			transform.rotation = camRot;
+		}
+		// cant collide with this
+		if (oldPos != transform.position)
+			oldPos = transform.position;
+		transform.Translate(new Vector3(_dir.x, 0.0f, _dir.z) * moveSpeed);
+		nextDir.x = _dir.x;
+		nextDir.y = 0.0f;
+		nextDir.z = _dir.z;
+		//controller.Move(nextDir);
 
-        // will collide but presents a whole bunch of new issues
-        //Vector3 vel = Vector3.zero;
-        //vel.y = rigidbody.velocity.y;
-        //vel = _dir.x * 100.0f * camScript.followCam.transform.right;
-        //vel = _dir.z * 100.0f * camScript.followCam.transform.forward;
-        //rigidbody.velocity = vel;
-        //transform.rotation = orgRot;
+		// will collide but presents a whole bunch of new issues
+		//Vector3 vel = _dir;
+		//vel += _dir.x * camScript.followCam.transform.right;
+		//vel += _dir.z * camScript.followCam.transform.forward;
+		//vel.y = rigidbody.velocity.y;
+		//vel.Normalize();
+		//vel *= moveSpeed;
+		//rigidbody.velocity = vel;
 
-        // the puppet faces the direction it is moving in
-        if (!rockedOn)
-        {
-            Vector3 dir = transform.position - oldPos;
-            Vector3 towards = transform.position + dir;
-            transform.LookAt(towards);
-        }
+		transform.rotation = orgRot;
+		// the puppet faces the direction it is moving in
+		if (!rockedOn)
+		{
+			Vector3 dir = transform.position - oldPos;
+			dir.y = 0.0f;
+			//Vector3 towards = transform.position + new Vector3(_dir.x, 0.0f, _dir.z);
+			Vector3 towards = transform.position + dir;
+			towards.y = transform.position.y;
+			transform.LookAt(towards);
+		}
 
         return 1;
     }
@@ -677,15 +753,16 @@ public class PuppetScript : MonoBehaviour
         return camScript.MoveCamera(_dir);
     }
 
-    public int ToggleLockon()
-    {
-        if (curTarg != null)
-        {
-            float dist = Vector3.SqrMagnitude(curTarg.transform.position - transform.position);
-            if (dist > targMaxDist && !rockedOn)
-                return -1;
-        }
-        else return -1;
+	public int ToggleLockon()
+	{
+		if (curTarg != null)
+		{
+			float dist = Vector3.SqrMagnitude(curTarg.transform.position - transform.position);
+			if (dist > targMaxDist && !rockedOn)
+				return -1;
+		}
+		else if (rockedOn == false)
+			return -1;
 
         if (Targeting_CubeSpawned != null && !rockedOn)
         {

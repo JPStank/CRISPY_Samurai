@@ -41,7 +41,7 @@ public class PuppetDodgeScript : MonoBehaviour {
                         transform.rotation = orgRot;
                         transform.Translate(0.0f, 0.0f, Time.deltaTime * rotationDist);
                         transform.rotation = curRot;
-                        transform.Rotate(Time.deltaTime * rotationSpeed, 0.0f, 0.0f);
+                       //transform.Rotate(Time.deltaTime * rotationSpeed, 0.0f, 0.0f);
                         break;
                     }
                 case PuppetScript.State.DGE_LEFT:
@@ -49,7 +49,7 @@ public class PuppetDodgeScript : MonoBehaviour {
                         transform.rotation = orgRot;
                         transform.Translate(-Time.deltaTime * rotationDist, 0.0f, 0.0f);
                         transform.rotation = curRot;
-                        transform.Rotate(0.0f, 0.0f, Time.deltaTime * rotationSpeed);
+                        //transform.Rotate(0.0f, 0.0f, Time.deltaTime * rotationSpeed);
                         break;
                     }
                 case PuppetScript.State.DGE_RIGHT:
@@ -57,7 +57,7 @@ public class PuppetDodgeScript : MonoBehaviour {
                         transform.rotation = orgRot;
                         transform.Translate(Time.deltaTime * rotationDist, 0.0f, 0.0f);
                         transform.rotation = curRot;
-                        transform.Rotate(0.0f, 0.0f, -Time.deltaTime * rotationSpeed);
+                        //transform.Rotate(0.0f, 0.0f, -Time.deltaTime * rotationSpeed);
                         break;
                     }
                 case PuppetScript.State.DGE_BACK:
@@ -65,7 +65,7 @@ public class PuppetDodgeScript : MonoBehaviour {
                         transform.rotation = orgRot;
                         transform.Translate(0.0f, 0.0f, -Time.deltaTime * rotationDist);
                         transform.rotation = curRot;
-                        transform.Rotate(-Time.deltaTime * rotationSpeed, 0.0f, 0.0f);
+                        //transform.Rotate(-Time.deltaTime * rotationSpeed, 0.0f, 0.0f);
                         break;
                     }
             }
@@ -94,6 +94,7 @@ public class PuppetDodgeScript : MonoBehaviour {
     // returns 1 on success
     public int DodgeForward(PuppetScript _sender)
     {
+		animation.Play("Dodge Forward");
         DgeTmrCur = DgeTmrMax;
         orgRot = transform.rotation;
         return 1;
@@ -103,7 +104,8 @@ public class PuppetDodgeScript : MonoBehaviour {
     // returns -1 on failure
     // returns 1 on success
     public int DodgeLeft(PuppetScript _sender)
-    {
+	{
+		animation.Play("Dodge Left");
         DgeTmrCur = DgeTmrMax;
         orgRot = transform.rotation;
         return 1;
@@ -113,7 +115,8 @@ public class PuppetDodgeScript : MonoBehaviour {
     // returns -1 on failure
     // returns 1 on success
     public int DodgeRight(PuppetScript _sender)
-    {
+	{
+		animation.Play("Dodge Right");
         DgeTmrCur = DgeTmrMax;
         orgRot = transform.rotation;
         return 1;
@@ -123,7 +126,8 @@ public class PuppetDodgeScript : MonoBehaviour {
     // returns -1 on failure
     // returns 1 on success
     public int DodgeBackwards(PuppetScript _sender)
-    {
+	{
+		animation.Play("Dodge Backward");
         DgeTmrCur = DgeTmrMax;
         orgRot = transform.rotation;
         return 1;
