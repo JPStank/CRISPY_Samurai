@@ -9,18 +9,20 @@ public class PuppetCameraScript : MonoBehaviour
 
 	public GameObject followCam;
 	public GameObject camTarg;
-	public bool camLockedOn = false;
+	//public bool camLockedOn = false;
 	public Vector3 camOffsetPos;
 	public Vector3 def_OffsetPos;
 	public Vector3 targOffsetPos;
 	public Vector3 def_rockedOffsetPos;
 	public Vector3 rockedOffsetPos;
+	public float camOffsetRatio;
+	public float last_camOffsetRatio;
 	public float rockedMinMax;
 
 	private PuppetScript Owner;
 	private Quaternion camRot;
 	private float def_camSpeed;
-	private float camSpeed;
+	public float camSpeed;
 	private float last_camSpeed;
 	private float peekTmr = 0.0f;
 
@@ -62,6 +64,9 @@ public class PuppetCameraScript : MonoBehaviour
 			rockedOffsetPos.z = 0.0f;
 		}
 		def_rockedOffsetPos = rockedOffsetPos;
+
+		camOffsetRatio = 1.0f;
+		last_camOffsetRatio = camOffsetRatio;
 		if (rockedMinMax == 0.0f)
 		{
 			rockedMinMax = 2.0f;
@@ -71,30 +76,47 @@ public class PuppetCameraScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
-	}
-
-	// Update Camera Function
-	// updates camera position and rotation
-	public void UpdateCam()
-	{
-		//Vector3 pos = transform.position;
-		//pos += camOffsetPos.y * transform.up;
-		//pos += camOffsetPos.z * transform.forward;
-		//followCam.transform.position = Vector3.Lerp(followCam.transform.position, pos, Time.deltaTime * camSpeed);
-
-		//followCam.transform.LookAt(transform);
+		Vector3 relativePos = camTarg.transform.position - followCam.transform.position;
+		RaycastHit hit;
+		if (Physics.Raycast(followCam.transform.position, relativePos.normalized, out hit)
+			&& hit.collider.gameObject.transform.tag != "Player")
+		{
+			if (hit.collider.gameObject.tag != "Terrain")
+				Debug.DrawLine(followCam.transform.position, hit.point);
+			float totalDist = Vector3.Distance(followCam.transform.position, camTarg.transform.position);
+			float correctDist = Vector3.Distance(camTarg.transform.position, hit.point);
+			if (totalDist != 0.0f)
+				camOffsetRatio = correctDist / totalDist;
+			//else
+			//	camOffsetRatio = 1.0f;
+		}
+		else if (camOffsetRatio >= last_camOffsetRatio)
+		{
+			camOffsetRatio += Time.deltaTime;
+			if (camOffsetRatio > 1.0f)
+				camOffsetRatio = 1.0f;
+		}
+		last_camOffsetRatio = camOffsetRatio;
 	}
 
 	public void LateUpdate()
 	{
 		if (Owner.tag == "Player")
 		{
+			
+			if (camOffsetRatio > 1.0f)
+				camOffsetRatio = 1.0f;
+
 			// Lerp camTarg to where it should be in reference to the puppet
 			Vector3 pos = transform.position;
 			pos += targOffsetPos.y * camTarg.transform.up;
+			//camTarg.transform.position = transform.position;
 			camTarg.transform.position = Vector3.Lerp(camTarg.transform.position, pos, Time.deltaTime * def_camSpeed);
 
+			if (Owner.curTarg == null)
+			{
+				Owner.rockedOn = false;
+			}
 			// additional funcitonality for rocking on (and out)
 			if (Owner.rockedOn)
 			{
@@ -111,8 +133,8 @@ public class PuppetCameraScript : MonoBehaviour
 			}
 
 			// puts the camera itself on a pole in the offset's direction from the target
-			pos += camOffsetPos.y * camTarg.transform.up;
-			pos += camOffsetPos.z * camTarg.transform.forward;
+			pos += (camOffsetPos.y * camOffsetRatio) * camTarg.transform.up;
+			pos += (camOffsetPos.z * camOffsetRatio) * camTarg.transform.forward;
 			followCam.transform.position = Vector3.Lerp(followCam.transform.position, pos, Time.deltaTime * def_camSpeed);
 
 			// does the rotations for us
@@ -164,7 +186,7 @@ public class PuppetCameraScript : MonoBehaviour
 						peekTmr = 0.0f;
 				}
 				if (peekTmr == 0.0f)
-					rockedOffsetPos = Vector3.Lerp( rockedOffsetPos, def_rockedOffsetPos, Time.deltaTime * 1.5f);
+					rockedOffsetPos = Vector3.Lerp(rockedOffsetPos, def_rockedOffsetPos, Time.deltaTime * 1.5f);
 			}
 			else
 				peekTmr = 0.3f;
@@ -201,7 +223,7 @@ public class PuppetCameraScript : MonoBehaviour
 			|| Owner.curState == PuppetScript.State.DGE_RIGHT)
 			return -1;
 
-		if (!camLockedOn)
+		if (!Owner.rockedOn)
 		{
 			Vector3 orgPos = camTarg.transform.position;
 			Vector3 tempPos = transform.position;
@@ -219,8 +241,7 @@ public class PuppetCameraScript : MonoBehaviour
 			Owner.moveSpeed = Owner.def_moveSpeed;
 		}
 
-		camLockedOn = !camLockedOn;
-		Owner.rockedOn = camLockedOn;
+		Owner.rockedOn = !Owner.rockedOn;
 		return 1;
 	}
 }

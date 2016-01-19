@@ -26,7 +26,7 @@ public class DedOutta10 : MonoBehaviour
 		}
 		if (timer < 0.0f)
 		{
-			Application.LoadLevel(Application.loadedLevelName);
+			Application.LoadLevel("Hub_Scene");
 		}
 	}
 }
