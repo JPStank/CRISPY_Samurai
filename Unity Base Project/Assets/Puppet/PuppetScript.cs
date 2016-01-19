@@ -4,19 +4,21 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
-	// New things, added by Dakota 1/13 7:22pm
-	public GameObject degubber;
-	public float curBalance = 100;
-	public float maxBalance = 100;
+	public GameObject swordSwish;
 
-	public enum State
-	{
-		IDLE = 0, MOVING, FLINCH, STUN, DEAD,
-		ATK_VERT, ATK_LTR, ATK_RTL, ATK_STAB, ATK_KICK,
-		PARRY,
-		GRD_TOP, GRD_LEFT, GRD_RIGHT,
-		DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK, DANCE, NUMSTATES
-	}
+    // New things, added by Dakota 1/13 7:22pm
+    public GameObject degubber;
+    public float curBalance = 100;
+    public float maxBalance = 100;
+
+    public enum State
+    {
+        IDLE = 0, MOVING, FLINCH, STUN, DEAD,
+        ATK_VERT, ATK_LTR, ATK_RTL, ATK_STAB, ATK_KICK,
+        PARRY,
+        GRD_TOP, GRD_LEFT, GRD_RIGHT,
+        DGE_FORWARD, DGE_LEFT, DGE_RIGHT, DGE_BACK, DANCE, NUMSTATES
+    }
 
 	public enum Dir
 	{
@@ -33,6 +35,7 @@ public class PuppetScript : MonoBehaviour
 	public Dictionary<string, float> animTimers;
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
+	public Armor armor;
 	private GameObject Targeting_CubeSpawned = null;
 	//public GameObject[] badguys;
 	public List<GameObject> badguys;
@@ -65,70 +68,70 @@ public class PuppetScript : MonoBehaviour
 	private int debugGrdType = 0;
 	private float debugGrdTmr = 0.0f;
 
-	public bool canHit = false;
+    public bool canHit = false;
 
     public bool godMode = false;
 
-	void ActivateHit()
-	{
-		canHit = true;
-	}
-	void DisableHit()
-	{
-		canHit = false;
-	}
-	public void SetHit(bool h)
-	{
-		canHit = h;
-	}
+    void ActivateHit()
+    {
+        canHit = true;
+    }
+    void DisableHit()
+    {
+        canHit = false;
+    }
+    public void SetHit(bool h)
+    {
+        canHit = h;
+    }
 
 
-	// Use this for initialization
-	void Start()
-	{
-		animation["New Down Slash"].time = 0.36667f;
-		animation["New Left Slash"].time = 0.6f;
-		animation["New Right Slash"].time = 0.63333f;
-		// New things, added by Dakota 1/13 whatever PM
-		// Needed a reference to the player in the meat script to decrement balance
-		BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
+    // Use this for initialization
+    void Start()
+    {
+        animation["New Down Slash"].time = 0.36667f;
+        animation["New Left Slash"].time = 0.6f;
+        animation["New Right Slash"].time = 0.63333f;
+        // New things, added by Dakota 1/13 whatever PM
+        // Needed a reference to the player in the meat script to decrement balance
+        BloodyBag[] meats = gameObject.GetComponentsInChildren<BloodyBag>();
 
-		for (int i = 0; i < meats.Length; i++)
-			meats[i].player = gameObject;
-		//
+        for (int i = 0; i < meats.Length; i++)
+            meats[i].player = gameObject;
+        //
 
-		animTimers = new Dictionary<string, float>();
-		animTimers["Idle"] = 1.833f;
-		animTimers["Walk"] = 1.1f;
-		animTimers["WalkRight"] = 1.1f;
-		animTimers["WalkLeft"] = 1.167f;
-		animTimers["Twerk"] = 15.2f;
-		animTimers["Block"] = 1.833f;
-		animTimers["BlockUp"] = 1.4f;
-		animTimers["BlockUpHit"] = 0.667f;
-		animTimers["Reaction"] = 0.967f;
-		animTimers["Stab"] = 2.133f;
-		animTimers["SlashVert"] = 2.267f;
-		animTimers["SlashLTR"] = 1.667f;
-		animTimers["SlashRTL"] = 2.033f;
+        animTimers = new Dictionary<string, float>();
+        animTimers["Idle"] = 1.833f;
+        animTimers["Walk"] = 1.1f;
+        animTimers["WalkRight"] = 1.1f;
+        animTimers["WalkLeft"] = 1.167f;
+        animTimers["Twerk"] = 15.2f;
+        animTimers["Block"] = 1.833f;
+        animTimers["BlockUp"] = 1.4f;
+        animTimers["BlockUpHit"] = 0.667f;
+        animTimers["Reaction"] = 0.967f;
+        animTimers["Stab"] = 2.133f;
+        animTimers["SlashVert"] = 2.267f;
+        animTimers["SlashLTR"] = 1.667f;
+        animTimers["SlashRTL"] = 2.033f;
 
-		Object temp = GetComponent<PuppetAttackScript>();
-		if (attackScript == null)
-		{
-			attackScript = (PuppetAttackScript)temp;
-		}
+        Object temp = GetComponent<PuppetAttackScript>();
+        if (attackScript == null)
+        {
+            attackScript = (PuppetAttackScript)temp;
+        }
 
-		if (guardScript == null)
-		{
-			temp = GetComponent<PuppetGuardScript>();
-			guardScript = (PuppetGuardScript)temp;
-		}
+        if (guardScript == null)
+        {
+            temp = GetComponent<PuppetGuardScript>();
+            guardScript = (PuppetGuardScript)temp;
+        }
 
-		if (dodgeScript == null)
-		{
-			temp = GetComponent<PuppetDodgeScript>();
-			dodgeScript = (PuppetDodgeScript)temp;
-		}
+        if (dodgeScript == null)
+        {
+            temp = GetComponent<PuppetDodgeScript>();
+            dodgeScript = (PuppetDodgeScript)temp;
+        }
 
 		if (camScript == null)
 		{
@@ -142,257 +145,257 @@ public class PuppetScript : MonoBehaviour
 		}
 		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
 
-		lastState = curState = State.IDLE;
-		if (targOffset == Vector3.zero)
-			targOffset.y = 2.0f;
-		if (targMaxDist == 0.0f)
-			targMaxDist = 200.0f;
-		if (moveSpeed == 0.0f)
-			moveSpeed = 5.0f;
-		def_moveSpeed = moveSpeed;
-		if (lockMoveSpeedMod == 0.0f)
-			lockMoveSpeedMod = 0.3f;
-		if (camSpeed == 0.0f)
-			camSpeed = 8.0f;
-		def_camSpeed = camSpeed;
-		AtkTmrMax = 1.0f;
-		DgeTmrMax = 0.5f;
-		GrdTmrMax = 0.2f;
+        lastState = curState = State.IDLE;
+        if (targOffset == Vector3.zero)
+            targOffset.y = 2.0f;
+        if (targMaxDist == 0.0f)
+            targMaxDist = 200.0f;
+        if (moveSpeed == 0.0f)
+            moveSpeed = 5.0f;
+        def_moveSpeed = moveSpeed;
+        if (lockMoveSpeedMod == 0.0f)
+            lockMoveSpeedMod = 0.3f;
+        if (camSpeed == 0.0f)
+            camSpeed = 8.0f;
+        def_camSpeed = camSpeed;
+        AtkTmrMax = 1.0f;
+        DgeTmrMax = 0.5f;
+        GrdTmrMax = 0.2f;
 
-		InitAnimTable();
-		InitStateTable();
+        InitAnimTable();
+        InitStateTable();
 
-		moveTest = Vector3.zero;
-		moveTest.x = 1.0f;
-		moveTest.z = 1.0f;
-		camTest = Vector3.zero;
-		camTest.x = 1.0f;
-		camTest.z = 1.0f;
+        moveTest = Vector3.zero;
+        moveTest.x = 1.0f;
+        moveTest.z = 1.0f;
+        camTest = Vector3.zero;
+        camTest.x = 1.0f;
+        camTest.z = 1.0f;
 
-		debugAngle = 0.0f;
+        debugAngle = 0.0f;
 
-		if (tag == "Player")
-			camScript.Initialize(this);
-		attackScript.Initialize(this);
-		dodgeScript.Initialize(this);
-		guardScript.Initialize(this);
-	}
-	void InitAnimTable()
-	{
-		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
-		animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
-		animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
-		animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
-		"Idle";
-		animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
-		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
-		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
-		"Block Up Hit";
-		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
-		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
-		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
-		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
-		animTable[(int)State.ATK_VERT, (int)State.ATK_VERT] =
-		animTable[(int)State.ATK_RTL, (int)State.ATK_VERT] =
-		animTable[(int)State.ATK_LTR, (int)State.ATK_VERT] =
-		"React Front";
-		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
-		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
-		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
-		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
-		animTable[(int)State.IDLE, (int)State.ATK_RTL] =
-		animTable[(int)State.MOVING, (int)State.ATK_RTL] =
-		animTable[(int)State.IDLE, (int)State.ATK_LTR] =
-		animTable[(int)State.MOVING, (int)State.ATK_LTR] =
-		animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
-		animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
-		animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
-		animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
-		animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
-		animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
-		"React Side";
+        if (tag == "Player")
+            camScript.Initialize(this);
+        attackScript.Initialize(this);
+        dodgeScript.Initialize(this);
+        guardScript.Initialize(this);
+    }
+    void InitAnimTable()
+    {
+        animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
+        animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
+        animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
+        animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
+        "Idle";
+        animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
+        animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
+        animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
+        "Block Up Hit";
+        animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
+        animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+        animTable[(int)State.IDLE, (int)State.ATK_VERT] =
+        animTable[(int)State.MOVING, (int)State.ATK_VERT] =
+        animTable[(int)State.ATK_VERT, (int)State.ATK_VERT] =
+        animTable[(int)State.ATK_RTL, (int)State.ATK_VERT] =
+        animTable[(int)State.ATK_LTR, (int)State.ATK_VERT] =
+        "React Front";
+        animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
+        animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
+        animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
+        animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
+        animTable[(int)State.IDLE, (int)State.ATK_RTL] =
+        animTable[(int)State.MOVING, (int)State.ATK_RTL] =
+        animTable[(int)State.IDLE, (int)State.ATK_LTR] =
+        animTable[(int)State.MOVING, (int)State.ATK_LTR] =
+        animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
+        animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
+        animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
+        animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
+        animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
+        animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
+        "React Side";
 
 
-		animTable[(int)State.IDLE, (int)State.IDLE] =
-		animTable[(int)State.MOVING, (int)State.MOVING] =
-		"Twerk";
+        animTable[(int)State.IDLE, (int)State.IDLE] =
+        animTable[(int)State.MOVING, (int)State.MOVING] =
+        "Twerk";
 
-	}
-	void InitStateTable()
-	{
-		stateTable = new bool[(int)State.NUMSTATES, (int)State.NUMSTATES];
+    }
+    void InitStateTable()
+    {
+        stateTable = new bool[(int)State.NUMSTATES, (int)State.NUMSTATES];
 
-		// move into idle from almost any other state
-		stateTable[(int)State.MOVING, (int)State.IDLE] =
-		stateTable[(int)State.FLINCH, (int)State.IDLE] =
-		stateTable[(int)State.STUN, (int)State.IDLE] =
-		stateTable[(int)State.ATK_VERT, (int)State.IDLE] =
-		stateTable[(int)State.ATK_LTR, (int)State.IDLE] =
-		stateTable[(int)State.ATK_RTL, (int)State.IDLE] =
-		stateTable[(int)State.ATK_STAB, (int)State.IDLE] =
-		stateTable[(int)State.ATK_KICK, (int)State.IDLE] =
-		stateTable[(int)State.PARRY, (int)State.IDLE] =
-		stateTable[(int)State.GRD_TOP, (int)State.IDLE] =
-		stateTable[(int)State.GRD_LEFT, (int)State.IDLE] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.IDLE] =
-		stateTable[(int)State.DGE_FORWARD, (int)State.IDLE] =
-		stateTable[(int)State.DGE_LEFT, (int)State.IDLE] =
-		stateTable[(int)State.DGE_RIGHT, (int)State.IDLE] =
-		stateTable[(int)State.DGE_BACK, (int)State.IDLE] =
-			//stateTable[(int)State.DANCE, (int)State.IDLE] =
-			true;
-		// a call to go into moving will only succeed under rare circumstances
-		stateTable[(int)State.IDLE, (int)State.MOVING] =
-		stateTable[(int)State.MOVING, (int)State.MOVING] =
-		stateTable[(int)State.DANCE, (int)State.MOVING] =
-			true;
-		// flinches and stuns can happen at any time
-		stateTable[(int)State.IDLE, (int)State.FLINCH] =
-		stateTable[(int)State.MOVING, (int)State.FLINCH] =
-		stateTable[(int)State.FLINCH, (int)State.FLINCH] =
-		stateTable[(int)State.STUN, (int)State.FLINCH] =
-		stateTable[(int)State.DEAD, (int)State.FLINCH] =
-		stateTable[(int)State.ATK_VERT, (int)State.FLINCH] =
-		stateTable[(int)State.ATK_LTR, (int)State.FLINCH] =
-		stateTable[(int)State.ATK_RTL, (int)State.FLINCH] =
-		stateTable[(int)State.ATK_STAB, (int)State.FLINCH] =
-		stateTable[(int)State.ATK_KICK, (int)State.FLINCH] =
-		stateTable[(int)State.PARRY, (int)State.FLINCH] =
-		stateTable[(int)State.GRD_TOP, (int)State.FLINCH] =
-		stateTable[(int)State.GRD_LEFT, (int)State.FLINCH] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.FLINCH] =
-		stateTable[(int)State.DGE_FORWARD, (int)State.FLINCH] =
-		stateTable[(int)State.DGE_LEFT, (int)State.FLINCH] =
-		stateTable[(int)State.DGE_RIGHT, (int)State.FLINCH] =
-		stateTable[(int)State.DGE_BACK, (int)State.FLINCH] =
-		stateTable[(int)State.DANCE, (int)State.FLINCH] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.STUN] =
-		stateTable[(int)State.MOVING, (int)State.STUN] =
-		stateTable[(int)State.FLINCH, (int)State.STUN] =
-		stateTable[(int)State.STUN, (int)State.STUN] =
-		stateTable[(int)State.DEAD, (int)State.STUN] =
-		stateTable[(int)State.ATK_VERT, (int)State.STUN] =
-		stateTable[(int)State.ATK_LTR, (int)State.STUN] =
-		stateTable[(int)State.ATK_RTL, (int)State.STUN] =
-		stateTable[(int)State.ATK_STAB, (int)State.STUN] =
-		stateTable[(int)State.ATK_KICK, (int)State.STUN] =
-		stateTable[(int)State.PARRY, (int)State.STUN] =
-		stateTable[(int)State.GRD_TOP, (int)State.STUN] =
-		stateTable[(int)State.GRD_LEFT, (int)State.STUN] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.STUN] =
-		stateTable[(int)State.DGE_FORWARD, (int)State.STUN] =
-		stateTable[(int)State.DGE_LEFT, (int)State.STUN] =
-		stateTable[(int)State.DGE_RIGHT, (int)State.STUN] =
-		stateTable[(int)State.DGE_BACK, (int)State.STUN] =
-		stateTable[(int)State.DANCE, (int)State.STUN] =
-			true;
+        // move into idle from almost any other state
+        stateTable[(int)State.MOVING, (int)State.IDLE] =
+        stateTable[(int)State.FLINCH, (int)State.IDLE] =
+        stateTable[(int)State.STUN, (int)State.IDLE] =
+        stateTable[(int)State.ATK_VERT, (int)State.IDLE] =
+        stateTable[(int)State.ATK_LTR, (int)State.IDLE] =
+        stateTable[(int)State.ATK_RTL, (int)State.IDLE] =
+        stateTable[(int)State.ATK_STAB, (int)State.IDLE] =
+        stateTable[(int)State.ATK_KICK, (int)State.IDLE] =
+        stateTable[(int)State.PARRY, (int)State.IDLE] =
+        stateTable[(int)State.GRD_TOP, (int)State.IDLE] =
+        stateTable[(int)State.GRD_LEFT, (int)State.IDLE] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.IDLE] =
+        stateTable[(int)State.DGE_FORWARD, (int)State.IDLE] =
+        stateTable[(int)State.DGE_LEFT, (int)State.IDLE] =
+        stateTable[(int)State.DGE_RIGHT, (int)State.IDLE] =
+        stateTable[(int)State.DGE_BACK, (int)State.IDLE] =
+            //stateTable[(int)State.DANCE, (int)State.IDLE] =
+            true;
+        // a call to go into moving will only succeed under rare circumstances
+        stateTable[(int)State.IDLE, (int)State.MOVING] =
+        stateTable[(int)State.MOVING, (int)State.MOVING] =
+        stateTable[(int)State.DANCE, (int)State.MOVING] =
+            true;
+        // flinches and stuns can happen at any time
+        stateTable[(int)State.IDLE, (int)State.FLINCH] =
+        stateTable[(int)State.MOVING, (int)State.FLINCH] =
+        stateTable[(int)State.FLINCH, (int)State.FLINCH] =
+        stateTable[(int)State.STUN, (int)State.FLINCH] =
+        stateTable[(int)State.DEAD, (int)State.FLINCH] =
+        stateTable[(int)State.ATK_VERT, (int)State.FLINCH] =
+        stateTable[(int)State.ATK_LTR, (int)State.FLINCH] =
+        stateTable[(int)State.ATK_RTL, (int)State.FLINCH] =
+        stateTable[(int)State.ATK_STAB, (int)State.FLINCH] =
+        stateTable[(int)State.ATK_KICK, (int)State.FLINCH] =
+        stateTable[(int)State.PARRY, (int)State.FLINCH] =
+        stateTable[(int)State.GRD_TOP, (int)State.FLINCH] =
+        stateTable[(int)State.GRD_LEFT, (int)State.FLINCH] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.FLINCH] =
+        stateTable[(int)State.DGE_FORWARD, (int)State.FLINCH] =
+        stateTable[(int)State.DGE_LEFT, (int)State.FLINCH] =
+        stateTable[(int)State.DGE_RIGHT, (int)State.FLINCH] =
+        stateTable[(int)State.DGE_BACK, (int)State.FLINCH] =
+        stateTable[(int)State.DANCE, (int)State.FLINCH] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.STUN] =
+        stateTable[(int)State.MOVING, (int)State.STUN] =
+        stateTable[(int)State.FLINCH, (int)State.STUN] =
+        stateTable[(int)State.STUN, (int)State.STUN] =
+        stateTable[(int)State.DEAD, (int)State.STUN] =
+        stateTable[(int)State.ATK_VERT, (int)State.STUN] =
+        stateTable[(int)State.ATK_LTR, (int)State.STUN] =
+        stateTable[(int)State.ATK_RTL, (int)State.STUN] =
+        stateTable[(int)State.ATK_STAB, (int)State.STUN] =
+        stateTable[(int)State.ATK_KICK, (int)State.STUN] =
+        stateTable[(int)State.PARRY, (int)State.STUN] =
+        stateTable[(int)State.GRD_TOP, (int)State.STUN] =
+        stateTable[(int)State.GRD_LEFT, (int)State.STUN] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.STUN] =
+        stateTable[(int)State.DGE_FORWARD, (int)State.STUN] =
+        stateTable[(int)State.DGE_LEFT, (int)State.STUN] =
+        stateTable[(int)State.DGE_RIGHT, (int)State.STUN] =
+        stateTable[(int)State.DGE_BACK, (int)State.STUN] =
+        stateTable[(int)State.DANCE, (int)State.STUN] =
+            true;
 
-		// die from any state!
-		stateTable[(int)State.IDLE, (int)State.DEAD] =
-		stateTable[(int)State.MOVING, (int)State.DEAD] =
-		stateTable[(int)State.FLINCH, (int)State.DEAD] =
-		stateTable[(int)State.STUN, (int)State.DEAD] =
-		stateTable[(int)State.DEAD, (int)State.DEAD] =
-		stateTable[(int)State.ATK_VERT, (int)State.DEAD] =
-		stateTable[(int)State.ATK_LTR, (int)State.DEAD] =
-		stateTable[(int)State.ATK_RTL, (int)State.DEAD] =
-		stateTable[(int)State.ATK_STAB, (int)State.DEAD] =
-		stateTable[(int)State.ATK_KICK, (int)State.DEAD] =
-		stateTable[(int)State.PARRY, (int)State.DEAD] =
-		stateTable[(int)State.GRD_TOP, (int)State.DEAD] =
-		stateTable[(int)State.GRD_LEFT, (int)State.DEAD] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.DEAD] =
-		stateTable[(int)State.DGE_FORWARD, (int)State.DEAD] =
-		stateTable[(int)State.DGE_LEFT, (int)State.DEAD] =
-		stateTable[(int)State.DGE_RIGHT, (int)State.DEAD] =
-		stateTable[(int)State.DGE_BACK, (int)State.DEAD] =
-		stateTable[(int)State.DANCE, (int)State.DEAD] =
-			true;
-		// can only attack from a few states
-		stateTable[(int)State.IDLE, (int)State.ATK_VERT] =
-		stateTable[(int)State.MOVING, (int)State.ATK_VERT] =
-		stateTable[(int)State.DANCE, (int)State.ATK_VERT] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.ATK_LTR] =
-		stateTable[(int)State.MOVING, (int)State.ATK_LTR] =
-		stateTable[(int)State.DANCE, (int)State.ATK_LTR] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.ATK_RTL] =
-		stateTable[(int)State.MOVING, (int)State.ATK_RTL] =
-		stateTable[(int)State.DANCE, (int)State.ATK_RTL] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.ATK_STAB] =
-		stateTable[(int)State.MOVING, (int)State.ATK_STAB] =
-		stateTable[(int)State.DANCE, (int)State.ATK_STAB] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.ATK_KICK] =
-		stateTable[(int)State.MOVING, (int)State.ATK_KICK] =
-		stateTable[(int)State.DANCE, (int)State.ATK_KICK] =
-			true;
+        // die from any state!
+        stateTable[(int)State.IDLE, (int)State.DEAD] =
+        stateTable[(int)State.MOVING, (int)State.DEAD] =
+        stateTable[(int)State.FLINCH, (int)State.DEAD] =
+        stateTable[(int)State.STUN, (int)State.DEAD] =
+        stateTable[(int)State.DEAD, (int)State.DEAD] =
+        stateTable[(int)State.ATK_VERT, (int)State.DEAD] =
+        stateTable[(int)State.ATK_LTR, (int)State.DEAD] =
+        stateTable[(int)State.ATK_RTL, (int)State.DEAD] =
+        stateTable[(int)State.ATK_STAB, (int)State.DEAD] =
+        stateTable[(int)State.ATK_KICK, (int)State.DEAD] =
+        stateTable[(int)State.PARRY, (int)State.DEAD] =
+        stateTable[(int)State.GRD_TOP, (int)State.DEAD] =
+        stateTable[(int)State.GRD_LEFT, (int)State.DEAD] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.DEAD] =
+        stateTable[(int)State.DGE_FORWARD, (int)State.DEAD] =
+        stateTable[(int)State.DGE_LEFT, (int)State.DEAD] =
+        stateTable[(int)State.DGE_RIGHT, (int)State.DEAD] =
+        stateTable[(int)State.DGE_BACK, (int)State.DEAD] =
+        stateTable[(int)State.DANCE, (int)State.DEAD] =
+            true;
+        // can only attack from a few states
+        stateTable[(int)State.IDLE, (int)State.ATK_VERT] =
+        stateTable[(int)State.MOVING, (int)State.ATK_VERT] =
+        stateTable[(int)State.DANCE, (int)State.ATK_VERT] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.ATK_LTR] =
+        stateTable[(int)State.MOVING, (int)State.ATK_LTR] =
+        stateTable[(int)State.DANCE, (int)State.ATK_LTR] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.ATK_RTL] =
+        stateTable[(int)State.MOVING, (int)State.ATK_RTL] =
+        stateTable[(int)State.DANCE, (int)State.ATK_RTL] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.ATK_STAB] =
+        stateTable[(int)State.MOVING, (int)State.ATK_STAB] =
+        stateTable[(int)State.DANCE, (int)State.ATK_STAB] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.ATK_KICK] =
+        stateTable[(int)State.MOVING, (int)State.ATK_KICK] =
+        stateTable[(int)State.DANCE, (int)State.ATK_KICK] =
+            true;
 
-		// can only parry from a few states
-		stateTable[(int)State.IDLE, (int)State.PARRY] =
-		stateTable[(int)State.MOVING, (int)State.PARRY] =
-		stateTable[(int)State.DANCE, (int)State.PARRY] =
-			true;
+        // can only parry from a few states
+        stateTable[(int)State.IDLE, (int)State.PARRY] =
+        stateTable[(int)State.MOVING, (int)State.PARRY] =
+        stateTable[(int)State.DANCE, (int)State.PARRY] =
+            true;
 
-		// can guard from other guards and parries as well as necessary base states
-		stateTable[(int)State.IDLE, (int)State.GRD_TOP] =
-		stateTable[(int)State.MOVING, (int)State.GRD_TOP] =
-			//stateTable[(int)State.PARRY, (int)State.GRD_TOP] =
-		stateTable[(int)State.GRD_TOP, (int)State.GRD_TOP] =
-		stateTable[(int)State.GRD_LEFT, (int)State.GRD_TOP] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.GRD_TOP] =
-		stateTable[(int)State.DANCE, (int)State.GRD_TOP] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.GRD_LEFT] =
-		stateTable[(int)State.MOVING, (int)State.GRD_LEFT] =
-			//stateTable[(int)State.PARRY, (int)State.GRD_LEFT] =
-		stateTable[(int)State.GRD_TOP, (int)State.GRD_LEFT] =
-		stateTable[(int)State.GRD_LEFT, (int)State.GRD_LEFT] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.GRD_LEFT] =
-		stateTable[(int)State.DANCE, (int)State.GRD_LEFT] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.GRD_RIGHT] =
-		stateTable[(int)State.MOVING, (int)State.GRD_RIGHT] =
-			//stateTable[(int)State.PARRY, (int)State.GRD_RIGHT] =
-		stateTable[(int)State.GRD_TOP, (int)State.GRD_RIGHT] =
-		stateTable[(int)State.GRD_LEFT, (int)State.GRD_RIGHT] =
-		stateTable[(int)State.GRD_RIGHT, (int)State.GRD_RIGHT] =
-		stateTable[(int)State.DANCE, (int)State.GRD_RIGHT] =
-			true;
+        // can guard from other guards and parries as well as necessary base states
+        stateTable[(int)State.IDLE, (int)State.GRD_TOP] =
+        stateTable[(int)State.MOVING, (int)State.GRD_TOP] =
+            //stateTable[(int)State.PARRY, (int)State.GRD_TOP] =
+        stateTable[(int)State.GRD_TOP, (int)State.GRD_TOP] =
+        stateTable[(int)State.GRD_LEFT, (int)State.GRD_TOP] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.GRD_TOP] =
+        stateTable[(int)State.DANCE, (int)State.GRD_TOP] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.GRD_LEFT] =
+        stateTable[(int)State.MOVING, (int)State.GRD_LEFT] =
+            //stateTable[(int)State.PARRY, (int)State.GRD_LEFT] =
+        stateTable[(int)State.GRD_TOP, (int)State.GRD_LEFT] =
+        stateTable[(int)State.GRD_LEFT, (int)State.GRD_LEFT] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.GRD_LEFT] =
+        stateTable[(int)State.DANCE, (int)State.GRD_LEFT] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.GRD_RIGHT] =
+        stateTable[(int)State.MOVING, (int)State.GRD_RIGHT] =
+            //stateTable[(int)State.PARRY, (int)State.GRD_RIGHT] =
+        stateTable[(int)State.GRD_TOP, (int)State.GRD_RIGHT] =
+        stateTable[(int)State.GRD_LEFT, (int)State.GRD_RIGHT] =
+        stateTable[(int)State.GRD_RIGHT, (int)State.GRD_RIGHT] =
+        stateTable[(int)State.DANCE, (int)State.GRD_RIGHT] =
+            true;
 
-		stateTable[(int)State.IDLE, (int)State.DGE_FORWARD] =
-		stateTable[(int)State.MOVING, (int)State.DGE_FORWARD] =
-		stateTable[(int)State.DANCE, (int)State.DGE_FORWARD] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.DGE_LEFT] =
-		stateTable[(int)State.MOVING, (int)State.DGE_LEFT] =
-		stateTable[(int)State.DANCE, (int)State.DGE_LEFT] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.DGE_RIGHT] =
-		stateTable[(int)State.MOVING, (int)State.DGE_RIGHT] =
-		stateTable[(int)State.DANCE, (int)State.DGE_RIGHT] =
-			true;
-		stateTable[(int)State.IDLE, (int)State.DGE_BACK] =
-		stateTable[(int)State.MOVING, (int)State.DGE_BACK] =
-		stateTable[(int)State.DANCE, (int)State.DGE_BACK] =
-			true;
+        stateTable[(int)State.IDLE, (int)State.DGE_FORWARD] =
+        stateTable[(int)State.MOVING, (int)State.DGE_FORWARD] =
+        stateTable[(int)State.DANCE, (int)State.DGE_FORWARD] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.DGE_LEFT] =
+        stateTable[(int)State.MOVING, (int)State.DGE_LEFT] =
+        stateTable[(int)State.DANCE, (int)State.DGE_LEFT] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.DGE_RIGHT] =
+        stateTable[(int)State.MOVING, (int)State.DGE_RIGHT] =
+        stateTable[(int)State.DANCE, (int)State.DGE_RIGHT] =
+            true;
+        stateTable[(int)State.IDLE, (int)State.DGE_BACK] =
+        stateTable[(int)State.MOVING, (int)State.DGE_BACK] =
+        stateTable[(int)State.DANCE, (int)State.DGE_BACK] =
+            true;
 
-		// dance muthafucka
-		stateTable[(int)State.IDLE, (int)State.DANCE] =
-			true;
+        // dance muthafucka
+        stateTable[(int)State.IDLE, (int)State.DANCE] =
+            true;
 
-	}
+    }
 
-	// Update is called once per frame
-	void Update()
-	{
-		if (curState == State.FLINCH && animation.isPlaying == false)
-		{
-			ChangeState(State.IDLE);
-		}
+    // Update is called once per frame
+    void Update()
+    {
+        if (curState == State.FLINCH && animation.isPlaying == false)
+        {
+            ChangeState(State.IDLE);
+        }
 
 		// only search for targets if we are the player.
 		if (tag == "Player")
@@ -520,129 +523,131 @@ public class PuppetScript : MonoBehaviour
 		}
 	}
 
-	// DoDegub()
-	// Does the degubs for the testing on the features
-	private void DoDegub()
-	{
-		if (debugMove || debugCamera)
-		{
-			debugAngle += Time.deltaTime * 2.0f;
-			if (debugAngle >= 2.0f * Mathf.PI)
-				debugAngle -= 2.0f * Mathf.PI;
-		}
-		if (debugMove)
-		{
-			moveTest.x = Mathf.Cos(debugAngle);
-			moveTest.z = Mathf.Sin(debugAngle);
+    // DoDegub()
+    // Does the degubs for the testing on the features
+    private void DoDegub()
+    {
+        if (debugMove || debugCamera)
+        {
+            debugAngle += Time.deltaTime * 2.0f;
+            if (debugAngle >= 2.0f * Mathf.PI)
+                debugAngle -= 2.0f * Mathf.PI;
+        }
+        if (debugMove)
+        {
+            moveTest.x = Mathf.Cos(debugAngle);
+            moveTest.z = Mathf.Sin(debugAngle);
 
-			Move(moveTest);
-		}
-		if (debugCamera)
-		{
-			moveTest.x = 1.0f;
-			moveTest.y = 0.0f;
-			MoveCamera(camTest);
-		}
-		if (debugDodge)
-		{
-			debugDodgeTmr += Time.deltaTime;
-			if (debugDodgeTmr > DgeTmrMax * 2.0f)
-			{
-				debugDodgeTmr = 0.0f;
-				int res = 1;
-				switch (debugDodgeType)
-				{
-					case 0:
-						res = DodgeLeft();
-						break;
-					case 1:
-						res = DodgeForward();
-						break;
-					case 2:
-						res = DodgeRight();
-						break;
-					case 3:
-						res = DodgeRight();
-						break;
-					case 4:
-						res = DodgeBackwards();
-						break;
-					case 5:
-						res = DodgeLeft();
-						break;
-				}
-				debugDodgeType++;
-				if (debugDodgeType > 5)
-					debugDodgeType = 0;
-			}
-		}
-		if (debugGuard)
-		{
-			debugGrdTmr += Time.deltaTime;
-			int res = 1;
-			switch (debugGrdType)
-			{
-				case 0:
-					res = GuardUpwards();
-					break;
-				case 1:
-					res = GuardLeft();
-					break;
-				case 2:
-					res = GuardRight();
-					break;
-			}
+            Move(moveTest);
+        }
+        if (debugCamera)
+        {
+            moveTest.x = 1.0f;
+            moveTest.y = 0.0f;
+            MoveCamera(camTest);
+        }
+        if (debugDodge)
+        {
+            debugDodgeTmr += Time.deltaTime;
+            if (debugDodgeTmr > DgeTmrMax * 2.0f)
+            {
+                debugDodgeTmr = 0.0f;
+                int res = 1;
+                switch (debugDodgeType)
+                {
+                    case 0:
+                        res = DodgeLeft();
+                        break;
+                    case 1:
+                        res = DodgeForward();
+                        break;
+                    case 2:
+                        res = DodgeRight();
+                        break;
+                    case 3:
+                        res = DodgeRight();
+                        break;
+                    case 4:
+                        res = DodgeBackwards();
+                        break;
+                    case 5:
+                        res = DodgeLeft();
+                        break;
+                }
+                debugDodgeType++;
+                if (debugDodgeType > 5)
+                    debugDodgeType = 0;
+            }
+        }
+        if (debugGuard)
+        {
+            debugGrdTmr += Time.deltaTime;
+            int res = 1;
+            switch (debugGrdType)
+            {
+                case 0:
+                    res = GuardUpwards();
+                    break;
+                case 1:
+                    res = GuardLeft();
+                    break;
+                case 2:
+                    res = GuardRight();
+                    break;
+            }
 
-			if (debugGrdTmr > GrdTmrMax * 5.0f)
-			{
-				debugGrdTmr = 0.0f;
-				debugGrdType++;
-				if (debugGrdType > 2)
-					debugGrdType = 0;
-			}
-		}
+            if (debugGrdTmr > GrdTmrMax * 5.0f)
+            {
+                debugGrdTmr = 0.0f;
+                debugGrdType++;
+                if (debugGrdType > 2)
+                    debugGrdType = 0;
+            }
+        }
 
-	}
-
-
-	// Change State Function
-	// returns -1 on failure
-	// returns 1 on success
-	public int ChangeState(State _nextState)
-	{
-		//if (attackScript.AtkTmrCur != 0.0f || dodgeScript.DgeTmrCur != 0.0f)
-		//	return -1;
-		if (stateTable[(int)curState, (int)_nextState] == false)
-			return -1;
-		if (_nextState == State.IDLE)
-			animation.Play("Idle");
-		if ((_nextState == State.GRD_TOP && curState != State.PARRY
-			&& curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT)
-			|| (_nextState == State.GRD_LEFT && curState != State.PARRY
-			&& curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT)
-			|| (_nextState == State.GRD_RIGHT && curState != State.PARRY
-			&& curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT))
-		{
-			lastState = curState;
-			curState = State.PARRY;
-			return 1;
-		}
+    }
 
 
-		lastState = curState;
-		curState = _nextState;
+    // Change State Function
+    // returns -1 on failure
+    // returns 1 on success
+    public int ChangeState(State _nextState)
+    {
+        //if (attackScript.AtkTmrCur != 0.0f || dodgeScript.DgeTmrCur != 0.0f)
+        //	return -1;
+        if (stateTable[(int)curState, (int)_nextState] == false)
+            return -1;
+        if (_nextState == State.IDLE)
+            animation.Play("Idle");
+        if ((_nextState == State.GRD_TOP && curState != State.PARRY
+            && curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT)
+            || (_nextState == State.GRD_LEFT && curState != State.PARRY
+            && curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT)
+            || (_nextState == State.GRD_RIGHT && curState != State.PARRY
+            && curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT))
+        {
+            lastState = curState;
+            curState = State.PARRY;
+            return 1;
+        }
 
-		// New things, added by Dakota 1/13 whatever PM
-		// Degub Stuff
-		if (lastState != curState)
-		{
-			if (degubber)
-				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + transform.tag + " " + curState.ToString());
-		}
-		//
+        if (_nextState == State.DEAD)
+            NotifyNextOfKin();
 
-		return 1;
-	}
+        lastState = curState;
+        curState = _nextState;
+
+        // New things, added by Dakota 1/13 whatever PM
+        // Degub Stuff
+        if (lastState != curState)
+        {
+            if (degubber)
+                degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + transform.tag + " " + curState.ToString());
+        }
+        //
+
+        return 1;
+    }
 
 	//void OnTriggerStay(Collider col)
 	//{
@@ -664,16 +669,16 @@ public class PuppetScript : MonoBehaviour
 		if (ChangeState(State.MOVING) == -1)
 			return -1;
 
-		// error check the input
-		if (_dir.x > 1.0f)
-			_dir.x = 1.0f;
-		else if (_dir.x < -1.0f)
-			_dir.x = -1.0f;
+        // error check the input
+        if (_dir.x > 1.0f)
+            _dir.x = 1.0f;
+        else if (_dir.x < -1.0f)
+            _dir.x = -1.0f;
 
-		if (_dir.z > 1.0f)
-			_dir.z = 1.0f;
-		else if (_dir.z < -1.0f)
-			_dir.z = -1.0f;
+        if (_dir.z > 1.0f)
+            _dir.z = 1.0f;
+        else if (_dir.z < -1.0f)
+            _dir.z = -1.0f;
 
 		// scale the input to time and our speed
 		_dir.x *= Time.deltaTime;
@@ -740,13 +745,13 @@ public class PuppetScript : MonoBehaviour
 			transform.LookAt(towards);
 		}
 
-		return 1;
-	}
+        return 1;
+    }
 
-	public int MoveCamera(Vector3 _dir)
-	{
-		return camScript.MoveCamera(_dir);
-	}
+    public int MoveCamera(Vector3 _dir)
+    {
+        return camScript.MoveCamera(_dir);
+    }
 
 	public int ToggleLockon()
 	{
@@ -759,175 +764,224 @@ public class PuppetScript : MonoBehaviour
 		else if (rockedOn == false)
 			return -1;
 
-		if (Targeting_CubeSpawned != null && !rockedOn)
-		{
-			if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
-				Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 10.0f;
-		}
-		else if (Targeting_CubeSpawned != null)
-		{
-			if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
-				Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 1.0f;
-		}
+        if (Targeting_CubeSpawned != null && !rockedOn)
+        {
+            if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
+                Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 10.0f;
+        }
+        else if (Targeting_CubeSpawned != null)
+        {
+            if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
+                Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 1.0f;
+        }
 
-		return camScript.ToggleLockon();
-	}
+        return camScript.ToggleLockon();
+    }
 
-	public int SlashVert()
-	{
-		if (ChangeState(State.ATK_VERT) == 1)
-			return attackScript.SlashVert(this);
-		else
-			return -1;
-	}
+    public int SlashVert()
+    {
+        if (ChangeState(State.ATK_VERT) == 1)
+            return attackScript.SlashVert(this);
+        else
+            return -1;
+    }
 
-	public int SlashLTR()
-	{
-		if (ChangeState(State.ATK_LTR) == 1)
-			return attackScript.SlashLTR(this);
-		else
-			return -1;
-	}
+    public int SlashLTR()
+    {
+        if (ChangeState(State.ATK_LTR) == 1)
+            return attackScript.SlashLTR(this);
+        else
+            return -1;
+    }
 
-	public int SlashRTL()
-	{
-		if (ChangeState(State.ATK_RTL) == 1)
-			return attackScript.SlashRTL(this);
-		else
-			return -1;
-	}
+    public int SlashRTL()
+    {
+        if (ChangeState(State.ATK_RTL) == 1)
+            return attackScript.SlashRTL(this);
+        else
+            return -1;
+    }
 
-	public int Thrust()
-	{
-		if (ChangeState(State.ATK_STAB) == 1)
-			return attackScript.Thrust(this);
-		else
-			return -1;
-	}
+    public int Thrust()
+    {
+        if (ChangeState(State.ATK_STAB) == 1)
+            return attackScript.Thrust(this);
+        else
+            return -1;
+    }
 
-	public int Kick()
-	{
-		if (ChangeState(State.ATK_KICK) == 1)
-			return attackScript.Kick(this);
-		else
-			return -1;
-	}
+    public int Kick()
+    {
+        if (ChangeState(State.ATK_KICK) == 1)
+            return attackScript.Kick(this);
+        else
+            return -1;
+    }
 
-	public int GuardUpwards()
-	{
-		if (ChangeState(State.GRD_TOP) == 1)
-			return guardScript.GuardUpwards(this);
-		else
-			return -1;
-	}
+    public int GuardUpwards()
+    {
+        if (ChangeState(State.GRD_TOP) == 1)
+            return guardScript.GuardUpwards(this);
+        else
+            return -1;
+    }
 
-	public int GuardLeft()
-	{
-		if (ChangeState(State.GRD_LEFT) == 1)
-			return guardScript.GuardLeft(this);
-		else
-			return -1;
-	}
+    public int GuardLeft()
+    {
+        if (ChangeState(State.GRD_LEFT) == 1)
+            return guardScript.GuardLeft(this);
+        else
+            return -1;
+    }
 
-	public int GuardRight()
-	{
-		if (ChangeState(State.GRD_RIGHT) == 1)
-			return guardScript.GuardRight(this);
-		else
-			return -1;
-	}
+    public int GuardRight()
+    {
+        if (ChangeState(State.GRD_RIGHT) == 1)
+            return guardScript.GuardRight(this);
+        else
+            return -1;
+    }
 
-	public int DodgeForward()
-	{
-		if (ChangeState(State.DGE_FORWARD) == 1)
-			return dodgeScript.DodgeForward(this);
-		else
-			return -1;
-	}
+    public int DodgeForward()
+    {
+        if (ChangeState(State.DGE_FORWARD) == 1)
+            return dodgeScript.DodgeForward(this);
+        else
+            return -1;
+    }
 
-	public int DodgeLeft()
-	{
-		if (ChangeState(State.DGE_LEFT) == 1)
-			return dodgeScript.DodgeLeft(this);
-		else
-			return -1;
-	}
+    public int DodgeLeft()
+    {
+        if (ChangeState(State.DGE_LEFT) == 1)
+            return dodgeScript.DodgeLeft(this);
+        else
+            return -1;
+    }
 
-	public int DodgeRight()
-	{
-		if (ChangeState(State.DGE_RIGHT) == 1)
-			return dodgeScript.DodgeRight(this);
-		else
-			return -1;
-	}
+    public int DodgeRight()
+    {
+        if (ChangeState(State.DGE_RIGHT) == 1)
+            return dodgeScript.DodgeRight(this);
+        else
+            return -1;
+    }
 
-	public int DodgeBackwards()
-	{
-		if (ChangeState(State.DGE_BACK) == 1)
-			return dodgeScript.DodgeBackwards(this);
-		else
-			return -1;
-	}
+    public int DodgeBackwards()
+    {
+        if (ChangeState(State.DGE_BACK) == 1)
+            return dodgeScript.DodgeBackwards(this);
+        else
+            return -1;
+    }
 
-	//Placeholder function, does nothing
-	public void ResolveHit(PuppetScript.State otherState)
-	{
-		//public string[,] animTable;
-		/*HOW TO SET UP A 2D ARRAY*/
-		/*METHOD1*/
-		//animTable = new string[,] { { "00", "01", "02" }, { "10", "11", "12" }, { "20", "21", "22" } };
-		/*METHOD2*/
-		//animTable = new string[18, 18];
-		//animTable[(int)PuppetScript.State.IDLE, (int)PuppetScript.State.IDLE] = "IDLE";
+    //Placeholder function, does nothing
+    public void ResolveHit(PuppetScript.State otherState)
+    {
+        //public string[,] animTable;
+        /*HOW TO SET UP A 2D ARRAY*/
+        /*METHOD1*/
+        //animTable = new string[,] { { "00", "01", "02" }, { "10", "11", "12" }, { "20", "21", "22" } };
+        /*METHOD2*/
+        //animTable = new string[18, 18];
+        //animTable[(int)PuppetScript.State.IDLE, (int)PuppetScript.State.IDLE] = "IDLE";
 
-		/*EXAMPLE IMPLEMENTATION*/
-		// animation.Play(animTable[(int)curState, (int)otherState]);
-		string toPlay = animTable[(int)curState, (int)otherState];
-		if (toPlay != null)
-		{
-			//if (degubber)
-			//degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
+        /*EXAMPLE IMPLEMENTATION*/
+        // animation.Play(animTable[(int)curState, (int)otherState]);
+        string toPlay = animTable[(int)curState, (int)otherState];
+        if (toPlay != null)
+        {
+            //if (degubber)
+            //degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
 
-			animation.Play(toPlay);
+            animation.Play(toPlay);
 
-			if (toPlay == "Idle")
-				ChangeState(State.IDLE);
-			if (toPlay == "React Front" || toPlay == "React Side")
-			{
+            if (toPlay == "Idle")
+                ChangeState(State.IDLE);
+            if (toPlay == "React Front" || toPlay == "React Side")
+            {
                 if (!godMode)
                 {
-				    curBalance -= 25;
+					bool armorBlocked = false;
+					if(armor != null)
+					{
+						Armor.ARMOR_PIECE pieceAffected = Armor.ARMOR_PIECE.INVALID;
+						switch (otherState)
+						{
+							case State.ATK_VERT:
+								pieceAffected = Armor.ARMOR_PIECE.TOP;
+								break;
+							case State.ATK_LTR:
+								pieceAffected = Armor.ARMOR_PIECE.RIGHT;
+								break;
+							case State.ATK_RTL:
+								pieceAffected = Armor.ARMOR_PIECE.LEFT;
+								break;
+							case State.ATK_STAB:
+								pieceAffected = Armor.ARMOR_PIECE.CHEST;
+								break;
+						}
+						if (pieceAffected != Armor.ARMOR_PIECE.INVALID)
+							armorBlocked = armor.ProcessHit(pieceAffected);
+						else
+							Debug.Log("Invalid armor checking! Please debug and investigate!");
+					}
+					if(!armorBlocked)
+						curBalance -= 25;
                 }
-				if (curBalance <= 0.0f)
-				{
-					gameObject.layer = 10;
-					animation.Play("Death");
-					ChangeState(State.DEAD);
-					curBalance = 0.0f;
-					return;
-				}
+                if (curBalance <= 0.0f)
+                {
+                    gameObject.layer = 10;
+                    animation.Play("Death");
+                    ChangeState(State.DEAD);
+                    curBalance = 0.0f;
+                    return;
+                }
 
-				if (gameObject.tag == "Enemy")
-				{
-					PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
-					playerPuppet.curBalance += 12.5f;
-					if (playerPuppet.curBalance > playerPuppet.maxBalance)
-						playerPuppet.curBalance = playerPuppet.maxBalance;
-				}
+                if (gameObject.tag == "Enemy")
+                {
+                    PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
+                    playerPuppet.curBalance += 12.5f;
+                    if (playerPuppet.curBalance > playerPuppet.maxBalance)
+                        playerPuppet.curBalance = playerPuppet.maxBalance;
+                }
 
-				// New things, added by Dakota 1/13 whatever PM
-				canHit = false;
-				//
-				ChangeState(State.FLINCH);
-			}
-		}
-	}
+                // New things, added by Dakota 1/13 whatever PM
+                canHit = false;
+                //
+                ChangeState(State.FLINCH);
+            }
+        }
+    }
 
-	public HitBox cube;
-	// Sam: activate our attack hitbox
-	void Attack()
-	{
+    public HitBox cube;
+    // Sam: activate our attack hitbox
+    void Attack()
+    {
         if (cube)
-		    cube.Attack();
+            cube.Attack();
+    }
+
+    //Sam: the enemy's hitbox that we are owned by
+    HitBox otherBox;
+    //Sam: tell the otherbox we are no longer among the living
+    void NotifyNextOfKin()
+    {
+        if (otherBox)
+            otherBox.RemoveFromList(gameObject);
+    }
+
+    public void SetOtherBox(HitBox other)
+    {
+        otherBox = other;
+    }
+
+    public void RemoveOtherBox()
+    {
+        otherBox = null;
+    }
+
+	public void PlaySwish()
+	{
+		Instantiate(swordSwish, transform.position, Quaternion.identity);
 	}
 }

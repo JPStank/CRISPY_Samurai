@@ -10,7 +10,7 @@ public class SoundEffect : MonoBehaviour
 	void Start () 
 	{
 		sfx = variety[Random.Range(0, variety.Length)];
-		sfx.Play();
+		sfx.PlayDelayed(0.3f);
 		Destroy(gameObject, 1.0f);
 	}
 }

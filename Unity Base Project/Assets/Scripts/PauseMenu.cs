@@ -137,7 +137,7 @@ public class PauseMenu : MonoBehaviour
 	public void Exit()
 	{
 		Pause();
-		Application.LoadLevel("Menu_Scene");
+		Application.LoadLevel("Hub_Scene");
 	}
 
 }

@@ -34,6 +34,7 @@ public class EnemySpawner : MonoBehaviour
         if (p && p.curBalance <= 0.0f)
         {
             //p.ChangeState(PuppetScript.State.DEAD);
+            //GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().RemoveEnemy(currEnemy);
             Destroy(currEnemy, currEnemy.GetComponent<Animation>()["Death"].length + 0.5f);
             currEnemy = null;
 
