@@ -41,8 +41,8 @@ public class HitBox : MonoBehaviour
 			{
 				if (victim.GetComponent<PuppetScript>() != null)
 				{
-					victim.GetComponent<PuppetScript>().ResolveHit(owner.curState);
-					owner.ResolveHit(victim.GetComponent<PuppetScript>().curState);
+					victim.GetComponent<PuppetScript>().ResolveHit(owner.gameObject);
+					owner.ResolveHit(victim);
 				}
 			}
 		}

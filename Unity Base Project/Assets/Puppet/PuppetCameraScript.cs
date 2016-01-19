@@ -78,7 +78,7 @@ public class PuppetCameraScript : MonoBehaviour
 	{
 		Vector3 relativePos = camTarg.transform.position - followCam.transform.position;
 		RaycastHit hit;
-		if (Physics.Raycast(followCam.transform.position, relativePos.normalized, out hit)
+		if (Physics.Raycast(followCam.transform.position, relativePos.normalized, out hit, relativePos.magnitude)
 			&& hit.collider.gameObject.transform.tag != "Player")
 		{
 			if (hit.collider.gameObject.tag != "Terrain")

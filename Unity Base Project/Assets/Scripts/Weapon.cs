@@ -59,9 +59,9 @@ public class Weapon : MonoBehaviour
             //owner.canHit = false;
 			if (other.gameObject.GetComponentInChildren<Weapon>() != null)
 			{
-				owner.ResolveHit(other.gameObject.GetComponentInChildren<Weapon>().owner.curState);
+				owner.ResolveHit(other.gameObject);
 				if (other.gameObject.GetComponent<PuppetScript>() != null)
-					other.gameObject.GetComponent<PuppetScript>().ResolveHit(owner.curState);
+					other.gameObject.GetComponent<PuppetScript>().ResolveHit(owner.gameObject);
 			}
 		}
 	}

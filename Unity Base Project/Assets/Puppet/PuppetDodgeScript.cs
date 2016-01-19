@@ -46,17 +46,17 @@ public class PuppetDodgeScript : MonoBehaviour {
                     }
                 case PuppetScript.State.DGE_LEFT:
                     {
-                        transform.rotation = orgRot;
+                        //transform.rotation = orgRot;
                         transform.Translate(-Time.deltaTime * rotationDist, 0.0f, 0.0f);
-                        transform.rotation = curRot;
+                        //transform.rotation = curRot;
                         //transform.Rotate(0.0f, 0.0f, Time.deltaTime * rotationSpeed);
                         break;
                     }
                 case PuppetScript.State.DGE_RIGHT:
                     {
-                        transform.rotation = orgRot;
+                        //transform.rotation = orgRot;
                         transform.Translate(Time.deltaTime * rotationDist, 0.0f, 0.0f);
-                        transform.rotation = curRot;
+                        //transform.rotation = curRot;
                         //transform.Rotate(0.0f, 0.0f, -Time.deltaTime * rotationSpeed);
                         break;
                     }
@@ -69,6 +69,10 @@ public class PuppetDodgeScript : MonoBehaviour {
                         break;
                     }
             }
+			if (Owner.rockedOn && Owner.curTarg)
+			{
+				transform.LookAt(Owner.curTarg.transform);
+			}
         }
 
 
