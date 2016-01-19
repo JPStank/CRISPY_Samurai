@@ -4,7 +4,10 @@ using System.Collections;
 public class PlayerInput : MonoBehaviour
 {
 	//public float speed = 2.0f;
-	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 1.0f;
+	enum ATTACKS { NONE = 0, VERT, LTR, RTL }
+	ATTACKS lastAttack;
+
+	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.25f;
 	public PuppetScript puppet;
 	public GameObject swordSwish;
 
@@ -12,6 +15,7 @@ public class PlayerInput : MonoBehaviour
 	void Start()
 	{
 		puppet = gameObject.GetComponent<PuppetScript>();
+		lastAttack = ATTACKS.NONE;
 	}
 
 	// Update is called once per frame
@@ -59,7 +63,7 @@ public class PlayerInput : MonoBehaviour
 
 		//if (bufferTime <= 0.0f)
 		//{
-		if(InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
+		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
 			|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
 		{
 			//puppet.rockedOn = !puppet.rockedOn;
@@ -73,22 +77,28 @@ public class PlayerInput : MonoBehaviour
 
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
 		{
-			//puppet slash
-			if (lHorizontal < -deadZone)
+			if (bufferTime >= 0.0f)
 			{
-				puppet.SlashRTL();
-				//Instantiate(swordSwish, puppet.transform.position, Quaternion.identity);
+				int x = 5; //for debug
+				switch (lastAttack)
+				{
+					case ATTACKS.NONE:
+						puppet.SlashRTL();
+						break;
+					case ATTACKS.VERT:
+						puppet.SlashRTL();
+						break;
+					case ATTACKS.LTR:
+						puppet.SlashVert();
+						break;
+					case ATTACKS.RTL:
+						puppet.SlashLTR();
+						break;
+					default:
+						break;
+				}
 			}
-			else if (lHorizontal > deadZone)
-			{
-				puppet.SlashLTR();
-				//Instantiate(swordSwish, puppet.transform.position, Quaternion.identity);
-			}
-			else if (lVertical < deadZone)
-			{
-				puppet.SlashVert();
-				//Instantiate(swordSwish, puppet.transform.position, Quaternion.identity);
-			}
+			bufferTime = maxTime;
 		}
 		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
 		{
@@ -111,11 +121,35 @@ public class PlayerInput : MonoBehaviour
 				puppet.DodgeBackwards();
 		}
 		//}
-		//else
-		//{
-		//	bufferTime -= Time.deltaTime;
-		//	if (bufferTime < 0.0f)
-		//		bufferTime = 0.0f;
-		//}
+		else
+		{
+			bufferTime -= Time.deltaTime;
+			if (bufferTime <= 0.0f)
+			{
+				bufferTime = 0.0f;
+				//lastAttack = ATTACKS.NONE;
+			}
+		}
+	}
+
+	// Sam: ugly interface for animations
+	void SetLastLTR()
+	{
+		lastAttack = ATTACKS.LTR;
+	}
+
+	void SetLastRTL()
+	{
+		lastAttack = ATTACKS.RTL;
+	}
+
+	void SetLastVert()
+	{
+		lastAttack = ATTACKS.VERT;
+	}
+
+	void SetLastNone()
+	{
+		lastAttack = ATTACKS.NONE;
 	}
 }
