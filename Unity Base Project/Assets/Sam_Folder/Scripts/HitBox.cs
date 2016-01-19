@@ -68,31 +68,31 @@ public class HitBox : MonoBehaviour
 	}
 
 	// Sam: this might have issues
-	//void OnTriggerEnter(Collider other)
-	//{
-	//	if (other.gameObject.tag == "Enemy"
-	//		|| other.gameObject.tag == "Player")
-	//	{
-	//		if (!targets.Contains(other.gameObject))
-	//		{
-	//			targets.Add(other.gameObject);
-	//			other.gameObject.GetComponent<PuppetScript>().SetOtherBox(this);
-	//		}
-	//	}
-	//}
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.tag == "Enemy"
+			|| other.gameObject.tag == "Player")
+		{
+			if (!targets.Contains(other.gameObject))
+			{
+				targets.Add(other.gameObject);
+				other.gameObject.GetComponent<PuppetScript>().SetOtherBox(this);
+			}
+		}
+	}
 
-	//void OnTriggerExit(Collider other)
-	//{
-	//	if (other.gameObject.tag == "Enemy"
-	//		|| other.gameObject.tag == "Player")
-	//	{
-	//		if (targets.Contains(other.gameObject))
-	//		{
-	//			targets.Remove(other.gameObject);
-	//			other.gameObject.GetComponent<PuppetScript>().RemoveOtherBox();
-	//		}
-	//	}
-	//}
+	void OnTriggerExit(Collider other)
+	{
+		if (other.gameObject.tag == "Enemy"
+			|| other.gameObject.tag == "Player")
+		{
+			if (targets.Contains(other.gameObject))
+			{
+				targets.Remove(other.gameObject);
+				other.gameObject.GetComponent<PuppetScript>().RemoveOtherBox();
+			}
+		}
+	}
 
 	//Sam: shouldn't need to ever call this function
 	public void AddToList(GameObject obj)
