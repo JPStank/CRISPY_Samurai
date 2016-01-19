@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class GUI : MonoBehaviour
 {
 	public Canvas theGUI;
+	public Canvas tutorial;
 	public Image guardLeft, guardRight, guardTop, balance;
 	private PuppetScript player;
 
@@ -64,5 +65,21 @@ public class GUI : MonoBehaviour
 			player.animation.Play(dances[Random.Range(0, dances.Count)]);
 			//GameObject.FindGameObjectWithTag("Player").GetComponent<Animation>().Play("Twerk");
 		}
+
+		if (InputChecker.GetAxis(InputChecker.PLAYER_NUMBER.ONE, InputChecker.JOYSTICK.DPAD, InputChecker.AXIS.X) < 0.0f && !action)
+		{
+			action = true;
+			if (tutorial)
+			{
+				tutorial.enabled = !tutorial.enabled;
+			}
+		}
+		else if (InputChecker.GetAxis(InputChecker.PLAYER_NUMBER.ONE, InputChecker.JOYSTICK.DPAD, InputChecker.AXIS.X) == 0.0f)
+		{
+			//tutorial.enabled = false;
+
+			action = false;
+		}
+
 	}
 }
