@@ -9,34 +9,25 @@ public class SteamManager : MonoBehaviour
     public GameObject steamEffect;
 
     public bool isAI = true;
+    public Vector3 test;
 
-    //public Vector3 test;
-
-	// Use this for initialization
-	void Start () 
-    {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-    {
-	
-	}
+    private Vector3 leftOffset = new Vector3(0.0f, 90.0f, 0.0f);
+    private Vector3 rightOffset = new Vector3(0.0f, 270.0f, 0.0f);
+    private Vector3 topOffset = new Vector3(270.0f, 0.0f, 0.0f);
 
     void SpawnTop()
     {
         if (isAI)
-            Instantiate(steamEffect, topSpawn.transform.position, Quaternion.Euler(270.0f, 90.0f, 0.0f));
+            Instantiate(steamEffect, topSpawn.transform.position, Quaternion.Euler(transform.eulerAngles + topOffset));
     }
     void SpawnLeft()
     {
         if (isAI)
-            Instantiate(steamEffect, leftSpawn.transform.position, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+            Instantiate(steamEffect, leftSpawn.transform.position, Quaternion.Euler(transform.eulerAngles + leftOffset));
     }
     void SpawnRight()
     {
         if (isAI)
-            Instantiate(steamEffect, rightSpawn.transform.position, Quaternion.Euler(0.0f, -180.0f, 0.0f));
+            Instantiate(steamEffect, rightSpawn.transform.position, Quaternion.Euler(transform.eulerAngles + rightOffset));
     }
 }
