@@ -306,4 +306,27 @@ public class AI_Controller : MonoBehaviour
     {
         inRange = b;
     }
+
+	#region ductTapeNbubbleGum
+	// Sam: Duct tape and bubblegum
+	void SetLastLTR()
+	{
+		//lastAttack = ATTACKS.LTR;
+	}
+
+	void SetLastRTL()
+	{
+		//lastAttack = ATTACKS.RTL;
+	}
+
+	void SetLastVert()
+	{
+		//lastAttack = ATTACKS.VERT;
+	}
+
+	void SetLastNone()
+	{
+		//lastAttack = ATTACKS.NONE;
+	}
+	#endregion
 }
