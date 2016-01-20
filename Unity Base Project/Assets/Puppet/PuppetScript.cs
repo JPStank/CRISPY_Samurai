@@ -49,6 +49,7 @@ public class PuppetScript : MonoBehaviour
 	public float DgeTmrMax;
 	public float GrdTmrMax;
 	public bool rockedOn = false;
+    public MaterialFlash flashScript = null; // Josh: talk to the renderer
 
 	private string[,] animTable;
 	private bool[,] stateTable;
@@ -111,6 +112,11 @@ public class PuppetScript : MonoBehaviour
 			temp = GetComponent<CharacterController>();
 			controller = (CharacterController)temp;
 		}
+        if (flashScript == null)
+        {
+            temp = GetComponentInChildren<MaterialFlash>();
+            flashScript = (MaterialFlash)temp;
+        }
 		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
 
 		lastState = curState = State.IDLE;
@@ -833,8 +839,11 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
+                
 				if (!godMode)
 				{
+                    if (flashScript)
+                        flashScript.StartFlash();
 					bool armorBlocked = false;
 					if (armor != null)
 					{
