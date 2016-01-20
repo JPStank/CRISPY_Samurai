@@ -52,10 +52,10 @@ public class AI_Monitor : MonoBehaviour
 
 	public void ReadyToConnect()
 	{
-		GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
-		foreach (GameObject bobject in allGameObjects)
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		foreach (GameObject enemy in enemies)
 		{
-			bobject.SendMessage("ConnectToMonitor",this, SendMessageOptions.DontRequireReceiver);
+			enemy.SendMessage("ConnectToMonitor",this, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 }
