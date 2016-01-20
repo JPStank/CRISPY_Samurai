@@ -132,7 +132,7 @@ public class PlayerInput : MonoBehaviour
 				if (bufferTime <= 0.0f)
 				{
 					bufferTime = 0.0f;
-					//lastAttack = ATTACKS.NONE;
+					lastAttack = ATTACKS.NONE;
 				}
 			}
 		}
