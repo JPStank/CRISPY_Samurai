@@ -815,7 +815,7 @@ public class PuppetScript : MonoBehaviour
 			return -1;
 	}
 
-	//Placeholder function, does nothing
+	//Resolve collisions when an attack is made.
 	public void ResolveHit(GameObject _otherObject)
 	{
 		//public string[,] animTable;
