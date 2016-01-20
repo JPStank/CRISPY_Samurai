@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	public GameObject bloodFX;
 	public GameObject swordSwish;
 
     // New things, added by Dakota 1/13 7:22pm
@@ -936,6 +937,11 @@ public class PuppetScript : MonoBehaviour
                 if (curBalance <= 0.0f)
                 {
                     gameObject.layer = 10;
+					if (bloodFX)
+					{
+						Instantiate(bloodFX, gameObject.transform.position, gameObject.transform.rotation);
+						Destroy(bloodFX, 2.0f);
+					}
                     animation.Play("Death");
                     ChangeState(State.DEAD);
                     curBalance = 0.0f;
