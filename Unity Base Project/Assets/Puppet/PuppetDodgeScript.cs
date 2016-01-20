@@ -38,33 +38,42 @@ public class PuppetDodgeScript : MonoBehaviour {
             {
                 case PuppetScript.State.DGE_FORWARD:
                     {
-                        transform.rotation = orgRot;
+                        //transform.rotation = orgRot;
                         transform.Translate(0.0f, 0.0f, Time.deltaTime * rotationDist);
-                        transform.rotation = curRot;
+                        //transform.rotation = curRot;
                        //transform.Rotate(Time.deltaTime * rotationSpeed, 0.0f, 0.0f);
                         break;
                     }
                 case PuppetScript.State.DGE_LEFT:
                     {
-                        //transform.rotation = orgRot;
-                        transform.Translate(-Time.deltaTime * rotationDist, 0.0f, 0.0f);
+						//transform.rotation = orgRot;
+						if (Owner.rockedOn)
+							transform.Translate(-Time.deltaTime * rotationDist, 0.0f, 0.0f);
+						else
+							transform.Translate(0.0f, 0.0f, Time.deltaTime * rotationDist);
                         //transform.rotation = curRot;
                         //transform.Rotate(0.0f, 0.0f, Time.deltaTime * rotationSpeed);
                         break;
                     }
                 case PuppetScript.State.DGE_RIGHT:
                     {
-                        //transform.rotation = orgRot;
-                        transform.Translate(Time.deltaTime * rotationDist, 0.0f, 0.0f);
+						//transform.rotation = orgRot;
+						if (Owner.rockedOn)
+							transform.Translate(Time.deltaTime * rotationDist, 0.0f, 0.0f);
+						else
+							transform.Translate(0.0f, 0.0f, Time.deltaTime * rotationDist);
                         //transform.rotation = curRot;
                         //transform.Rotate(0.0f, 0.0f, -Time.deltaTime * rotationSpeed);
                         break;
                     }
                 case PuppetScript.State.DGE_BACK:
                     {
-                        transform.rotation = orgRot;
-                        transform.Translate(0.0f, 0.0f, -Time.deltaTime * rotationDist);
-                        transform.rotation = curRot;
+                        //transform.rotation = orgRot;
+						if (Owner.rockedOn)
+							transform.Translate(0.0f, 0.0f, -Time.deltaTime * rotationDist);
+						else
+							transform.Translate(0.0f, 0.0f, Time.deltaTime * rotationDist);
+                        //transform.rotation = curRot;
                         //transform.Rotate(-Time.deltaTime * rotationSpeed, 0.0f, 0.0f);
                         break;
                     }
