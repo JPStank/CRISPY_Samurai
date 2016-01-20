@@ -3,9 +3,11 @@ using System.Collections;
 
 public class Action : ScriptableObject
 {
+	public enum TYPE { SLASH, GUARD, WINDOW };
     protected bool behaving = false;
     public PuppetScript puppet;
 	public Animation animation;
+	public TYPE type;
 	// Use this for initialization
 	public void Start()
 	{

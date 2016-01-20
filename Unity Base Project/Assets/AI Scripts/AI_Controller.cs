@@ -8,6 +8,7 @@ public class AI_Controller : MonoBehaviour
     NavMeshAgent agent;
     GameObject player;
     PuppetScript puppet;
+	AI_Monitor monitor;
 
     //public List<Action> actions;
     [Header("Patrol Stuff")]
@@ -25,6 +26,7 @@ public class AI_Controller : MonoBehaviour
     public bool inRange = false;
     public Action currentAction;
     int nextAction;
+	public int attackID;
 
     public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
 
@@ -34,6 +36,7 @@ public class AI_Controller : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
         puppet = GetComponent<PuppetScript>();
+		FindMonitor();
         nextAction = 1;
         actions = new List<Action>();
         foreach (ATTACK_TYPE attack in attacks)
@@ -45,6 +48,7 @@ public class AI_Controller : MonoBehaviour
                         SlashLeft move = ScriptableObject.CreateInstance<SlashLeft>();
                         move.animation = animation;
                         move.puppet = puppet;
+						move.type = Action.TYPE.SLASH;
                         actions.Add(move);
                         break;
                     }
@@ -53,7 +57,8 @@ public class AI_Controller : MonoBehaviour
                         SlashRight move = ScriptableObject.CreateInstance<SlashRight>();
                         move.animation = animation;
                         move.puppet = puppet;
-                        actions.Add(move);
+						move.type = Action.TYPE.SLASH;
+						actions.Add(move);
                         break;
                     }
                 case ATTACK_TYPE.TOP:
@@ -61,7 +66,8 @@ public class AI_Controller : MonoBehaviour
                         SlashTop move = ScriptableObject.CreateInstance<SlashTop>();
                         move.animation = animation;
                         move.puppet = puppet;
-                        actions.Add(move);
+						move.type = Action.TYPE.SLASH;
+						actions.Add(move);
                         break;
                     }
                 case ATTACK_TYPE.THRUST:
@@ -69,6 +75,7 @@ public class AI_Controller : MonoBehaviour
 						ThrustForward move = ScriptableObject.CreateInstance<ThrustForward>();
 						move.animation = animation;
 						move.puppet = puppet;
+						move.type = Action.TYPE.SLASH;
 						actions.Add(move);
 						break;
 					}
@@ -78,6 +85,7 @@ public class AI_Controller : MonoBehaviour
 						move.animation = animation;
 						move.puppet = puppet;
 						move.GuardTimerMax = guardTimer;
+						move.type = Action.TYPE.GUARD;
 						actions.Add(move);
 					}
 					break;
@@ -87,6 +95,7 @@ public class AI_Controller : MonoBehaviour
 						move.animation = animation;
 						move.puppet = puppet;
 						move.GuardTimerMax = guardTimer;
+						move.type = Action.TYPE.GUARD;
 						actions.Add(move);
 					}
 					break;
@@ -96,6 +105,7 @@ public class AI_Controller : MonoBehaviour
 						move.animation = animation;
 						move.puppet = puppet;
 						move.GuardTimerMax = guardTimer;
+						move.type = Action.TYPE.GUARD;
 						actions.Add(move);
 					}
 					break;
@@ -110,6 +120,7 @@ public class AI_Controller : MonoBehaviour
 						move.dances.Add("Twerk");
 						move.dances.Add("Gangnam Style");
 						move.dances.Add("Robot");
+						move.type = Action.TYPE.GUARD;
 						actions.Add(move);
 					}
 					break;
@@ -119,6 +130,7 @@ public class AI_Controller : MonoBehaviour
                         move.animation = animation;
                         move.puppet = puppet;
                         move.TimerMax = shortTimer;
+						move.type = Action.TYPE.WINDOW;
                         actions.Add(move);
                     }
                     break;
@@ -128,7 +140,8 @@ public class AI_Controller : MonoBehaviour
                         move.animation = animation;
                         move.puppet = puppet;
                         move.TimerMax = mediumTimer;
-                        actions.Add(move);
+						move.type = Action.TYPE.WINDOW;
+						actions.Add(move);
                     }
                     break;
                 case ATTACK_TYPE.WINDOW_LONG:
@@ -137,7 +150,8 @@ public class AI_Controller : MonoBehaviour
                         move.animation = animation;
                         move.puppet = puppet;
                         move.TimerMax = longTimer;
-                        actions.Add(move);
+						move.type = Action.TYPE.WINDOW;
+						actions.Add(move);
                     }
                     break;
             }
@@ -151,6 +165,7 @@ public class AI_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (puppet.curState != PuppetScript.State.DEAD)
         {
             if (patrolling)
@@ -158,6 +173,7 @@ public class AI_Controller : MonoBehaviour
                 if ((player.gameObject.transform.position - gameObject.transform.position).magnitude < noticeDistance)
                 {
                     patrolling = false;
+					attackID = monitor.AddEnemy(this);
                     return;
                 }
 
@@ -208,10 +224,12 @@ public class AI_Controller : MonoBehaviour
 					agent.Stop();
                 }
 
-                if (inRange || currentAction.isBehaving())
+                if ((inRange || currentAction.isBehaving()) && (monitor.CanIAttack(attackID) || currentAction.type == Action.TYPE.WINDOW))
                 {
                     if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
                     {
+						if (currentAction.type == Action.TYPE.WINDOW && monitor.CanIAttack(attackID))
+							monitor.AttackDone();
                         // Increment the action
 						if (actions.Count > 1)
 						{
@@ -306,6 +324,28 @@ public class AI_Controller : MonoBehaviour
     {
         inRange = b;
     }
+
+	public void ConnectToMonitor(AI_Monitor connectME)
+	{
+		if(monitor == null)
+			monitor = connectME;
+		if(!patrolling)
+			attackID = monitor.AddEnemy(this);
+	}
+
+	public void FindMonitor()
+	{
+		GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
+		foreach (GameObject bobject in allGameObjects)
+		{
+			bobject.SendMessage("ReadyToConnect", SendMessageOptions.DontRequireReceiver);
+		}
+	}
+
+	public void OnDestroy()
+	{
+		monitor.AttackDone();
+	}
 
 	#region ductTapeNbubbleGum
 	// Sam: Duct tape and bubblegum
