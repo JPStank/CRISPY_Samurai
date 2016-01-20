@@ -48,10 +48,6 @@ public class PuppetScript : MonoBehaviour
 	public float AtkTmrMax;
 	public float DgeTmrMax;
 	public float GrdTmrMax;
-	public bool debugMove = false;
-	public bool debugCamera = false;
-	public bool debugDodge = false;
-	public bool debugGuard = false;
 	public bool rockedOn = false;
     public MaterialFlash flashScript = null; // Josh: talk to the renderer
 
@@ -66,6 +62,10 @@ public class PuppetScript : MonoBehaviour
 	private float debugDodgeTmr = 0.0f;
 	private int debugGrdType = 0;
 	private float debugGrdTmr = 0.0f;
+	private bool debugMove = false;
+	private bool debugCamera = false;
+	private bool debugDodge = false;
+	private bool debugGuard = false;
 
 	public bool godMode = false;
 
