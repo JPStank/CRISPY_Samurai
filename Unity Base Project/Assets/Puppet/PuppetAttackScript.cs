@@ -56,7 +56,7 @@ public class PuppetAttackScript : MonoBehaviour {
         //Trigger animation
 		animation["Down Slash"].speed = attackSpeed;
         animation.Play("Down Slash");
-		AtkTmrCur = _sender.animTimers["SlashVert"] / animation["Down Slash"].speed;
+        AtkTmrCur = animation["Down Slash"].length / animation["Down Slash"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
@@ -72,7 +72,7 @@ public class PuppetAttackScript : MonoBehaviour {
 		animation["Right Slash"].speed = attackSpeed;
 
         animation.Play("Right Slash");
-		AtkTmrCur = _sender.animTimers["SlashLTR"] / animation["Right Slash"].speed;
+        AtkTmrCur = animation["Right Slash"].length / animation["Right Slash"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
@@ -88,7 +88,7 @@ public class PuppetAttackScript : MonoBehaviour {
 		animation["Left Slash"].speed = attackSpeed;
 
         animation.Play("Left Slash");
-		AtkTmrCur = _sender.animTimers["SlashRTL"] / animation["Left Slash"].speed;
+        AtkTmrCur = animation["Left Slash"].length / animation["Left Slash"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);

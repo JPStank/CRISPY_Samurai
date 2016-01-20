@@ -23,7 +23,7 @@ public class BloodyBag : MonoBehaviour
         if (other.transform.tag == "Weapon")
         {
 			Weapon temp = other.gameObject.GetComponent<Weapon>();
-			if (temp && temp.owner.canHit)
+			if (temp)
 			{
 				//temp.owner.canHit = false;
 				Instantiate(bloodEffect, other.contacts[0].point, bloodEffect.transform.rotation);

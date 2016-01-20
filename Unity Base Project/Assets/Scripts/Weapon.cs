@@ -46,15 +46,14 @@ public class Weapon : MonoBehaviour
 		if (other.transform.tag == "Weapon")
 		{
 			Weapon temp = other.gameObject.GetComponent<Weapon>();
-			if (temp && temp.owner.canHit)
+			if (temp)
 			{
 				//owner.canHit = false;
 				Instantiate(sparkEffect, other.contacts[0].point, Quaternion.identity);
 			}
 		}
 		if ((other.transform.tag == "Player"
-			|| other.transform.tag == "Enemy")
-            && owner.canHit)
+			|| other.transform.tag == "Enemy"))
 		{
             //owner.canHit = false;
 			if (other.gameObject.GetComponentInChildren<Weapon>() != null)
