@@ -22,7 +22,7 @@ public static class InputChecker
 	public enum CONTROLLER_BUTTON { A, B, X, Y, BUMPER_L, BUMPER_R, START, BACK, LEFTSTICK_CLICK, RIGHTSTICK_CLICK };
 	public enum JOYSTICK { LEFT, RIGHT, DPAD };
 	public enum TRIGGER { LEFT, RIGHT };
-	public enum BUTTON_STATE { UP, DOWN };
+	public enum BUTTON_STATE { UP, DOWN, HELD };
 
 /******************************************************
  * Function: GetAxis
@@ -186,6 +186,8 @@ public static class InputChecker
 			buttonValue = Input.GetButtonDown(inputToCheck);
 		else if (whichState == BUTTON_STATE.UP)
 			buttonValue = Input.GetButtonUp(inputToCheck);
+		else if (whichState == BUTTON_STATE.HELD)
+			buttonValue = Input.GetButton(inputToCheck);
 
 		return buttonValue;
 
