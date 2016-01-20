@@ -13,8 +13,8 @@ public class BloodEffectBehavior : MonoBehaviour
         {
             sfx = gameObject.GetComponent<AudioSource>();
         }
-        // kill self after 1 second
-        Destroy(gameObject, 1.0f);
+        // kill self after 3 second
+        Destroy(gameObject, 3.0f);
     }
 
     // Update is called once per frame

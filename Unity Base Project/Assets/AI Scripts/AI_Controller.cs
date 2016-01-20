@@ -211,10 +211,11 @@ public class AI_Controller : MonoBehaviour
             {
                 // Checking player dir and distance
                 Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+				playerDirection.y = 0.0f;
                 Vector3 AIForward = transform.forward;
                 float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-                if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+                if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
                 {
                     inRange = false;
                 }
@@ -224,11 +225,11 @@ public class AI_Controller : MonoBehaviour
 					agent.Stop();
                 }
 
-                if ((inRange || currentAction.isBehaving()) && (monitor.CanIAttack(attackID) || currentAction.type == Action.TYPE.WINDOW))
+				if ((inRange || currentAction.isBehaving()) && (monitor.CanIAttack(attackID)/* || currentAction.type == Action.TYPE.WINDOW*/))
                 {
                     if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
                     {
-						if (currentAction.type == Action.TYPE.WINDOW && monitor.CanIAttack(attackID))
+						if (currentAction.type == Action.TYPE.WINDOW/* && monitor.CanIAttack(attackID)*/)
 							monitor.AttackDone();
                         // Increment the action
 						if (actions.Count > 1)
@@ -261,12 +262,14 @@ public class AI_Controller : MonoBehaviour
         if (player && agent && puppet)
         {
             Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			playerDirection.y = 0.0f;
             Vector3 AIForward = transform.forward;
             float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-            //Debug.Log(angleToPlayer + " Minion Script");
+            Debug.Log(angleToPlayer + " " + (gameObject.transform.position - player.transform.position).magnitude + " " + 
+				" Seek Player");
 
-            if (angleToPlayer > 15.0f &&
+            if (angleToPlayer > 5.0f &&
                 !currentAction.isBehaving() &&
                 (gameObject.transform.position - player.transform.position).magnitude < agent.stoppingDistance &&
                 (gameObject.transform.position - player.transform.position).magnitude > 0.78f)
@@ -335,11 +338,11 @@ public class AI_Controller : MonoBehaviour
 
 	public void FindMonitor()
 	{
-		GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
-		foreach (GameObject bobject in allGameObjects)
-		{
-			bobject.SendMessage("ReadyToConnect", SendMessageOptions.DontRequireReceiver);
-		}
+		GameObject bob = GameObject.FindGameObjectWithTag("Enemy Monitor");
+		monitor = bob.GetComponent<AI_Monitor>();
+		if (monitor != null)
+			monitor.ReadyToConnect();
+		
 	}
 
 	public void OnDestroy()
