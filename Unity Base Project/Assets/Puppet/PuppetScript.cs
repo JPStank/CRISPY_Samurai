@@ -45,9 +45,9 @@ public class PuppetScript : MonoBehaviour
 	public float lockMoveSpeedMod;
 	public float def_camSpeed;
 	public float camSpeed;
-	public float AtkTmrMax;
+	//public float AtkTmrMax;
 	public float DgeTmrMax;
-	public float GrdTmrMax;
+	//public float GrdTmrMax;
 	public bool rockedOn = false;
 
 	private string[,] animTable;
@@ -126,9 +126,12 @@ public class PuppetScript : MonoBehaviour
 		if (camSpeed == 0.0f)
 			camSpeed = 8.0f;
 		def_camSpeed = camSpeed;
-		AtkTmrMax = 1.0f;
-		DgeTmrMax = 0.5f;
-		GrdTmrMax = 0.2f;
+		//if (AtkTmrMax = 0.0f)
+			//AtkTmrMax = 1.0f;
+		if (DgeTmrMax == 0.0f)
+			DgeTmrMax = 0.5f;
+		//if (GrdTmrMax)
+			//GrdTmrMax = 0.2f;
 
 		InitAnimTable();
 		InitStateTable();
@@ -456,6 +459,7 @@ public class PuppetScript : MonoBehaviour
 	// Does the degubs for the testing on the features
 	private void DoDegub()
 	{
+		return;
 		if (debugMove || debugCamera)
 		{
 			debugAngle += Time.deltaTime * 2.0f;
@@ -478,7 +482,7 @@ public class PuppetScript : MonoBehaviour
 		if (debugDodge)
 		{
 			debugDodgeTmr += Time.deltaTime;
-			if (debugDodgeTmr > DgeTmrMax * 2.0f)
+			//if (debugDodgeTmr > DgeTmrMax * 2.0f)
 			{
 				debugDodgeTmr = 0.0f;
 				int res = 1;
@@ -525,7 +529,7 @@ public class PuppetScript : MonoBehaviour
 					break;
 			}
 
-			if (debugGrdTmr > GrdTmrMax * 5.0f)
+			//if (debugGrdTmr > GrdTmrMax * 5.0f)
 			{
 				debugGrdTmr = 0.0f;
 				debugGrdType++;

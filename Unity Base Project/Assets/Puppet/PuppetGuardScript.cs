@@ -19,7 +19,7 @@ public class PuppetGuardScript : MonoBehaviour {
         Owner = _sender;
         //Animetor = _sender.Animetor;
 
-        GrdTmrMax = _sender.GrdTmrMax;
+        //GrdTmrMax = _sender.GrdTmrMax;
         GrdTmrCur = 0.0f;
     }
 	
