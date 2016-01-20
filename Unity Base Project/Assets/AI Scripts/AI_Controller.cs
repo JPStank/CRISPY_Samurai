@@ -324,12 +324,6 @@ public class AI_Controller : MonoBehaviour
                     puppet.ChangeState(PuppetScript.State.MOVING);
                     animation.Play("Walk Forward");
                 }
-
-                if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
-                {
-                    //inRange = true;
-                    animation.Play("Idle");
-                }
             }
             //else if ((gameObject.transform.position - player.transform.position).magnitude < agent.stoppingDistance + 0.5f && !currentAction.isBehaving())
             //{

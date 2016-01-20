@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
-	public GameObject bloodFX;
+	public GameObject painEffect;
+	public GameObject bloodHit;
+	public GameObject bloodPool;
 	public GameObject swordSwish;
 
 	// New things, added by Dakota 1/13 7:22pm
@@ -39,20 +41,17 @@ public class PuppetScript : MonoBehaviour
 	public List<GameObject> badguys;
 	public Vector3 targOffset;
 	public Vector3 nextDir;
+	//public float AtkTmrMax;
+	public float DgeTmrMax;
+	public float GrdTmrMax;
 	public float targMaxDist;
 	public float def_moveSpeed;
 	public float moveSpeed;
 	public float lockMoveSpeedMod;
 	public float def_camSpeed;
 	public float camSpeed;
-	public float AtkTmrMax;
-	public float DgeTmrMax;
-	public float GrdTmrMax;
-	public bool debugMove = false;
-	public bool debugCamera = false;
-	public bool debugDodge = false;
-	public bool debugGuard = false;
 	public bool rockedOn = false;
+    public MaterialFlash flashScript = null; // Josh: talk to the renderer
 
 	private string[,] animTable;
 	private bool[,] stateTable;
@@ -65,6 +64,10 @@ public class PuppetScript : MonoBehaviour
 	private float debugDodgeTmr = 0.0f;
 	private int debugGrdType = 0;
 	private float debugGrdTmr = 0.0f;
+	private bool debugMove = false;
+	private bool debugCamera = false;
+	private bool debugDodge = false;
+	private bool debugGuard = false;
 
 	public bool godMode = false;
 
@@ -81,7 +84,7 @@ public class PuppetScript : MonoBehaviour
 
 		for (int i = 0; i < meats.Length; i++)
 			meats[i].player = gameObject;
-		//
+		
 
 		Object temp = GetComponent<PuppetAttackScript>();
 		if (attackScript == null)
@@ -111,6 +114,11 @@ public class PuppetScript : MonoBehaviour
 			temp = GetComponent<CharacterController>();
 			controller = (CharacterController)temp;
 		}
+        if (flashScript == null)
+        {
+            temp = GetComponentInChildren<MaterialFlash>();
+            flashScript = (MaterialFlash)temp;
+        }
 		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
 
 		lastState = curState = State.IDLE;
@@ -126,9 +134,12 @@ public class PuppetScript : MonoBehaviour
 		if (camSpeed == 0.0f)
 			camSpeed = 8.0f;
 		def_camSpeed = camSpeed;
-		AtkTmrMax = 1.0f;
-		DgeTmrMax = 0.5f;
-		GrdTmrMax = 0.2f;
+		//if (AtkTmrMax = 0.0f)
+			//AtkTmrMax = 1.0f;
+		if (DgeTmrMax == 0.0f)
+			DgeTmrMax = 0.5f;
+		if (GrdTmrMax == 0.0f)
+			GrdTmrMax = 0.2f;
 
 		InitAnimTable();
 		InitStateTable();
@@ -456,6 +467,7 @@ public class PuppetScript : MonoBehaviour
 	// Does the degubs for the testing on the features
 	private void DoDegub()
 	{
+		return;
 		if (debugMove || debugCamera)
 		{
 			debugAngle += Time.deltaTime * 2.0f;
@@ -478,7 +490,7 @@ public class PuppetScript : MonoBehaviour
 		if (debugDodge)
 		{
 			debugDodgeTmr += Time.deltaTime;
-			if (debugDodgeTmr > DgeTmrMax * 2.0f)
+			//if (debugDodgeTmr > DgeTmrMax * 2.0f)
 			{
 				debugDodgeTmr = 0.0f;
 				int res = 1;
@@ -525,7 +537,7 @@ public class PuppetScript : MonoBehaviour
 					break;
 			}
 
-			if (debugGrdTmr > GrdTmrMax * 5.0f)
+			//if (debugGrdTmr > GrdTmrMax * 5.0f)
 			{
 				debugGrdTmr = 0.0f;
 				debugGrdType++;
@@ -833,8 +845,16 @@ public class PuppetScript : MonoBehaviour
 				ChangeState(State.IDLE);
 			if (toPlay == "React Front" || toPlay == "React Side")
 			{
+                
 				if (!godMode)
 				{
+                    if (flashScript)
+                        flashScript.StartFlash();
+					if (bloodHit && painEffect)
+					{
+						Instantiate(painEffect, transform.position, transform.rotation);
+						Instantiate(bloodHit, transform.position, transform.rotation);
+					}
 					bool armorBlocked = false;
 					if (armor != null)
 					{
@@ -865,10 +885,10 @@ public class PuppetScript : MonoBehaviour
 				if (curBalance <= 0.0f)
 				{
 					gameObject.layer = 10;
-					if (bloodFX)
+					if (bloodPool)
 					{
-						Instantiate(bloodFX, gameObject.transform.position, gameObject.transform.rotation);
-						Destroy(bloodFX, 2.0f);
+						Instantiate(bloodPool, gameObject.transform.position, gameObject.transform.rotation);
+						//Destroy(bloodFX, 2.0f);
 					}
 					animation.Play("Death");
 					ChangeState(State.DEAD);
