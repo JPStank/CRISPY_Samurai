@@ -39,17 +39,24 @@ public class PlayerInput : MonoBehaviour
 
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
 		{
-			//SetLastNone();
+			SetLastNone();
 			//bufferTime = 0.0f;
-			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
+			//if (Input.GetButton("P1_Button_Y"))
+			//	puppet.GuardUpwards();
+			//else if (Input.GetButton("P1_Button_X"))
+			//	puppet.GuardLeft();
+			//else if (Input.GetButton("P1_Button_B"))
+			//	puppet.GuardRight();
+
+			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.HELD))
 			{
 				puppet.GuardLeft();
 			}
-			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN))
+			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.HELD))
 			{
 				puppet.GuardRight();
 			}
-			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
+			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.HELD))
 			{
 				puppet.GuardUpwards();
 			}
@@ -59,8 +66,6 @@ public class PlayerInput : MonoBehaviour
 		//}
 		else
 		{
-
-
 			//if (bufferTime <= 0.0f)
 			//{
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
