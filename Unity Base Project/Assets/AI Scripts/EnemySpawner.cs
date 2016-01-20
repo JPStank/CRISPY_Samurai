@@ -9,6 +9,12 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject currEnemy;
 
+
+
+    public float waitTime = 2.0f;
+    private float timer = 0.0f;
+    private bool waiting = false;
+
     int index = 0; // use this to browse the list of enemies
 
 	// Use this for initialization
@@ -20,31 +26,46 @@ public class EnemySpawner : MonoBehaviour
         }
         if (spawnPoint == null)
         {
-            Debug.LogWarning("YOU MUST SET SPAWN LOCATION IDIOT!!");
+            Debug.LogWarning("YOU MUST SET SPAWN POINT IDIOT!!");
         }
         //currEnemy = enemies[index];
         currEnemy = (GameObject)Instantiate(enemies[index], spawnPoint.transform.position, Quaternion.identity);
+
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        PuppetScript p = currEnemy.GetComponent<PuppetScript>();
-
-        if (p && p.curBalance <= 0.0f)
+        if (currEnemy)
         {
-            //p.ChangeState(PuppetScript.State.DEAD);
-            //GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().RemoveEnemy(currEnemy);
-            Destroy(currEnemy, currEnemy.GetComponent<Animation>()["Death"].length + 0.5f);
-            currEnemy = null;
+            PuppetScript p = currEnemy.GetComponent<PuppetScript>();
 
-            index++;
-            if (index >= enemies.Length)
+            if (p && p.curBalance <= 0.0f)
             {
-                index = 0;
-            }
+                //p.ChangeState(PuppetScript.State.DEAD);
+                //GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().RemoveEnemy(currEnemy);
+                Destroy(currEnemy, currEnemy.GetComponent<Animation>()["Death"].length + 0.5f);
+                currEnemy = null;
 
-            currEnemy = (GameObject)Instantiate(enemies[index], spawnPoint.transform.position, Quaternion.identity);
+                index++;
+                if (index >= enemies.Length)
+                {
+                    index = 0;
+                }
+                waiting = true;
+            }
         }
+        if (waiting)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= waitTime)
+            {
+                timer = 0.0f;
+                waiting = false;
+                currEnemy = (GameObject)Instantiate(enemies[index], spawnPoint.transform.position, Quaternion.identity);
+            }
+        }
+
 	}
 }
