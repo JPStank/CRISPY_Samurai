@@ -19,8 +19,8 @@ public class Boss_AI_Controller : MonoBehaviour
 	public bool minionSummoned = false;
 	public bool minionDead = false;
 	public bool healing = false;
-	public Vector3 minionSpawnLocation;
-	public Vector3 retreatPoint;
+	public GameObject minionSpawnLocation;
+	public GameObject retreatPoint;
 	public GameObject minion = null;
 	PuppetScript minionPuppet;
 	public Action currentAction;
@@ -270,11 +270,11 @@ public class Boss_AI_Controller : MonoBehaviour
 		{
 			if (minion != null)
 			{
-				GameObject.Instantiate(minion, minionSpawnLocation, Quaternion.identity);
+				GameObject.Instantiate(minion, minionSpawnLocation.transform.position, Quaternion.identity);
 				minionPuppet = minion.GetComponent<PuppetScript>();
 				healing = true;
 				minionSummoned = true;
-				agent.SetDestination(retreatPoint);
+				agent.SetDestination(retreatPoint.transform.position);
 			}
 			phase = PHASE.TWO;
 		}
