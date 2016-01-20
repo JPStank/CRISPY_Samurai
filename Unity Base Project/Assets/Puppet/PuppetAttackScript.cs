@@ -8,7 +8,7 @@ public class PuppetAttackScript : MonoBehaviour {
 
     private PuppetScript Owner;
     //private Animator Animetor;
-    private float AtkTmrMax;
+    //private float AtkTmrMax;
 
 	public float attackSpeed = 1.0f;
 
@@ -24,7 +24,7 @@ public class PuppetAttackScript : MonoBehaviour {
         Owner = _sender;
         //Animetor = _sender.Animetor;
 
-        AtkTmrMax = _sender.AtkTmrMax;
+        //AtkTmrMax = _sender.AtkTmrMax;
         AtkTmrCur = 0.0f;
     }
 	
