@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	public GameObject bloodFX;
 	public GameObject swordSwish;
 
 	// New things, added by Dakota 1/13 7:22pm
@@ -26,18 +27,15 @@ public class PuppetScript : MonoBehaviour
 	}
 	public State lastState;
 	public State curState;
-	//public State nextState;
 	public PuppetAttackScript attackScript;
 	public PuppetGuardScript guardScript;
 	public PuppetDodgeScript dodgeScript;
 	public PuppetCameraScript camScript;
 	public CharacterController controller;
-	public Dictionary<string, float> animTimers;
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
 	public Armor armor;
 	private GameObject Targeting_CubeSpawned = null;
-	//public GameObject[] badguys;
 	public List<GameObject> badguys;
 	public Vector3 targOffset;
 	public Vector3 nextDir;
@@ -68,22 +66,7 @@ public class PuppetScript : MonoBehaviour
 	private int debugGrdType = 0;
 	private float debugGrdTmr = 0.0f;
 
-	public bool canHit = false;
-
 	public bool godMode = false;
-
-	void ActivateHit()
-	{
-		canHit = true;
-	}
-	void DisableHit()
-	{
-		canHit = false;
-	}
-	public void SetHit(bool h)
-	{
-		canHit = h;
-	}
 
 
 	// Use this for initialization
@@ -99,21 +82,6 @@ public class PuppetScript : MonoBehaviour
 		for (int i = 0; i < meats.Length; i++)
 			meats[i].player = gameObject;
 		//
-
-		animTimers = new Dictionary<string, float>();
-		animTimers["Idle"] = 1.833f;
-		animTimers["Walk"] = 1.1f;
-		animTimers["WalkRight"] = 1.1f;
-		animTimers["WalkLeft"] = 1.167f;
-		animTimers["Twerk"] = 15.2f;
-		animTimers["Block"] = 1.833f;
-		animTimers["BlockUp"] = 1.4f;
-		animTimers["BlockUpHit"] = 0.667f;
-		animTimers["Reaction"] = 0.967f;
-		animTimers["Stab"] = 2.133f;
-		animTimers["SlashVert"] = 2.267f;
-		animTimers["SlashLTR"] = 1.667f;
-		animTimers["SlashRTL"] = 2.033f;
 
 		Object temp = GetComponent<PuppetAttackScript>();
 		if (attackScript == null)
@@ -409,46 +377,7 @@ public class PuppetScript : MonoBehaviour
 			}
 		}
 
-		//if (tag == "Player")
-		//{
-		//	//oldPos = transform.position;
-		//	transform.Translate(nextDir * moveSpeed);
-		//	//if (transform.position != oldPos)
-		//	//{
-		//	//	int thing = 0;
-		//	//}
-		//	transform.rotation = orgRot;
-		//	// the puppet faces the direction it is moving in
-		//	if (!rockedOn && nextDir != Vector3.zero)
-		//	{
-		//		//Vector3 dir = transform.position - oldPos;
-		//		//dir.y = 0.0f;
-		//		//Vector3 towards = (transform.position - dir) + transform.position;
-		//		//towards.y = 0.0f;
-		//		Vector3 towards = transform.position + (nextDir * moveSpeed);
-		//		towards.y = transform.position.y;
-		//		transform.LookAt(towards);
-		//	}
-		//	nextDir = Vector3.zero;
-		//}
-
-		//DoDegub();
 	}
-	//public void LateUpdate()
-	//{
-	//	transform.Translate(nextDir);
-	//	nextDir = Vector3.zero;
-	//	transform.rotation = orgRot;
-	//	// the puppet faces the direction it is moving in
-	//	if (!rockedOn)
-	//	{
-	//		Vector3 dir = transform.position - oldPos;
-	//		dir.y = 0.0f;
-	//		Vector3 towards = transform.position + dir;
-	//		transform.LookAt(towards);
-	//		oldPos = transform.position;
-	//	}
-	//}
 
 	// FindTarg()
 	// find the most relevant enemy and assign him as our current target.
@@ -648,15 +577,6 @@ public class PuppetScript : MonoBehaviour
 
 		return 1;
 	}
-
-	//void OnTriggerStay(Collider col)
-	//{
-	//	Vector3 dir = transform.position - col.transform.position;
-	//	dir.Normalize();
-	//	//transform.position += dir;
-	//	nextDir += dir;
-	//	nextDir.Normalize();
-	//}
 
 	// Move Function
 	// Moves in direction of _dir.x and _dir.z
@@ -945,6 +865,11 @@ public class PuppetScript : MonoBehaviour
 				if (curBalance <= 0.0f)
 				{
 					gameObject.layer = 10;
+					if (bloodFX)
+					{
+						Instantiate(bloodFX, gameObject.transform.position, gameObject.transform.rotation);
+						Destroy(bloodFX, 2.0f);
+					}
 					animation.Play("Death");
 					ChangeState(State.DEAD);
 					curBalance = 0.0f;
@@ -966,8 +891,6 @@ public class PuppetScript : MonoBehaviour
 				}
 
 				// New things, added by Dakota 1/13 whatever PM
-				canHit = false;
-				//
 				ChangeState(State.FLINCH);
 			}
 		}
