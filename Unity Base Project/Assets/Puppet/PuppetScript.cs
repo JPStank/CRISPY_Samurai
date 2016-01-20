@@ -41,15 +41,15 @@ public class PuppetScript : MonoBehaviour
 	public List<GameObject> badguys;
 	public Vector3 targOffset;
 	public Vector3 nextDir;
+	//public float AtkTmrMax;
+	public float DgeTmrMax;
+	public float GrdTmrMax;
 	public float targMaxDist;
 	public float def_moveSpeed;
 	public float moveSpeed;
 	public float lockMoveSpeedMod;
 	public float def_camSpeed;
 	public float camSpeed;
-	//public float AtkTmrMax;
-	public float DgeTmrMax;
-	//public float GrdTmrMax;
 	public bool rockedOn = false;
     public MaterialFlash flashScript = null; // Josh: talk to the renderer
 
@@ -84,7 +84,7 @@ public class PuppetScript : MonoBehaviour
 
 		for (int i = 0; i < meats.Length; i++)
 			meats[i].player = gameObject;
-		//
+		
 
 		Object temp = GetComponent<PuppetAttackScript>();
 		if (attackScript == null)
@@ -138,8 +138,8 @@ public class PuppetScript : MonoBehaviour
 			//AtkTmrMax = 1.0f;
 		if (DgeTmrMax == 0.0f)
 			DgeTmrMax = 0.5f;
-		//if (GrdTmrMax)
-			//GrdTmrMax = 0.2f;
+		if (GrdTmrMax == 0.0f)
+			GrdTmrMax = 0.2f;
 
 		InitAnimTable();
 		InitStateTable();
