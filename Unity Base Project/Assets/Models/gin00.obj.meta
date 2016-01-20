@@ -5,11 +5,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: gin00
     100002: //RootNode
+    100004: gin00:gin00
     400000: gin00
     400002: //RootNode
+    400004: gin00:gin00
     2300000: gin00
+    2300002: gin00:gin00
     3300000: gin00
+    3300002: gin00:gin00
     4300000: gin00
+    4300002: gin00:gin00
     9500000: //RootNode
   materials:
     importMaterials: 1

@@ -5,11 +5,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: ksg00
     100002: //RootNode
+    100004: ksg00:ksg00
     400000: ksg00
     400002: //RootNode
+    400004: ksg00:ksg00
     2300000: ksg00
+    2300002: ksg00:ksg00
     3300000: ksg00
+    3300002: ksg00:ksg00
     4300000: ksg00
+    4300002: ksg00:ksg00
     9500000: //RootNode
   materials:
     importMaterials: 1

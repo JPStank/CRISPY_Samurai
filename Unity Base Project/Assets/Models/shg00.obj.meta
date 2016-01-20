@@ -5,11 +5,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: shg00
     100002: //RootNode
+    100004: shg00:shg00
     400000: shg00
     400002: //RootNode
+    400004: shg00:shg00
     2300000: shg00
+    2300002: shg00:shg00
     3300000: shg00
+    3300002: shg00:shg00
     4300000: shg00
+    4300002: shg00:shg00
     9500000: //RootNode
   materials:
     importMaterials: 1
