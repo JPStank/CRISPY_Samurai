@@ -215,6 +215,30 @@ public class AI_Controller : MonoBehaviour
                 Vector3 AIForward = transform.forward;
                 float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
+				// Checking other enemies to move away
+				//Vector3 right = transform.right;
+				//foreach (AI_Controller enemy in monitor.enemies)
+				//{
+				//	Vector3 toEnemy = enemy.gameObject.transform.position - transform.position;
+				//	if(toEnemy.magnitude < 2.0f)
+				//	{
+				//		Transform ownTransform = transform;
+				//		if (Vector3.Dot(right, toEnemy) < 0)
+				//		{
+				//			ownTransform.RotateAround(player.transform.position, Vector3.up, -1.0f);
+				//			agent.SetDestination(ownTransform.position);
+				//		}
+				//
+				//		//else
+				//		//{
+				//		//	ownTransform.RotateAround(player.transform.position, Vector3.up, 1.0f);
+				//		//	agent.SetDestination(ownTransform.position);
+				//		//}
+				//		return;
+				//
+				//	}
+				//}
+
                 if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
                 {
                     inRange = false;
@@ -333,7 +357,10 @@ public class AI_Controller : MonoBehaviour
 		if(monitor == null)
 			monitor = connectME;
 		if(!patrolling)
+		{
 			attackID = monitor.AddEnemy(this);
+			agent.avoidancePriority = attackID;
+		}
 	}
 
 	public void FindMonitor()
