@@ -9,7 +9,7 @@ public class PlayerInput : MonoBehaviour
 
 	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.25f;
 	public PuppetScript puppet;
-	public GameObject swordSwish;
+	//public GameObject swordSwish;
 
 	// Use this for initialization
 	void Start()
