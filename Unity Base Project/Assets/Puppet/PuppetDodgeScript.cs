@@ -9,12 +9,12 @@ public class PuppetDodgeScript : MonoBehaviour {
     //private Animator Animetor;
     private Quaternion orgRot;
     private float DgeTmrMax;
-    private float rotationSpeed;
+    //private float rotationSpeed;
     private float rotationDist;
 
 	// Use this for initialization
 	void Start () {
-        rotationSpeed = 750.0f;
+        //rotationSpeed = 750.0f;
         rotationDist = 10.0f;
 	}
 
