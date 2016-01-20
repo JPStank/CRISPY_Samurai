@@ -868,7 +868,7 @@ public class PuppetScript : MonoBehaviour
 					if (bloodFX)
 					{
 						Instantiate(bloodFX, gameObject.transform.position, gameObject.transform.rotation);
-						Destroy(bloodFX, 2.0f);
+						//Destroy(bloodFX, 2.0f);
 					}
 					animation.Play("Death");
 					ChangeState(State.DEAD);
