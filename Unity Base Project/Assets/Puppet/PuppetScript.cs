@@ -875,7 +875,7 @@ public class PuppetScript : MonoBehaviour
     }
 
     //Placeholder function, does nothing
-    public void ResolveHit(PuppetScript.State otherState)
+    public void ResolveHit(GameObject _otherObject)
     {
         //public string[,] animTable;
         /*HOW TO SET UP A 2D ARRAY*/
@@ -887,6 +887,11 @@ public class PuppetScript : MonoBehaviour
 
         /*EXAMPLE IMPLEMENTATION*/
         // animation.Play(animTable[(int)curState, (int)otherState]);
+		PuppetScript otherScript = _otherObject.GetComponent<PuppetScript>();
+		State otherState = otherScript.curState;
+		Vector3 fromOtherDir = transform.position - _otherObject.transform.position;
+		fromOtherDir.Normalize();
+
         string toPlay = animTable[(int)curState, (int)otherState];
         if (toPlay != null)
         {
@@ -935,7 +940,13 @@ public class PuppetScript : MonoBehaviour
                     ChangeState(State.DEAD);
                     curBalance = 0.0f;
                     return;
-                }
+				}
+				else if (otherState == State.ATK_LTR
+					|| otherState == State.ATK_RTL
+					|| otherState == State.ATK_VERT)
+				{
+					rigidbody.AddForce(50000.0f * fromOtherDir);
+				}
 
                 if (gameObject.tag == "Enemy")
                 {
