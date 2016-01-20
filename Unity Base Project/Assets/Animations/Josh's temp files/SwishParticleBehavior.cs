@@ -11,17 +11,19 @@ public class SwishParticleBehavior : MonoBehaviour
         {
             Debug.LogError("YOU MUST SET THE TRAIL IDIOT!!");
         }
-
-        trail.enabled = false;
+        if (trail)
+            trail.enabled = false;
 	}
 	
     public void ActivateTrail()
     {
-        trail.enabled = true;
+        if (trail)
+            trail.enabled = true;
     }
 
     public void DisableTrail()
     {
-        trail.enabled = false;
+        if (trail)
+            trail.enabled = false;
     }
 }
