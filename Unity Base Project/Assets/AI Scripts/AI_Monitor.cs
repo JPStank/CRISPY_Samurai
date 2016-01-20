@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class AI_Monitor : MonoBehaviour
 {
 	public List<AI_Controller> enemies;
-	public int canAttack;
+	public int canAttack = 0; // Josh: Trying to force linear iteration of enemies
 	// Use this for initialization
 	void Start()
 	{
@@ -47,13 +47,20 @@ public class AI_Monitor : MonoBehaviour
 
 	public void AttackDone()
 	{
-		canAttack = Random.Range(0, enemies.Count);
+        // simply iterate the list
+        canAttack++;
+        if (canAttack >= enemies.Count)
+        {
+            canAttack = 0;
+        }
+		//canAttack = Random.Range(0, enemies.Count); // Josh: make this behavior enabled on a bool?
 	}
 
 	public void ReadyToConnect()
 	{
-		GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
-		foreach (GameObject bobject in allGameObjects)
+		//GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject bobject in enemies)
 		{
 			bobject.SendMessage("ConnectToMonitor",this, SendMessageOptions.DontRequireReceiver);
 		}

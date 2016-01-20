@@ -344,7 +344,7 @@ public class AI_Controller : MonoBehaviour
 
 	public void OnDestroy()
 	{
-		monitor.AttackDone();
+		monitor.RemoveEnemy(attackID);
 	}
 
 	#region ductTapeNbubbleGum
