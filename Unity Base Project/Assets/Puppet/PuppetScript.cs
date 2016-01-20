@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
-	public GameObject bloodFX;
+	public GameObject painEffect;
+	public GameObject bloodHit;
+	public GameObject bloodPool;
 	public GameObject swordSwish;
 
 	// New things, added by Dakota 1/13 7:22pm
@@ -844,6 +846,11 @@ public class PuppetScript : MonoBehaviour
 				{
                     if (flashScript)
                         flashScript.StartFlash();
+					if (bloodHit && painEffect)
+					{
+						Instantiate(painEffect, transform.position, transform.rotation);
+						Instantiate(bloodHit, transform.position, transform.rotation);
+					}
 					bool armorBlocked = false;
 					if (armor != null)
 					{
@@ -874,9 +881,9 @@ public class PuppetScript : MonoBehaviour
 				if (curBalance <= 0.0f)
 				{
 					gameObject.layer = 10;
-					if (bloodFX)
+					if (bloodPool)
 					{
-						Instantiate(bloodFX, gameObject.transform.position, gameObject.transform.rotation);
+						Instantiate(bloodPool, gameObject.transform.position, gameObject.transform.rotation);
 						//Destroy(bloodFX, 2.0f);
 					}
 					animation.Play("Death");
