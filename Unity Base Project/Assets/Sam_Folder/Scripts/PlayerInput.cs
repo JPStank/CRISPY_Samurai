@@ -7,15 +7,19 @@ public class PlayerInput : MonoBehaviour
 	enum ATTACKS { NONE = 0, VERT, LTR, RTL }
 	ATTACKS lastAttack;
 
-	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.25f;
+	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.5f;
 	public PuppetScript puppet;
-	public GameObject swordSwish;
+	//public GameObject swordSwish;
+	public GameObject guard;
+	MyStance stance;
 
 	// Use this for initialization
 	void Start()
 	{
 		puppet = gameObject.GetComponent<PuppetScript>();
 		lastAttack = ATTACKS.NONE;
+		if (guard)
+			stance = guard.GetComponent<MyStance>();
 	}
 
 	// Update is called once per frame
@@ -40,6 +44,9 @@ public class PlayerInput : MonoBehaviour
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
 		{
 			SetLastNone();
+
+			if(guard)
+				guard.SetActive(true);
 			//bufferTime = 0.0f;
 			//if (Input.GetButton("P1_Button_Y"))
 			//	puppet.GuardUpwards();
@@ -51,14 +58,37 @@ public class PlayerInput : MonoBehaviour
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.HELD))
 			{
 				puppet.GuardLeft();
+				if (stance)
+				{
+					stance.SetLeftRed();
+					stance.ClearRight();
+					stance.ClearTop();
+				}
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.HELD))
 			{
 				puppet.GuardRight();
+				if (stance)
+				{
+					stance.SetRightRed();
+					stance.ClearLeft();
+					stance.ClearTop();
+				}
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.HELD))
 			{
 				puppet.GuardUpwards();
+				if (stance)
+				{
+					stance.SetTopRed();
+					stance.ClearLeft();
+					stance.ClearRight();
+				}
+			}
+			else
+			{
+				if (stance)
+					stance.Clear();
 			}
 		}
 		//else
@@ -66,6 +96,8 @@ public class PlayerInput : MonoBehaviour
 		//}
 		else
 		{
+			if(guard)
+				guard.SetActive(false);
 			//if (bufferTime <= 0.0f)
 			//{
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
@@ -77,7 +109,10 @@ public class PlayerInput : MonoBehaviour
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BACK, InputChecker.BUTTON_STATE.DOWN))
 			{
-				Application.LoadLevel("Menu_Scene");
+				if (Application.loadedLevelName != "Hub_Scene")
+					Application.LoadLevel("Hub_Scene");
+				else
+					Application.LoadLevel("Menu_Scene");
 			}
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
