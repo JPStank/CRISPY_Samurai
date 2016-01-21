@@ -11,8 +11,8 @@ public class PuppetScript : MonoBehaviour
 
 	// New things, added by Dakota 1/13 7:22pm
 	public GameObject degubber;
-	public float curBalance = 100;
-	public float maxBalance = 100;
+	public float curTallys = 3;
+	public float maxTallys = 3;
 
 	public enum State
 	{

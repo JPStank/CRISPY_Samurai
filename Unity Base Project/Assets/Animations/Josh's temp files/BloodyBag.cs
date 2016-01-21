@@ -30,16 +30,16 @@ public class BloodyBag : MonoBehaviour
 
 				if (player)
 				{
-					player.GetComponent<PuppetScript>().curBalance -= (hitCost * 5.0f);
-					if (player.GetComponent<PuppetScript>().curBalance < 0.0f)
-						player.GetComponent<PuppetScript>().curBalance = 0.0f;
+					player.GetComponent<PuppetScript>().curTallys -= (hitCost * 5.0f);
+					if (player.GetComponent<PuppetScript>().curTallys < 0.0f)
+						player.GetComponent<PuppetScript>().curTallys = 0.0f;
 				}
 
 				if (temp.owner.tag == "Player")
 				{
-					temp.owner.GetComponent<PuppetScript>().curBalance += (hitCost * 3.0f);
-					if (temp.owner.GetComponent<PuppetScript>().curBalance > temp.owner.GetComponent<PuppetScript>().maxBalance)
-						temp.owner.GetComponent<PuppetScript>().curBalance = temp.owner.GetComponent<PuppetScript>().maxBalance;
+					temp.owner.GetComponent<PuppetScript>().curTallys += (hitCost * 3.0f);
+					if (temp.owner.GetComponent<PuppetScript>().curTallys > temp.owner.GetComponent<PuppetScript>().maxTallys)
+						temp.owner.GetComponent<PuppetScript>().curTallys = temp.owner.GetComponent<PuppetScript>().maxTallys;
 				}
 			}
 
