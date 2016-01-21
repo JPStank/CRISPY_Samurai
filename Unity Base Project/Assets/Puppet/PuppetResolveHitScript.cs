@@ -89,9 +89,9 @@ public class PuppetResolveHitScript : MonoBehaviour {
 							Debug.Log("Invalid armor checking! Please debug and investigate!");
 					}
 					if (!armorBlocked)
-						Owner.curBalance -= 25;
+						Owner.curTallys--;
 				}
-				if (Owner.curBalance <= 0.0f)
+				if (Owner.curTallys <= 0.0f)
 				{
 					gameObject.layer = 10;
 					if (Owner.bloodPool)
@@ -101,7 +101,7 @@ public class PuppetResolveHitScript : MonoBehaviour {
 					}
 					animation.Play("Death");
 					Owner.ChangeState(PuppetScript.State.DEAD);
-					Owner.curBalance = 0.0f;
+					Owner.curTallys = 0.0f;
 					return 1;
 				}
 				else if (otherState == PuppetScript.State.ATK_LTR
@@ -111,13 +111,13 @@ public class PuppetResolveHitScript : MonoBehaviour {
 					rigidbody.AddForce(50000.0f * fromOtherDir);
 				}
 
-				if (gameObject.tag == "Enemy")
-				{
-					PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
-					playerPuppet.curBalance += 12.5f;
-					if (playerPuppet.curBalance > playerPuppet.maxBalance)
-						playerPuppet.curBalance = playerPuppet.maxBalance;
-				}
+				//if (gameObject.tag == "Enemy")
+				//{
+				//	PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
+				//	playerPuppet.curTallys++;
+				//	if (playerPuppet.curTallys > playerPuppet.maxTallys)
+				//		playerPuppet.curTallys = playerPuppet.maxTallys;
+				//}
 
 				// New things, added by Dakota 1/13 whatever PM
 				Owner.ChangeState(PuppetScript.State.FLINCH);
@@ -182,9 +182,9 @@ public class PuppetResolveHitScript : MonoBehaviour {
 							Debug.Log("Invalid armor checking! Please debug and investigate!");
 					}
 					if (!armorBlocked)
-						Owner.curBalance -= 25;
+						Owner.curTallys -= 25;
 				}
-				if (Owner.curBalance <= 0.0f)
+				if (Owner.curTallys <= 0.0f)
 				{
 					gameObject.layer = 10;
 					if (Owner.bloodPool)
@@ -194,7 +194,7 @@ public class PuppetResolveHitScript : MonoBehaviour {
 					}
 					animation.Play("Death");
 					Owner.ChangeState(PuppetScript.State.DEAD);
-					Owner.curBalance = 0.0f;
+					Owner.curTallys = 0.0f;
 					return 1;
 				}
 				else if (otherState == PuppetScript.State.ATK_LTR
@@ -207,9 +207,9 @@ public class PuppetResolveHitScript : MonoBehaviour {
 				if (gameObject.tag == "Enemy")
 				{
 					PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
-					playerPuppet.curBalance += 12.5f;
-					if (playerPuppet.curBalance > playerPuppet.maxBalance)
-						playerPuppet.curBalance = playerPuppet.maxBalance;
+					playerPuppet.curTallys += 12.5f;
+					if (playerPuppet.curTallys > playerPuppet.maxTallys)
+						playerPuppet.curTallys = playerPuppet.maxTallys;
 				}
 
 				// New things, added by Dakota 1/13 whatever PM
