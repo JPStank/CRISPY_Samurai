@@ -290,15 +290,15 @@ public class AI_Controller : MonoBehaviour
             Vector3 AIForward = transform.forward;
             float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-            Debug.Log(angleToPlayer + " " + (gameObject.transform.position - player.transform.position).magnitude + " " + 
-				" Seek Player");
+            //Debug.Log(angleToPlayer + " " + (gameObject.transform.position - player.transform.position).magnitude + " " + 
+			//	" Seek Player");
 
             if (angleToPlayer > 5.0f &&
                 !currentAction.isBehaving() &&
                 (gameObject.transform.position - player.transform.position).magnitude < agent.stoppingDistance &&
                 (gameObject.transform.position - player.transform.position).magnitude > 0.78f)
             {
-                Debug.Log((gameObject.transform.position - player.transform.position).magnitude);
+                //Debug.Log((gameObject.transform.position - player.transform.position).magnitude);
 
                 // Angle the enemy towards the player
                 agent.updateRotation = false;

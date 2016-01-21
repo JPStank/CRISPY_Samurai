@@ -9,7 +9,9 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject currEnemy;
 
-
+    public ArenaDoors doorFriends;
+    public int killsRequired = 3;
+    int killCount = 0;
 
     public float waitTime = 2.0f;
     private float timer = 0.0f;
@@ -27,6 +29,10 @@ public class EnemySpawner : MonoBehaviour
         if (spawnPoint == null)
         {
             Debug.LogWarning("YOU MUST SET SPAWN POINT IDIOT!!");
+        }
+        if (doorFriends == null)
+        {
+            Debug.LogWarning("I NEED DOOR FRIENDS PLS!!");
         }
         //currEnemy = enemies[index];
         currEnemy = (GameObject)Instantiate(enemies[index], spawnPoint.transform.position, Quaternion.identity);
@@ -46,6 +52,13 @@ public class EnemySpawner : MonoBehaviour
                 //GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().RemoveEnemy(currEnemy);
                 Destroy(currEnemy, currEnemy.GetComponent<Animation>()["Death"].length + 0.5f);
                 currEnemy = null;
+                
+                killCount++;
+                if (killCount >= killsRequired)
+                {
+                    if (doorFriends)
+                        doorFriends.MoveTheDoorsPls(false);
+                }
 
                 index++;
                 if (index >= enemies.Length)
