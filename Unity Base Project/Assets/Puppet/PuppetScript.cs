@@ -51,6 +51,7 @@ public class PuppetScript : MonoBehaviour
 	public float def_camSpeed;
 	public float camSpeed;
 	public bool rockedOn = false;
+	public bool godMode = false;
     public MaterialFlash flashScript = null; // Josh: talk to the renderer
 
 	private string[,] animTable;
@@ -69,7 +70,6 @@ public class PuppetScript : MonoBehaviour
 	private bool debugDodge = false;
 	private bool debugGuard = false;
 
-	public bool godMode = false;
 
 
 	// Use this for initialization
@@ -815,7 +815,7 @@ public class PuppetScript : MonoBehaviour
 			return -1;
 	}
 
-	//Placeholder function, does nothing
+	//Resolve collisions when an attack is made.
 	public void ResolveHit(GameObject _otherObject)
 	{
 		//public string[,] animTable;
