@@ -109,7 +109,10 @@ public class PlayerInput : MonoBehaviour
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BACK, InputChecker.BUTTON_STATE.DOWN))
 			{
-				Application.LoadLevel("Menu_Scene");
+				if (Application.loadedLevelName != "Hub_Scene")
+					Application.LoadLevel("Hub_Scene");
+				else
+					Application.LoadLevel("Menu_Scene");
 			}
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
