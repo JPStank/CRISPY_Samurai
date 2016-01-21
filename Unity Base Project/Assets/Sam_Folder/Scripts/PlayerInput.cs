@@ -8,8 +8,8 @@ public class PlayerInput : MonoBehaviour
 	enum ATTACKS { NONE = 0, VERT, LTR, RTL }
 	ATTACKS lastAttack;
 
-	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.5f;
-	//	maxStam, curStam, regenRate = 1.0f;
+	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.5f,
+		maxStam, curStam, regenRate = 1.0f;
 	public PuppetScript puppet;
 	//public GameObject swordSwish;
 	public GameObject guard;
@@ -20,7 +20,7 @@ public class PlayerInput : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		//curStam = maxStam = 5.0f;
+		curStam = maxStam = 5.0f;
 		puppet = gameObject.GetComponent<PuppetScript>();
 		lastAttack = ATTACKS.NONE;
 		if (guard)
@@ -131,9 +131,12 @@ public class PlayerInput : MonoBehaviour
 			{
 				if (bufferTime >= 0.0f /*&& curStam >= 1.0f*/)
 				{
-					//curStam -= 1.0f;
-					//if (curStam < 0.0f)
-					//	curStam = 0.0f;
+					//if (!animation.isPlaying)
+					//{
+						//curStam -= 1.0f;
+						//if (curStam < 0.0f)
+						//	curStam = 0.0f;
+					//}
 					//int x = 5; //for debug
 					switch (lastAttack)
 					{
@@ -168,9 +171,9 @@ public class PlayerInput : MonoBehaviour
 				//puppet dodge
 				//if (curStam >= 2.0f)
 				//{
-					//curStam -= 2.0f;
-					//if (curStam < 0.0f)
-					//	curStam = 0.0f;
+				//	curStam -= 2.0f;
+				//	if (curStam < 0.0f)
+				//		curStam = 0.0f;
 
 					if (lHorizontal > deadZone)
 						puppet.DodgeRight();
