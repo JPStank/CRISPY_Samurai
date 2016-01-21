@@ -147,7 +147,10 @@ public class PuppetScript : MonoBehaviour
 		if (GrdTmrMax == 0.0f)
 			GrdTmrMax = 0.2f;
 
-		InitAnimTable();
+		if (tag == "Player")
+			InitAnimTable();
+		else if (tag == "Enemy")
+			InitAnimTableEnemy();
 		InitStateTable();
 
 		moveTest = Vector3.zero;
@@ -201,10 +204,53 @@ public class PuppetScript : MonoBehaviour
 		animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
 		"React Side";
 
-
+		#region Very Unimportant Things
 		animTable[(int)State.IDLE, (int)State.IDLE] =
 		animTable[(int)State.MOVING, (int)State.MOVING] =
 		"Twerk";
+		#endregion
+
+	}
+	void InitAnimTableEnemy()
+	{
+		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
+		animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
+		animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
+		animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
+		"Idle";
+		animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
+		"Block Up Hit";
+		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
+		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
+		//animTableEnemy[(int)State.ATK_VERT, (int)State.ATK_VERT] =
+		//animTableEnemy[(int)State.ATK_RTL, (int)State.ATK_VERT] =
+		//animTableEnemy[(int)State.ATK_LTR, (int)State.ATK_VERT] =
+		"React Front";
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
+		animTable[(int)State.IDLE, (int)State.ATK_RTL] =
+		animTable[(int)State.MOVING, (int)State.ATK_RTL] =
+		animTable[(int)State.IDLE, (int)State.ATK_LTR] =
+		animTable[(int)State.MOVING, (int)State.ATK_LTR] =
+		//animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
+		//animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
+		//animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
+		//animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
+		//animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
+		//animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
+		"React Side";
+
+		#region Very Unimportant Things
+		animTable[(int)State.IDLE, (int)State.IDLE] =
+		animTable[(int)State.MOVING, (int)State.MOVING] =
+		"Twerk";
+		#endregion
 
 	}
 	void InitStateTable()
@@ -384,7 +430,7 @@ public class PuppetScript : MonoBehaviour
 		}
 
 		// only search for targets if we are the player.
-		if (tag == "Player")
+		if (tag == "Player" && curState != State.DEAD)
 		{
 			FindTarg();
 			if (rockedOn && curTarg != null)
@@ -580,19 +626,30 @@ public class PuppetScript : MonoBehaviour
 		}
 
 		if (_nextState == State.DEAD)
-			NotifyNextOfKin();
+		{
+			if (Targeting_CubeSpawned != null)
+			{
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject); // apparently the solution.
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Targeting_CubeSpawned = null;
+			}
+			if (rockedOn)
+				ToggleLockon();
+		}
 
 		lastState = curState;
 		curState = _nextState;
 
 		// New things, added by Dakota 1/13 whatever PM
 		// Degub Stuff
-		if (lastState != curState)
-		{
-			if (degubber)
+		if (lastState != curState && degubber != null)
 				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + transform.tag + " " + curState.ToString());
-		}
-		//
 
 		return 1;
 	}
@@ -837,39 +894,45 @@ public class PuppetScript : MonoBehaviour
 			return rhScript.ResolveHit(_otherObject);
 		else
 			return -1;
-
-
 	}
 
+	// Cube!!!
 	public HitBox cube;
 	// Sam: activate our attack hitbox
-	void Attack()
-	{
-		if (cube)
-			cube.Attack();
-	}
+	void Attack() // Defender of the polyverse!
+	{// Cube!!!
+		if (cube) // defeat the dreaded cone!
+			cube.Attack(); // Uses three-dimensional pictures!
+	}// Cube.
 
-	//Sam: the enemy's hitbox that we are owned by
-	HitBox otherBox;
-	//Sam: tell the otherbox we are no longer among the living
-	void NotifyNextOfKin()
-	{
-		if (otherBox)
-			otherBox.RemoveFromList(gameObject);
-	}
-
-	public void SetOtherBox(HitBox other)
-	{
-		otherBox = other;
-	}
-
-	public void RemoveOtherBox()
-	{
-		otherBox = null;
-	}
 
 	public void PlaySwish()
 	{
 		Instantiate(swordSwish, transform.position, Quaternion.identity);
+	}
+
+	// IsState() functions
+	// checks the multiple states for various actions so we can do so in a single line.
+	public bool IsAttackState()
+	{
+		return (curState == State.ATK_KICK
+			|| curState == State.ATK_LTR
+			|| curState == State.ATK_RTL
+			|| curState == State.ATK_STAB
+			|| curState == State.ATK_VERT);
+	}
+
+	public bool IsDodgeState()
+	{
+		return (curState == State.DGE_BACK
+			|| curState == State.DGE_FORWARD
+			|| curState == State.DGE_RIGHT);
+	}
+
+	public bool IsGuardState()
+	{
+		return (curState == State.GRD_LEFT
+			|| curState == State.GRD_RIGHT
+			|| curState == State.GRD_TOP);
 	}
 }
