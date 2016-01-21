@@ -43,7 +43,7 @@ public class Boss_AI_Controller : MonoBehaviour
 		healingAction.dances.Add("Twerk");
 		healingAction.dances.Add("Gangnam Style");
 		healingAction.dances.Add("Robot");
-		puppet.maxBalance = 150;
+		puppet.maxTallys = 150;
 		PopulateActions(phaseOneAttacks, ref phaseOne);
 		if (!repeatActions)
 			PopulateActions(phaseTwoAttacks, ref phaseTwo);
@@ -266,7 +266,7 @@ public class Boss_AI_Controller : MonoBehaviour
 			SeekPlayer();
 		}
 
-		if (puppet.curBalance <= 75)
+		if (puppet.curTallys <= 75)
 		{
 			if (minion != null)
 			{
@@ -298,7 +298,7 @@ public class Boss_AI_Controller : MonoBehaviour
 			if (healTimer >= regenerationRate)
 			{
 				healTimer = 0.0f;
-				puppet.curBalance++;
+				puppet.curTallys++;
 			}
 			if (minionPuppet.curState == PuppetScript.State.DEAD)
 			{

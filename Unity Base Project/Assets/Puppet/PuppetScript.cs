@@ -11,8 +11,8 @@ public class PuppetScript : MonoBehaviour
 
 	// New things, added by Dakota 1/13 7:22pm
 	public GameObject degubber;
-	public float curBalance = 100;
-	public float maxBalance = 100;
+	public float curTallys = 3;
+	public float maxTallys = 3;
 
 	public enum State
 	{
@@ -33,6 +33,7 @@ public class PuppetScript : MonoBehaviour
 	public PuppetGuardScript guardScript;
 	public PuppetDodgeScript dodgeScript;
 	public PuppetCameraScript camScript;
+	public PuppetResolveHitScript rhScript;
 	public CharacterController controller;
 	public GameObject curTarg;
 	public GameObject Targeting_Cube;
@@ -52,9 +53,9 @@ public class PuppetScript : MonoBehaviour
 	public float camSpeed;
 	public bool rockedOn = false;
 	public bool godMode = false;
-    public MaterialFlash flashScript = null; // Josh: talk to the renderer
+	public MaterialFlash flashScript = null; // Josh: talk to the renderer
+	public string[,] animTable;
 
-	private string[,] animTable;
 	private bool[,] stateTable;
 	private Quaternion orgRot;
 	private Vector3 moveTest;
@@ -109,6 +110,11 @@ public class PuppetScript : MonoBehaviour
 			temp = GetComponent<PuppetCameraScript>();
 			camScript = (PuppetCameraScript)temp;
 		}
+		if (rhScript == null)
+		{
+			temp = GetComponent<PuppetResolveHitScript>();
+			rhScript = (PuppetResolveHitScript)temp;
+		}
 		if (controller == null)
 		{
 			temp = GetComponent<CharacterController>();
@@ -158,6 +164,7 @@ public class PuppetScript : MonoBehaviour
 		attackScript.Initialize(this);
 		dodgeScript.Initialize(this);
 		guardScript.Initialize(this);
+		rhScript.Initialize(this);
 	}
 	void InitAnimTable()
 	{
@@ -815,8 +822,9 @@ public class PuppetScript : MonoBehaviour
 			return -1;
 	}
 
-	//Resolve collisions when an attack is made.
-	public void ResolveHit(GameObject _otherObject)
+	// Resolve collisions when an attack is made.
+	// returns 1 on success, -1 on failure.
+	public int ResolveHit(GameObject _otherObject)
 	{
 		//public string[,] animTable;
 		/*HOW TO SET UP A 2D ARRAY*/
@@ -825,95 +833,12 @@ public class PuppetScript : MonoBehaviour
 		/*METHOD2*/
 		//animTable = new string[18, 18];
 		//animTable[(int)PuppetScript.State.IDLE, (int)PuppetScript.State.IDLE] = "IDLE";
+		if (rhScript != null)
+			return rhScript.ResolveHit(_otherObject);
+		else
+			return -1;
 
-		/*EXAMPLE IMPLEMENTATION*/
-		// animation.Play(animTable[(int)curState, (int)otherState]);
-		PuppetScript otherScript = _otherObject.GetComponent<PuppetScript>();
-		State otherState = otherScript.curState;
-		Vector3 fromOtherDir = transform.position - _otherObject.transform.position;
-		fromOtherDir.Normalize();
 
-		string toPlay = animTable[(int)curState, (int)otherState];
-		if (toPlay != null)
-		{
-			//if (degubber)
-			//degubber.GetComponent<DebugMonitor>().UpdateText("New Anim: " + toPlay);
-
-			animation.Play(toPlay);
-
-			if (toPlay == "Idle")
-				ChangeState(State.IDLE);
-			if (toPlay == "React Front" || toPlay == "React Side")
-			{
-                
-				if (!godMode)
-				{
-                    if (flashScript)
-                        flashScript.StartFlash();
-					if (bloodHit && painEffect)
-					{
-						Instantiate(painEffect, transform.position, transform.rotation);
-						Instantiate(bloodHit, transform.position, transform.rotation);
-					}
-					bool armorBlocked = false;
-					if (armor != null)
-					{
-						Armor.ARMOR_PIECE pieceAffected = Armor.ARMOR_PIECE.INVALID;
-						switch (otherState)
-						{
-							case State.ATK_VERT:
-								pieceAffected = Armor.ARMOR_PIECE.TOP;
-								break;
-							case State.ATK_LTR:
-								pieceAffected = Armor.ARMOR_PIECE.RIGHT;
-								break;
-							case State.ATK_RTL:
-								pieceAffected = Armor.ARMOR_PIECE.LEFT;
-								break;
-							case State.ATK_STAB:
-								pieceAffected = Armor.ARMOR_PIECE.CHEST;
-								break;
-						}
-						if (pieceAffected != Armor.ARMOR_PIECE.INVALID)
-							armorBlocked = armor.ProcessHit(pieceAffected);
-						else
-							Debug.Log("Invalid armor checking! Please debug and investigate!");
-					}
-					if (!armorBlocked)
-						curBalance -= 25;
-				}
-				if (curBalance <= 0.0f)
-				{
-					gameObject.layer = 10;
-					if (bloodPool)
-					{
-						Instantiate(bloodPool, gameObject.transform.position, gameObject.transform.rotation);
-						//Destroy(bloodFX, 2.0f);
-					}
-					animation.Play("Death");
-					ChangeState(State.DEAD);
-					curBalance = 0.0f;
-					return;
-				}
-				else if (otherState == State.ATK_LTR
-					|| otherState == State.ATK_RTL
-					|| otherState == State.ATK_VERT)
-				{
-					rigidbody.AddForce(50000.0f * fromOtherDir);
-				}
-
-				if (gameObject.tag == "Enemy")
-				{
-					PuppetScript playerPuppet = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
-					playerPuppet.curBalance += 12.5f;
-					if (playerPuppet.curBalance > playerPuppet.maxBalance)
-						playerPuppet.curBalance = playerPuppet.maxBalance;
-				}
-
-				// New things, added by Dakota 1/13 whatever PM
-				ChangeState(State.FLINCH);
-			}
-		}
 	}
 
 	public HitBox cube;

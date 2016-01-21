@@ -46,7 +46,7 @@ public class EnemySpawner : MonoBehaviour
         {
             PuppetScript p = currEnemy.GetComponent<PuppetScript>();
 
-            if (p && p.curBalance <= 0.0f)
+            if (p && p.curTallys <= 0.0f)
             {
                 //p.ChangeState(PuppetScript.State.DEAD);
                 //GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().RemoveEnemy(currEnemy);

@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput_Alt : MonoBehaviour
 {
 	//public float speed = 2.0f;
 	enum ATTACKS { NONE = 0, VERT, LTR, RTL }
@@ -13,7 +12,7 @@ public class PlayerInput : MonoBehaviour
 	public PuppetScript puppet;
 	//public GameObject swordSwish;
 	public GameObject guard;
-	public Image staminaBar;
+	//public Image staminaBar;
 
 	MyStance stance;
 
@@ -129,57 +128,59 @@ public class PlayerInput : MonoBehaviour
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
 			{
-				if (bufferTime >= 0.0f /*&& curStam >= 1.0f*/)
-				{
-					//curStam -= 1.0f;
-					//if (curStam < 0.0f)
-					//	curStam = 0.0f;
-					//int x = 5; //for debug
-					switch (lastAttack)
-					{
-						case ATTACKS.NONE:
-							puppet.SlashRTL();
-							break;
-						case ATTACKS.VERT:
-							puppet.SlashRTL();
-							break;
-						case ATTACKS.LTR:
-							puppet.SlashVert();
-							break;
-						case ATTACKS.RTL:
-							puppet.SlashLTR();
-							break;
-						default:
-							break;
-					}
-				}
-				bufferTime = maxTime;
+				//if (bufferTime >= 0.0f /*&& curStam >= 1.0f*/)
+				//{
+				//	//curStam -= 1.0f;
+				//	//if (curStam < 0.0f)
+				//	//	curStam = 0.0f;
+				//	//int x = 5; //for debug
+				//	switch (lastAttack)
+				//	{
+				//		case ATTACKS.NONE:
+				//			puppet.SlashRTL();
+				//			break;
+				//		case ATTACKS.VERT:
+				//			puppet.SlashRTL();
+				//			break;
+				//		case ATTACKS.LTR:
+				//			puppet.SlashVert();
+				//			break;
+				//		case ATTACKS.RTL:
+				//			puppet.SlashLTR();
+				//			break;
+				//		default:
+				//			break;
+				//	}
+				//}
+				//bufferTime = maxTime;
+
+				puppet.SlashLTR();
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.Y, InputChecker.BUTTON_STATE.DOWN))
 			{
-				//puppet thrust
+				puppet.SlashVert();
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN))
 			{
-				//puppet kick
+				puppet.SlashRTL();
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet dodge
 				//if (curStam >= 2.0f)
 				//{
-					//curStam -= 2.0f;
-					//if (curStam < 0.0f)
-					//	curStam = 0.0f;
+				//curStam -= 2.0f;
+				//if (curStam < 0.0f)
+				//	curStam = 0.0f;
 
-					if (lHorizontal > deadZone)
-						puppet.DodgeRight();
-					else if (lHorizontal < -deadZone)
-						puppet.DodgeLeft();
-					else if (lVertical < -deadZone)
-						puppet.DodgeForward();
-					else
-						puppet.DodgeBackwards();
+				if (lHorizontal > deadZone)
+					puppet.DodgeRight();
+				else if (lHorizontal < -deadZone)
+					puppet.DodgeLeft();
+				else if (lVertical < -deadZone)
+					puppet.DodgeForward();
+				else
+					puppet.DodgeBackwards();
 				//}
 			}
 			//}
