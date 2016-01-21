@@ -7,7 +7,7 @@ public class PlayerInput : MonoBehaviour
 	enum ATTACKS { NONE = 0, VERT, LTR, RTL }
 	ATTACKS lastAttack;
 
-	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.25f;
+	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.5f;
 	public PuppetScript puppet;
 	//public GameObject swordSwish;
 	public GameObject guard;
