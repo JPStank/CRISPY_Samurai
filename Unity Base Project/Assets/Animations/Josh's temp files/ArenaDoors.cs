@@ -63,6 +63,7 @@ public class ArenaDoors : MonoBehaviour
 
     public void MoveTheDoorsPls(bool moveUp)
     {
+        Debug.Log("KILL COUNT ACHIEVED");
         StartCoroutine(MoveDoors(moveUp, 1.5f));
     }
 
