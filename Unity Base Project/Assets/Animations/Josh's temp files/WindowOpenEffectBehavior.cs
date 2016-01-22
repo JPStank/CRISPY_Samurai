@@ -15,14 +15,10 @@ public class WindowOpenEffectBehavior : MonoBehaviour
         transform.eulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
 	}
 	
-	void Update () 
+    public void GoTime(float t)
     {
-	    if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            StartCoroutine(ShrinkOverTime(2.0f));
-        }
-	}
-
+        StartCoroutine(ShrinkOverTime(t));
+    }
     public IEnumerator ShrinkOverTime(float length)
     {
 

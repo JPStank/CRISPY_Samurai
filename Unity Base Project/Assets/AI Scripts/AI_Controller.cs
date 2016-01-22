@@ -36,9 +36,17 @@ public class AI_Controller : MonoBehaviour
 	bool IAmDead = false;
 	public int DeadLayer = 10;
 
+	public bool behaving;
+
+    public GameObject windowTell;
+
 	// Use this for initialization
 	void Start()
 	{
+        if (windowTell == null)
+        {
+            Debug.LogError("I NEED A WINDOW OF OPPORTUNITY EFFECT IN Window Tell PLS KTHX");
+        }
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
@@ -133,7 +141,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_SHORT:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-						move.animation = animation;
+                        move.WindowTell = windowTell;
+                        move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = shortTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -143,7 +152,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_MEDIUM:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-						move.animation = animation;
+                        move.WindowTell = windowTell;
+                        move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = mediumTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -153,7 +163,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_LONG:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-						move.animation = animation;
+                        move.WindowTell = windowTell;
+                        move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = longTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -252,7 +263,8 @@ public class AI_Controller : MonoBehaviour
 					}
 
 					// If I am in range of the player or I am currently in the middle of an attack
-					if (inRange || currentAction.isBehaving())
+					behaving = currentAction.isBehaving();
+					if (inRange || behaving)
 					{
 						// I will execute an attack until it is complete
 						if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
@@ -300,6 +312,7 @@ public class AI_Controller : MonoBehaviour
 						destination = MaintainDistance(distanceToMaintain);
 						agent.SetDestination(destination);
 						movingToDistance = true;
+						puppet.ChangeState(PuppetScript.State.MOVING);
 						animation.Play("Walk Forward");
 					}
 
@@ -311,6 +324,7 @@ public class AI_Controller : MonoBehaviour
 
 						if(!animation.IsPlaying("Walk Forward"))
 						{
+							puppet.ChangeState(PuppetScript.State.MOVING);
 							animation.Play("Walk Forward");
 						}
 
