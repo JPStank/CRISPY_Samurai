@@ -61,15 +61,17 @@ public class PuppetScript : MonoBehaviour
 	private Vector3 moveTest;
 	private Vector3 camTest;
 	private Vector3 oldPos;
-	private float debugAngle;
-	private int debugDodgeType = 0;
-	private float debugDodgeTmr = 0.0f;
-	private int debugGrdType = 0;
-	private float debugGrdTmr = 0.0f;
-	private bool debugMove = false;
-	private bool debugCamera = false;
-	private bool debugDodge = false;
-	private bool debugGuard = false;
+	#region old degubstuffs
+	//private float debugAngle;
+	//private int debugDodgeType = 0;
+	//private float debugDodgeTmr = 0.0f;
+	//private int debugGrdType = 0;
+	//private float debugGrdTmr = 0.0f;
+	//private bool debugMove = false;
+	//private bool debugCamera = false;
+	//private bool debugDodge = false;
+	//private bool debugGuard = false;
+	#endregion
 
 
 
@@ -160,7 +162,7 @@ public class PuppetScript : MonoBehaviour
 		camTest.x = 1.0f;
 		camTest.z = 1.0f;
 
-		debugAngle = 0.0f;
+		//debugAngle = 0.0f;
 
 		if (tag == "Player")
 			camScript.Initialize(this);
@@ -516,90 +518,91 @@ public class PuppetScript : MonoBehaviour
 		}
 	}
 
+	#region old DoDegub() stuffs
 	// DoDegub()
 	// Does the degubs for the testing on the features
-	private void DoDegub()
-	{
-		return;
-		if (debugMove || debugCamera)
-		{
-			debugAngle += Time.deltaTime * 2.0f;
-			if (debugAngle >= 2.0f * Mathf.PI)
-				debugAngle -= 2.0f * Mathf.PI;
-		}
-		if (debugMove)
-		{
-			moveTest.x = Mathf.Cos(debugAngle);
-			moveTest.z = Mathf.Sin(debugAngle);
+	//private void DoDegub()
+	//{
+	//	if (debugMove || debugCamera)
+	//	{
+	//		debugAngle += Time.deltaTime * 2.0f;
+	//		if (debugAngle >= 2.0f * Mathf.PI)
+	//			debugAngle -= 2.0f * Mathf.PI;
+	//	}
+	//	if (debugMove)
+	//	{
+	//		moveTest.x = Mathf.Cos(debugAngle);
+	//		moveTest.z = Mathf.Sin(debugAngle);
 
-			Move(moveTest);
-		}
-		if (debugCamera)
-		{
-			moveTest.x = 1.0f;
-			moveTest.y = 0.0f;
-			MoveCamera(camTest);
-		}
-		if (debugDodge)
-		{
-			debugDodgeTmr += Time.deltaTime;
-			//if (debugDodgeTmr > DgeTmrMax * 2.0f)
-			{
-				debugDodgeTmr = 0.0f;
-				int res = 1;
-				switch (debugDodgeType)
-				{
-					case 0:
-						res = DodgeLeft();
-						break;
-					case 1:
-						res = DodgeForward();
-						break;
-					case 2:
-						res = DodgeRight();
-						break;
-					case 3:
-						res = DodgeRight();
-						break;
-					case 4:
-						res = DodgeBackwards();
-						break;
-					case 5:
-						res = DodgeLeft();
-						break;
-				}
-				debugDodgeType++;
-				if (debugDodgeType > 5)
-					debugDodgeType = 0;
-			}
-		}
-		if (debugGuard)
-		{
-			debugGrdTmr += Time.deltaTime;
-			int res = 1;
-			switch (debugGrdType)
-			{
-				case 0:
-					res = GuardUpwards();
-					break;
-				case 1:
-					res = GuardLeft();
-					break;
-				case 2:
-					res = GuardRight();
-					break;
-			}
+	//		Move(moveTest);
+	//	}
+	//	if (debugCamera)
+	//	{
+	//		moveTest.x = 1.0f;
+	//		moveTest.y = 0.0f;
+	//		MoveCamera(camTest);
+	//	}
+	//	if (debugDodge)
+	//	{
+	//		debugDodgeTmr += Time.deltaTime;
+	//		//if (debugDodgeTmr > DgeTmrMax * 2.0f)
+	//		{
+	//			debugDodgeTmr = 0.0f;
+	//			int res = 1;
+	//			switch (debugDodgeType)
+	//			{
+	//				case 0:
+	//					res = DodgeLeft();
+	//					break;
+	//				case 1:
+	//					res = DodgeForward();
+	//					break;
+	//				case 2:
+	//					res = DodgeRight();
+	//					break;
+	//				case 3:
+	//					res = DodgeRight();
+	//					break;
+	//				case 4:
+	//					res = DodgeBackwards();
+	//					break;
+	//				case 5:
+	//					res = DodgeLeft();
+	//					break;
+	//			}
+	//			debugDodgeType++;
+	//			if (debugDodgeType > 5)
+	//				debugDodgeType = 0;
+	//		}
+	//	}
+	//	if (debugGuard)
+	//	{
+	//		debugGrdTmr += Time.deltaTime;
+	//		int res = 1;
+	//		switch (debugGrdType)
+	//		{
+	//			case 0:
+	//				res = GuardUpwards();
+	//				break;
+	//			case 1:
+	//				res = GuardLeft();
+	//				break;
+	//			case 2:
+	//				res = GuardRight();
+	//				break;
+	//		}
 
-			//if (debugGrdTmr > GrdTmrMax * 5.0f)
-			{
-				debugGrdTmr = 0.0f;
-				debugGrdType++;
-				if (debugGrdType > 2)
-					debugGrdType = 0;
-			}
-		}
+	//		//if (debugGrdTmr > GrdTmrMax * 5.0f)
+	//		{
+	//			debugGrdTmr = 0.0f;
+	//			debugGrdType++;
+	//			if (debugGrdType > 2)
+	//				debugGrdType = 0;
+	//		}
+	//	}
 
-	}
+	//}
+#endregion
 
 
 	// Change State Function
@@ -747,6 +750,11 @@ public class PuppetScript : MonoBehaviour
 	public int MoveCamera(Vector3 _dir)
 	{
 		return camScript.MoveCamera(_dir);
+	}
+
+	public int ResetCamera()
+	{
+		return camScript.ResetCamera();
 	}
 
 	public int ToggleLockon()
