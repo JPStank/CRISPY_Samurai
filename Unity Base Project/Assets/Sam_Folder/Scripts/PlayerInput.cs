@@ -53,19 +53,18 @@ public class PlayerInput : MonoBehaviour
 		Vector3 dir = new Vector3(lHorizontal, 0.0f, -lVertical);
 		puppet.Move(dir);
 
+		if(InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.LEFTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN)
+			&& !puppet.rockedOn)
+		{
+			puppet.ResetCamera();
+		}
+
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
 		{
 			SetLastNone();
 
 			if (guard)
 				guard.SetActive(true);
-			//bufferTime = 0.0f;
-			//if (Input.GetButton("P1_Button_Y"))
-			//	puppet.GuardUpwards();
-			//else if (Input.GetButton("P1_Button_X"))
-			//	puppet.GuardLeft();
-			//else if (Input.GetButton("P1_Button_B"))
-			//	puppet.GuardRight();
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.HELD))
 			{
@@ -112,8 +111,7 @@ public class PlayerInput : MonoBehaviour
 				guard.SetActive(false);
 			//if (bufferTime <= 0.0f)
 			//{
-			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
-				|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
+			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet.rockedOn = !puppet.rockedOn;
 				puppet.ToggleLockon();
