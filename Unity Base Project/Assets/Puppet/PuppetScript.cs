@@ -749,6 +749,11 @@ public class PuppetScript : MonoBehaviour
 		return camScript.MoveCamera(_dir);
 	}
 
+	public int ResetCamera()
+	{
+		return camScript.ResetCamera();
+	}
+
 	public int ToggleLockon()
 	{
 		if (curTarg != null)

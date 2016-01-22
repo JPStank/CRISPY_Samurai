@@ -76,6 +76,7 @@ public class HitBox : MonoBehaviour
 			if (!targets.Contains(other.gameObject))
 			{
 				targets.Add(other.gameObject);
+				
 			}
 		}
 	}
@@ -88,6 +89,7 @@ public class HitBox : MonoBehaviour
 			if (targets.Contains(other.gameObject))
 			{
 				targets.Remove(other.gameObject);
+				
 			}
 		}
 	}

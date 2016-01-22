@@ -52,6 +52,12 @@ public class PlayerInput_Alt : MonoBehaviour
 		Vector3 dir = new Vector3(lHorizontal, 0.0f, -lVertical);
 		puppet.Move(dir);
 
+		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.LEFTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN)
+			&& !puppet.rockedOn)
+		{
+			puppet.ResetCamera();
+		}
+
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
 		{
 			SetLastNone();
