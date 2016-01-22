@@ -87,15 +87,15 @@ public class PuppetResolveHitScript : MonoBehaviour
 							Debug.Log("Invalid armor checking! Please debug and investigate!");
 					}
 					if (!armorBlocked)
-						Owner.curBalance -= 25;
+						Owner.curTallys--;
 				}
-				if (Owner.curBalance <= 0.0f)
+				if (Owner.curTallys <= 0.0f)
 				{
 					gameObject.layer = 10;
 					if (Owner.bloodPool) Instantiate(Owner.bloodPool, transform.position, transform.rotation);
 					animation.Play("Death");
 					Owner.ChangeState(PuppetScript.State.DEAD);
-					Owner.curBalance = 0.0f;
+					Owner.curTallys = 0.0f;
 					return 1;
 				}
 				else if (enemyScript.IsAttackState()) rigidbody.AddForce(50000.0f * fromOtherDir);
@@ -159,24 +159,24 @@ public class PuppetResolveHitScript : MonoBehaviour
 							Debug.Log("Invalid armor checking! Please debug and investigate!");
 					}
 					if (!armorBlocked)
-						Owner.curBalance -= 25;
+						Owner.curTallys--;
 				}
-				if (Owner.curBalance <= 0.0f)
+				if (Owner.curTallys <= 0.0f)
 				{
 					gameObject.layer = 10;
 					if (Owner.bloodPool) Instantiate(Owner.bloodPool, gameObject.transform.position, gameObject.transform.rotation);
 					animation.Play("Death");
 					Owner.ChangeState(PuppetScript.State.DEAD);
-					Owner.curBalance = 0.0f;
+					Owner.curTallys = 0.0f;
 					return 1;
 				}
 				// Apply knockback
 				else if (otherScript.IsAttackState()) rigidbody.AddForce(50000.0f * fromOtherDir);
 
 				// only for enemies
-				otherScript.curBalance += 12.5f;
-				if (otherScript.curBalance > otherScript.maxBalance)
-					otherScript.curBalance = otherScript.maxBalance;
+				//otherScript.curBalance += 12.5f;
+				//if (otherScript.curBalance > otherScript.maxBalance)
+				//	otherScript.curBalance = otherScript.maxBalance;
 
 				// New things, added by Dakota 1/13 whatever PM
 				Owner.ChangeState(PuppetScript.State.FLINCH);
