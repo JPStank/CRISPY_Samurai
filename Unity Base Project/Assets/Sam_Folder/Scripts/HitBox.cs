@@ -76,7 +76,7 @@ public class HitBox : MonoBehaviour
 			if (!targets.Contains(other.gameObject))
 			{
 				targets.Add(other.gameObject);
-				other.gameObject.GetComponent<PuppetScript>().SetOtherBox(this);
+				//other.gameObject.GetComponent<PuppetScript>().SetOtherBox(this);
 			}
 		}
 	}
@@ -89,7 +89,7 @@ public class HitBox : MonoBehaviour
 			if (targets.Contains(other.gameObject))
 			{
 				targets.Remove(other.gameObject);
-				other.gameObject.GetComponent<PuppetScript>().RemoveOtherBox();
+				//other.gameObject.GetComponent<PuppetScript>().RemoveOtherBox();
 			}
 		}
 	}
