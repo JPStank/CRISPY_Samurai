@@ -61,15 +61,17 @@ public class PuppetScript : MonoBehaviour
 	private Vector3 moveTest;
 	private Vector3 camTest;
 	private Vector3 oldPos;
-	private float debugAngle;
-	private int debugDodgeType = 0;
-	private float debugDodgeTmr = 0.0f;
-	private int debugGrdType = 0;
-	private float debugGrdTmr = 0.0f;
-	private bool debugMove = false;
-	private bool debugCamera = false;
-	private bool debugDodge = false;
-	private bool debugGuard = false;
+	#region old degubstuffs
+	//private float debugAngle;
+	//private int debugDodgeType = 0;
+	//private float debugDodgeTmr = 0.0f;
+	//private int debugGrdType = 0;
+	//private float debugGrdTmr = 0.0f;
+	//private bool debugMove = false;
+	//private bool debugCamera = false;
+	//private bool debugDodge = false;
+	//private bool debugGuard = false;
+	#endregion
 
 
 
@@ -85,7 +87,7 @@ public class PuppetScript : MonoBehaviour
 
 		for (int i = 0; i < meats.Length; i++)
 			meats[i].player = gameObject;
-		
+
 
 		Object temp = GetComponent<PuppetAttackScript>();
 		if (attackScript == null)
@@ -120,16 +122,16 @@ public class PuppetScript : MonoBehaviour
 			temp = GetComponent<CharacterController>();
 			controller = (CharacterController)temp;
 		}
-        if (flashScript == null)
-        {
-            temp = GetComponentInChildren<MaterialFlash>();
-            flashScript = (MaterialFlash)temp;
-        }
+		if (flashScript == null)
+		{
+			temp = GetComponentInChildren<MaterialFlash>();
+			flashScript = (MaterialFlash)temp;
+		}
 		//badguys = GameObject.FindGameObjectsWithTag("Enemy");
 
 		lastState = curState = State.IDLE;
 		if (targOffset == Vector3.zero)
-			targOffset.y = 2.0f;
+			targOffset.y = 3.0f;
 		if (targMaxDist == 0.0f)
 			targMaxDist = 200.0f;
 		if (moveSpeed == 0.0f)
@@ -141,7 +143,7 @@ public class PuppetScript : MonoBehaviour
 			camSpeed = 8.0f;
 		def_camSpeed = camSpeed;
 		//if (AtkTmrMax = 0.0f)
-			//AtkTmrMax = 1.0f;
+		//AtkTmrMax = 1.0f;
 		if (DgeTmrMax == 0.0f)
 			DgeTmrMax = 0.5f;
 		if (GrdTmrMax == 0.0f)
@@ -160,7 +162,7 @@ public class PuppetScript : MonoBehaviour
 		camTest.x = 1.0f;
 		camTest.z = 1.0f;
 
-		debugAngle = 0.0f;
+		//debugAngle = 0.0f;
 
 		if (tag == "Player")
 			camScript.Initialize(this);
@@ -226,9 +228,9 @@ public class PuppetScript : MonoBehaviour
 		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
 		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
 		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
-		//animTableEnemy[(int)State.ATK_VERT, (int)State.ATK_VERT] =
-		//animTableEnemy[(int)State.ATK_RTL, (int)State.ATK_VERT] =
-		//animTableEnemy[(int)State.ATK_LTR, (int)State.ATK_VERT] =
+			//animTableEnemy[(int)State.ATK_VERT, (int)State.ATK_VERT] =
+			//animTableEnemy[(int)State.ATK_RTL, (int)State.ATK_VERT] =
+			//animTableEnemy[(int)State.ATK_LTR, (int)State.ATK_VERT] =
 		"React Front";
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
@@ -238,12 +240,12 @@ public class PuppetScript : MonoBehaviour
 		animTable[(int)State.MOVING, (int)State.ATK_RTL] =
 		animTable[(int)State.IDLE, (int)State.ATK_LTR] =
 		animTable[(int)State.MOVING, (int)State.ATK_LTR] =
-		//animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
-		//animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
-		//animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
-		//animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
-		//animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
-		//animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
+			//animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
+			//animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
+			//animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
+			//animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
+			//animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
+			//animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
 		"React Side";
 
 		#region Very Unimportant Things
@@ -453,27 +455,33 @@ public class PuppetScript : MonoBehaviour
 		{
 			if (tempguy.GetComponent<PuppetScript>().curState != State.DEAD)
 				badguys.Add(tempguy);
+			else if (tempguy == curTarg)
+			{
+					if (Targeting_CubeSpawned != null)
+					{
+						Destroy(Targeting_CubeSpawned.gameObject);
+						DestroyImmediate(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						DestroyImmediate(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						DestroyImmediate(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						DestroyImmediate(Targeting_CubeSpawned.gameObject);
+						Targeting_CubeSpawned = null;
+					}
+					if (rockedOn)
+						ToggleLockon();
+			}
 		}
-		curTarg = null;
+		//curTarg = null;
 		if (badguys.Count > 0)
 		{
 			float dist;
 			float curDist = dist = 0x0FFFFFFF;
 			foreach (GameObject badguy in badguys)
 			{
-				if (badguy.GetComponent<PuppetScript>().curState == State.DEAD)
-				{
-					if (Targeting_CubeSpawned != null)
-					{
-						Destroy(Targeting_CubeSpawned);
-						Targeting_CubeSpawned = null;
-					}
-					if (rockedOn)
-						ToggleLockon();
-					continue;
-				}
 				curDist = Vector3.SqrMagnitude(badguy.transform.position - transform.position);
-				if (curDist < dist)
+				if (curDist < dist && !rockedOn)
 				{
 					//if (!rockedOn)
 					curTarg = badguy;
@@ -492,11 +500,18 @@ public class PuppetScript : MonoBehaviour
 					Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
 					Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
 				}
-				else
+				else  if (!rockedOn)
 				{
 					if (Targeting_CubeSpawned != null)
 					{
-						Destroy(Targeting_CubeSpawned);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject); // apparently the solution.
+						Destroy(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
+						Destroy(Targeting_CubeSpawned.gameObject);
 						Targeting_CubeSpawned = null;
 					}
 					if (rockedOn)
@@ -504,11 +519,18 @@ public class PuppetScript : MonoBehaviour
 				}
 			}
 		}
-		else
+		else // no badguys that are alive
 		{
 			if (Targeting_CubeSpawned != null)
 			{
 				Destroy(Targeting_CubeSpawned);
+				Destroy(Targeting_CubeSpawned.gameObject); // apparently the solution.
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
 				Targeting_CubeSpawned = null;
 			}
 			if (rockedOn)
@@ -516,90 +538,91 @@ public class PuppetScript : MonoBehaviour
 		}
 	}
 
+	#region old DoDegub() stuffs
 	// DoDegub()
 	// Does the degubs for the testing on the features
-	private void DoDegub()
-	{
-		return;
-		if (debugMove || debugCamera)
-		{
-			debugAngle += Time.deltaTime * 2.0f;
-			if (debugAngle >= 2.0f * Mathf.PI)
-				debugAngle -= 2.0f * Mathf.PI;
-		}
-		if (debugMove)
-		{
-			moveTest.x = Mathf.Cos(debugAngle);
-			moveTest.z = Mathf.Sin(debugAngle);
+	//private void DoDegub()
+	//{
+	//	if (debugMove || debugCamera)
+	//	{
+	//		debugAngle += Time.deltaTime * 2.0f;
+	//		if (debugAngle >= 2.0f * Mathf.PI)
+	//			debugAngle -= 2.0f * Mathf.PI;
+	//	}
+	//	if (debugMove)
+	//	{
+	//		moveTest.x = Mathf.Cos(debugAngle);
+	//		moveTest.z = Mathf.Sin(debugAngle);
 
-			Move(moveTest);
-		}
-		if (debugCamera)
-		{
-			moveTest.x = 1.0f;
-			moveTest.y = 0.0f;
-			MoveCamera(camTest);
-		}
-		if (debugDodge)
-		{
-			debugDodgeTmr += Time.deltaTime;
-			//if (debugDodgeTmr > DgeTmrMax * 2.0f)
-			{
-				debugDodgeTmr = 0.0f;
-				int res = 1;
-				switch (debugDodgeType)
-				{
-					case 0:
-						res = DodgeLeft();
-						break;
-					case 1:
-						res = DodgeForward();
-						break;
-					case 2:
-						res = DodgeRight();
-						break;
-					case 3:
-						res = DodgeRight();
-						break;
-					case 4:
-						res = DodgeBackwards();
-						break;
-					case 5:
-						res = DodgeLeft();
-						break;
-				}
-				debugDodgeType++;
-				if (debugDodgeType > 5)
-					debugDodgeType = 0;
-			}
-		}
-		if (debugGuard)
-		{
-			debugGrdTmr += Time.deltaTime;
-			int res = 1;
-			switch (debugGrdType)
-			{
-				case 0:
-					res = GuardUpwards();
-					break;
-				case 1:
-					res = GuardLeft();
-					break;
-				case 2:
-					res = GuardRight();
-					break;
-			}
+	//		Move(moveTest);
+	//	}
+	//	if (debugCamera)
+	//	{
+	//		moveTest.x = 1.0f;
+	//		moveTest.y = 0.0f;
+	//		MoveCamera(camTest);
+	//	}
+	//	if (debugDodge)
+	//	{
+	//		debugDodgeTmr += Time.deltaTime;
+	//		//if (debugDodgeTmr > DgeTmrMax * 2.0f)
+	//		{
+	//			debugDodgeTmr = 0.0f;
+	//			int res = 1;
+	//			switch (debugDodgeType)
+	//			{
+	//				case 0:
+	//					res = DodgeLeft();
+	//					break;
+	//				case 1:
+	//					res = DodgeForward();
+	//					break;
+	//				case 2:
+	//					res = DodgeRight();
+	//					break;
+	//				case 3:
+	//					res = DodgeRight();
+	//					break;
+	//				case 4:
+	//					res = DodgeBackwards();
+	//					break;
+	//				case 5:
+	//					res = DodgeLeft();
+	//					break;
+	//			}
+	//			debugDodgeType++;
+	//			if (debugDodgeType > 5)
+	//				debugDodgeType = 0;
+	//		}
+	//	}
+	//	if (debugGuard)
+	//	{
+	//		debugGrdTmr += Time.deltaTime;
+	//		int res = 1;
+	//		switch (debugGrdType)
+	//		{
+	//			case 0:
+	//				res = GuardUpwards();
+	//				break;
+	//			case 1:
+	//				res = GuardLeft();
+	//				break;
+	//			case 2:
+	//				res = GuardRight();
+	//				break;
+	//		}
 
-			//if (debugGrdTmr > GrdTmrMax * 5.0f)
-			{
-				debugGrdTmr = 0.0f;
-				debugGrdType++;
-				if (debugGrdType > 2)
-					debugGrdType = 0;
-			}
-		}
+	//		//if (debugGrdTmr > GrdTmrMax * 5.0f)
+	//		{
+	//			debugGrdTmr = 0.0f;
+	//			debugGrdType++;
+	//			if (debugGrdType > 2)
+	//				debugGrdType = 0;
+	//		}
+	//	}
 
-	}
+	//}
+	#endregion
 
 
 	// Change State Function
@@ -649,7 +672,7 @@ public class PuppetScript : MonoBehaviour
 		// New things, added by Dakota 1/13 whatever PM
 		// Degub Stuff
 		if (lastState != curState && degubber != null)
-				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + transform.tag + " " + curState.ToString());
+			degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + transform.tag + " " + curState.ToString());
 
 		return 1;
 	}
@@ -751,29 +774,32 @@ public class PuppetScript : MonoBehaviour
 
 	public int ResetCamera()
 	{
-		return camScript.ResetCamera();
+		if (rockedOn)
+			return -1;
+		else
+			return camScript.ResetCamera();
 	}
 
 	public int ToggleLockon()
 	{
+		if (curState == State.DEAD)
+			return -1;
 		if (curTarg != null)
 		{
 			float dist = Vector3.SqrMagnitude(curTarg.transform.position - transform.position);
 			if (dist > targMaxDist && !rockedOn)
 				return -1;
 		}
-		else if (rockedOn == false)
+		else if (rockedOn == false) // cant lock on if we don't have a target
 			return -1;
 
 		if (Targeting_CubeSpawned != null && !rockedOn)
 		{
-			if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
-				Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 10.0f;
+			Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 10.0f;
 		}
 		else if (Targeting_CubeSpawned != null)
 		{
-			if (Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>() != null)
-				Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 1.0f;
+			Targeting_CubeSpawned.GetComponent<Targeting_CubeScript>().scaleSpeed = 1.0f;
 		}
 
 		return camScript.ToggleLockon();

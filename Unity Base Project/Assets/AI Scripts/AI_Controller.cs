@@ -33,6 +33,8 @@ public class AI_Controller : MonoBehaviour
 	float tooCloseTimer = 0.0f;
 	Vector3 destination;
 	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
+	bool IAmDead = false;
+	public int DeadLayer = 10;
 
 	// Use this for initialization
 	void Start()
@@ -168,6 +170,11 @@ public class AI_Controller : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if(!IAmDead && gameObject.layer == DeadLayer)
+		{
+			IAmDead = true;
+			monitor.RemoveEnemy(attackID);
+		}
 
 		if (puppet.curState != PuppetScript.State.DEAD)
 		{
@@ -415,10 +422,10 @@ public class AI_Controller : MonoBehaviour
 	{
 		if (monitor == null)
 			monitor = connectME;
-		if (!patrolling)
+		if (!patrolling
+			&& !IAmDead)
 		{
 			attackID = monitor.AddEnemy(this);
-			agent.avoidancePriority = attackID;
 		}
 	}
 
@@ -431,10 +438,10 @@ public class AI_Controller : MonoBehaviour
 
 	}
 
-	public void OnDestroy()
-	{
-		monitor.RemoveEnemy(attackID);
-	}
+	//public void OnDestroy()
+	//{
+	//	monitor.RemoveEnemy(attackID);
+	//}
 
 	Vector3 MaintainDistance(float _distanceToMaintain)
 	{

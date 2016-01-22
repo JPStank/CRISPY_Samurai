@@ -107,8 +107,14 @@ public class PuppetCameraScript : MonoBehaviour
 			if (resetTmr > 0.0f)
 			{
 				resetTmr -= Time.deltaTime;
-				//Quaternion.Lerp(camTarg.transform.rotation, transform.rotation, Time.deltaTime);
-				Quaternion.Slerp(camTarg.transform.rotation, transform.rotation, Time.deltaTime * def_camSpeed);
+				float dt = Time.deltaTime * 20.0f;
+				Vector3 newRot = new Vector3(
+					Mathf.LerpAngle(camTarg.transform.eulerAngles.x, transform.eulerAngles.x, dt),
+					Mathf.LerpAngle(camTarg.transform.eulerAngles.y, transform.eulerAngles.y, dt),
+					Mathf.LerpAngle(camTarg.transform.eulerAngles.z, transform.eulerAngles.z, dt)
+					);
+				camTarg.transform.eulerAngles = newRot;
+				camRot = camTarg.transform.rotation;
 				if (resetTmr < 0.0f)
 					resetTmr = 0.0f;
 			}
@@ -231,10 +237,7 @@ public class PuppetCameraScript : MonoBehaviour
 	// returns 1 on success
 	public int ToggleLockon()
 	{
-		if (Owner.curState == PuppetScript.State.DGE_BACK
-			|| Owner.curState == PuppetScript.State.DGE_FORWARD
-			|| Owner.curState == PuppetScript.State.DGE_LEFT
-			|| Owner.curState == PuppetScript.State.DGE_RIGHT)
+		if (Owner.IsDodgeState())
 			return -1;
 
 		if (!Owner.rockedOn)

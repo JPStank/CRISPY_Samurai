@@ -117,8 +117,7 @@ public class PlayerInput_Alt : MonoBehaviour
 				guard.SetActive(false);
 			//if (bufferTime <= 0.0f)
 			//{
-			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
-				|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
+			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet.rockedOn = !puppet.rockedOn;
 				puppet.ToggleLockon();
