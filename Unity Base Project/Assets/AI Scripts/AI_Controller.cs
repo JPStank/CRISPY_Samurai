@@ -418,7 +418,7 @@ public class AI_Controller : MonoBehaviour
 		if (!patrolling)
 		{
 			attackID = monitor.AddEnemy(this);
-			agent.avoidancePriority = attackID;
+			//agent.avoidancePriority = attackID;
 		}
 	}
 
