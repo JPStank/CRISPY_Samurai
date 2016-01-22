@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ArenaDoors : MonoBehaviour 
 {
+    public EnemySpawner spawner = null;
     public GameObject[] doors = new GameObject[2];
 
     public bool doorsUp = false;
@@ -56,6 +57,9 @@ public class ArenaDoors : MonoBehaviour
         {
             Debug.Log("PLAYER HAS ENTERED");
             StartCoroutine(MoveDoors(true, 1.5f));
+
+            if (spawner)
+                spawner.SpawnAll();
 
             Destroy(GetComponent<BoxCollider>());
         }
