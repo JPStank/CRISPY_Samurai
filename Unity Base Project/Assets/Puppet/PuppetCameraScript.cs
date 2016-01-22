@@ -237,10 +237,7 @@ public class PuppetCameraScript : MonoBehaviour
 	// returns 1 on success
 	public int ToggleLockon()
 	{
-		if (Owner.curState == PuppetScript.State.DGE_BACK
-			|| Owner.curState == PuppetScript.State.DGE_FORWARD
-			|| Owner.curState == PuppetScript.State.DGE_LEFT
-			|| Owner.curState == PuppetScript.State.DGE_RIGHT)
+		if (Owner.IsDodgeState())
 			return -1;
 
 		if (!Owner.rockedOn)
