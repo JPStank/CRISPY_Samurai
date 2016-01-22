@@ -22,7 +22,7 @@ public class Blood : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
 		if (player)
 		{
-			lastBalance = player.curBalance;
+			lastBalance = player.curTallys;
 		}
 
 		fadeTimer = maxFadeTime;
@@ -33,7 +33,7 @@ public class Blood : MonoBehaviour
 	{
 		if (player)
 		{
-			if (lastBalance > player.curBalance)
+			if (lastBalance > player.curTallys)
 			{
 				isVisible = true;
 
@@ -43,7 +43,7 @@ public class Blood : MonoBehaviour
 				top.color = Color.white;
 				bottom.color = Color.white;
 
-				lastBalance = player.curBalance;
+				lastBalance = player.curTallys;
 				fadeTimer = maxFadeTime;
 
 			}
