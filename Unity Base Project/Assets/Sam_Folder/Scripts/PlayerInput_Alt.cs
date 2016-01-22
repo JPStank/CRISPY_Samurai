@@ -56,6 +56,10 @@ public class PlayerInput_Alt : MonoBehaviour
 			&& !puppet.rockedOn)
 		{
 			puppet.ResetCamera();
+
+			GameObject thing = new GameObject();
+			thing.AddComponent<ParticleSystem>();
+			Instantiate(thing, puppet.transform.position, Quaternion.identity);
 		}
 
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)

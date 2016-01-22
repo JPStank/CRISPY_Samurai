@@ -190,7 +190,7 @@ public class AI_Controller : MonoBehaviour
 
 				if (!waiting)
 				{
-					Debug.Log(gameObject.transform.position + " " + patrolPoints[currentPatrolPoint]);
+					//Debug.Log(gameObject.transform.position + " " + patrolPoints[currentPatrolPoint]);
 					agent.SetDestination(patrolPoints[currentPatrolPoint]);
 					if (!animation.IsPlaying("Walk Forward"))
 					{
@@ -222,7 +222,7 @@ public class AI_Controller : MonoBehaviour
 			#region AttackingThePlayer
 			else
 			{
-				Debug.Log("Attacking");
+				//Debug.Log("Attacking");
 				// Checking player dir and distance
 				// and initializing variables for later use
 				Vector3 playerDirection = player.transform.position - gameObject.transform.position;
@@ -239,7 +239,7 @@ public class AI_Controller : MonoBehaviour
 				// If it is my turn
 				if (myTurn)
 				{
-					Debug.Log("My Turn");
+					//Debug.Log("My Turn");
 					// This check will determine if I am in range of the player
 					if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > stoppingDistance)
 					{
@@ -289,7 +289,7 @@ public class AI_Controller : MonoBehaviour
 				// If it is not my turn
 				if(!myTurn)
 				{
-					Debug.Log("Not My Turn");
+					//Debug.Log("Not My Turn");
 					// Maintaining proper distance
 					float distanceToMaintain = stoppingDistance * 2;
 
@@ -347,7 +347,7 @@ public class AI_Controller : MonoBehaviour
 
 	void SeekPlayer()
 	{
-		Debug.Log("Seeking");
+		//Debug.Log("Seeking");
 		// Initializing variables
 		Vector3 playerDirection = player.transform.position - gameObject.transform.position;
 		playerDirection.y = 0.0f;
