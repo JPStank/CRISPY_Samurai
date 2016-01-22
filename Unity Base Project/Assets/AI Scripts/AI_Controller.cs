@@ -300,6 +300,7 @@ public class AI_Controller : MonoBehaviour
 						destination = MaintainDistance(distanceToMaintain);
 						agent.SetDestination(destination);
 						movingToDistance = true;
+						puppet.ChangeState(PuppetScript.State.MOVING);
 						animation.Play("Walk Forward");
 					}
 
@@ -311,6 +312,7 @@ public class AI_Controller : MonoBehaviour
 
 						if(!animation.IsPlaying("Walk Forward"))
 						{
+							puppet.ChangeState(PuppetScript.State.MOVING);
 							animation.Play("Walk Forward");
 						}
 
