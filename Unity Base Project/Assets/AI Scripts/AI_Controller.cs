@@ -422,7 +422,8 @@ public class AI_Controller : MonoBehaviour
 	{
 		if (monitor == null)
 			monitor = connectME;
-		if (!patrolling)
+		if (!patrolling
+			&& !IAmDead)
 		{
 			attackID = monitor.AddEnemy(this);
 		}
