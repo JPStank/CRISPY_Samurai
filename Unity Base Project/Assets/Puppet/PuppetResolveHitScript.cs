@@ -146,7 +146,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 				Owner.ChangeState(PuppetScript.State.IDLE);
 			else if (toPlay == "React Front" || toPlay == "React Side")
 			{
-				if (!Owner.godMode)
+				if (!Owner.godMode && Owner.curState != PuppetScript.State.MOVING)
 				{
 					if (Owner.flashScript) Owner.flashScript.StartFlash();
 					if (Owner.bloodHit && Owner.painEffect)

@@ -36,6 +36,8 @@ public class AI_Controller : MonoBehaviour
 	bool IAmDead = false;
 	public int DeadLayer = 10;
 
+	public bool behaving;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -252,7 +254,8 @@ public class AI_Controller : MonoBehaviour
 					}
 
 					// If I am in range of the player or I am currently in the middle of an attack
-					if (inRange || currentAction.isBehaving())
+					behaving = currentAction.isBehaving();
+					if (inRange || behaving)
 					{
 						// I will execute an attack until it is complete
 						if (currentAction.Execute() == COMPLETION_STATE.COMPLETE)
@@ -300,6 +303,7 @@ public class AI_Controller : MonoBehaviour
 						destination = MaintainDistance(distanceToMaintain);
 						agent.SetDestination(destination);
 						movingToDistance = true;
+						puppet.ChangeState(PuppetScript.State.MOVING);
 						animation.Play("Walk Forward");
 					}
 
@@ -311,6 +315,7 @@ public class AI_Controller : MonoBehaviour
 
 						if(!animation.IsPlaying("Walk Forward"))
 						{
+							puppet.ChangeState(PuppetScript.State.MOVING);
 							animation.Play("Walk Forward");
 						}
 
