@@ -11,8 +11,8 @@ public class PuppetScript : MonoBehaviour
 
 	// New things, added by Dakota 1/13 7:22pm
 	public GameObject degubber;
-	public float curBalance = 100;
-	public float maxBalance = 100;
+	public float curTallys = 3;
+	public float maxTallys = 3;
 
 	public enum State
 	{
@@ -61,15 +61,17 @@ public class PuppetScript : MonoBehaviour
 	private Vector3 moveTest;
 	private Vector3 camTest;
 	private Vector3 oldPos;
-	private float debugAngle;
-	private int debugDodgeType = 0;
-	private float debugDodgeTmr = 0.0f;
-	private int debugGrdType = 0;
-	private float debugGrdTmr = 0.0f;
-	private bool debugMove = false;
-	private bool debugCamera = false;
-	private bool debugDodge = false;
-	private bool debugGuard = false;
+	#region old degubstuffs
+	//private float debugAngle;
+	//private int debugDodgeType = 0;
+	//private float debugDodgeTmr = 0.0f;
+	//private int debugGrdType = 0;
+	//private float debugGrdTmr = 0.0f;
+	//private bool debugMove = false;
+	//private bool debugCamera = false;
+	//private bool debugDodge = false;
+	//private bool debugGuard = false;
+	#endregion
 
 
 
@@ -147,7 +149,10 @@ public class PuppetScript : MonoBehaviour
 		if (GrdTmrMax == 0.0f)
 			GrdTmrMax = 0.2f;
 
-		InitAnimTable();
+		if (tag == "Player")
+			InitAnimTable();
+		else if (tag == "Enemy")
+			InitAnimTableEnemy();
 		InitStateTable();
 
 		moveTest = Vector3.zero;
@@ -157,7 +162,7 @@ public class PuppetScript : MonoBehaviour
 		camTest.x = 1.0f;
 		camTest.z = 1.0f;
 
-		debugAngle = 0.0f;
+		//debugAngle = 0.0f;
 
 		if (tag == "Player")
 			camScript.Initialize(this);
@@ -201,10 +206,53 @@ public class PuppetScript : MonoBehaviour
 		animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
 		"React Side";
 
-
+		#region Very Unimportant Things
 		animTable[(int)State.IDLE, (int)State.IDLE] =
 		animTable[(int)State.MOVING, (int)State.MOVING] =
 		"Twerk";
+		#endregion
+
+	}
+	void InitAnimTableEnemy()
+	{
+		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
+		animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
+		animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
+		animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
+		"Idle";
+		animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
+		"Block Up Hit";
+		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
+		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
+		//animTableEnemy[(int)State.ATK_VERT, (int)State.ATK_VERT] =
+		//animTableEnemy[(int)State.ATK_RTL, (int)State.ATK_VERT] =
+		//animTableEnemy[(int)State.ATK_LTR, (int)State.ATK_VERT] =
+		"React Front";
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
+		animTable[(int)State.IDLE, (int)State.ATK_RTL] =
+		animTable[(int)State.MOVING, (int)State.ATK_RTL] =
+		animTable[(int)State.IDLE, (int)State.ATK_LTR] =
+		animTable[(int)State.MOVING, (int)State.ATK_LTR] =
+		//animTable[(int)State.ATK_VERT, (int)State.ATK_RTL] =
+		//animTable[(int)State.ATK_VERT, (int)State.ATK_LTR] =
+		//animTable[(int)State.ATK_RTL, (int)State.ATK_RTL] =
+		//animTable[(int)State.ATK_RTL, (int)State.ATK_LTR] =
+		//animTable[(int)State.ATK_LTR, (int)State.ATK_RTL] =
+		//animTable[(int)State.ATK_LTR, (int)State.ATK_LTR] =
+		"React Side";
+
+		#region Very Unimportant Things
+		animTable[(int)State.IDLE, (int)State.IDLE] =
+		animTable[(int)State.MOVING, (int)State.MOVING] =
+		"Twerk";
+		#endregion
 
 	}
 	void InitStateTable()
@@ -384,7 +432,7 @@ public class PuppetScript : MonoBehaviour
 		}
 
 		// only search for targets if we are the player.
-		if (tag == "Player")
+		if (tag == "Player" && curState != State.DEAD)
 		{
 			FindTarg();
 			if (rockedOn && curTarg != null)
@@ -470,90 +518,91 @@ public class PuppetScript : MonoBehaviour
 		}
 	}
 
+	#region old DoDegub() stuffs
 	// DoDegub()
 	// Does the degubs for the testing on the features
-	private void DoDegub()
-	{
-		return;
-		if (debugMove || debugCamera)
-		{
-			debugAngle += Time.deltaTime * 2.0f;
-			if (debugAngle >= 2.0f * Mathf.PI)
-				debugAngle -= 2.0f * Mathf.PI;
-		}
-		if (debugMove)
-		{
-			moveTest.x = Mathf.Cos(debugAngle);
-			moveTest.z = Mathf.Sin(debugAngle);
+	//private void DoDegub()
+	//{
+	//	if (debugMove || debugCamera)
+	//	{
+	//		debugAngle += Time.deltaTime * 2.0f;
+	//		if (debugAngle >= 2.0f * Mathf.PI)
+	//			debugAngle -= 2.0f * Mathf.PI;
+	//	}
+	//	if (debugMove)
+	//	{
+	//		moveTest.x = Mathf.Cos(debugAngle);
+	//		moveTest.z = Mathf.Sin(debugAngle);
 
-			Move(moveTest);
-		}
-		if (debugCamera)
-		{
-			moveTest.x = 1.0f;
-			moveTest.y = 0.0f;
-			MoveCamera(camTest);
-		}
-		if (debugDodge)
-		{
-			debugDodgeTmr += Time.deltaTime;
-			//if (debugDodgeTmr > DgeTmrMax * 2.0f)
-			{
-				debugDodgeTmr = 0.0f;
-				int res = 1;
-				switch (debugDodgeType)
-				{
-					case 0:
-						res = DodgeLeft();
-						break;
-					case 1:
-						res = DodgeForward();
-						break;
-					case 2:
-						res = DodgeRight();
-						break;
-					case 3:
-						res = DodgeRight();
-						break;
-					case 4:
-						res = DodgeBackwards();
-						break;
-					case 5:
-						res = DodgeLeft();
-						break;
-				}
-				debugDodgeType++;
-				if (debugDodgeType > 5)
-					debugDodgeType = 0;
-			}
-		}
-		if (debugGuard)
-		{
-			debugGrdTmr += Time.deltaTime;
-			int res = 1;
-			switch (debugGrdType)
-			{
-				case 0:
-					res = GuardUpwards();
-					break;
-				case 1:
-					res = GuardLeft();
-					break;
-				case 2:
-					res = GuardRight();
-					break;
-			}
+	//		Move(moveTest);
+	//	}
+	//	if (debugCamera)
+	//	{
+	//		moveTest.x = 1.0f;
+	//		moveTest.y = 0.0f;
+	//		MoveCamera(camTest);
+	//	}
+	//	if (debugDodge)
+	//	{
+	//		debugDodgeTmr += Time.deltaTime;
+	//		//if (debugDodgeTmr > DgeTmrMax * 2.0f)
+	//		{
+	//			debugDodgeTmr = 0.0f;
+	//			int res = 1;
+	//			switch (debugDodgeType)
+	//			{
+	//				case 0:
+	//					res = DodgeLeft();
+	//					break;
+	//				case 1:
+	//					res = DodgeForward();
+	//					break;
+	//				case 2:
+	//					res = DodgeRight();
+	//					break;
+	//				case 3:
+	//					res = DodgeRight();
+	//					break;
+	//				case 4:
+	//					res = DodgeBackwards();
+	//					break;
+	//				case 5:
+	//					res = DodgeLeft();
+	//					break;
+	//			}
+	//			debugDodgeType++;
+	//			if (debugDodgeType > 5)
+	//				debugDodgeType = 0;
+	//		}
+	//	}
+	//	if (debugGuard)
+	//	{
+	//		debugGrdTmr += Time.deltaTime;
+	//		int res = 1;
+	//		switch (debugGrdType)
+	//		{
+	//			case 0:
+	//				res = GuardUpwards();
+	//				break;
+	//			case 1:
+	//				res = GuardLeft();
+	//				break;
+	//			case 2:
+	//				res = GuardRight();
+	//				break;
+	//		}
 
-			//if (debugGrdTmr > GrdTmrMax * 5.0f)
-			{
-				debugGrdTmr = 0.0f;
-				debugGrdType++;
-				if (debugGrdType > 2)
-					debugGrdType = 0;
-			}
-		}
+	//		//if (debugGrdTmr > GrdTmrMax * 5.0f)
+	//		{
+	//			debugGrdTmr = 0.0f;
+	//			debugGrdType++;
+	//			if (debugGrdType > 2)
+	//				debugGrdType = 0;
+	//		}
+	//	}
 
-	}
+	//}
+#endregion
 
 
 	// Change State Function
@@ -580,19 +629,30 @@ public class PuppetScript : MonoBehaviour
 		}
 
 		if (_nextState == State.DEAD)
-			NotifyNextOfKin();
+		{
+			if (Targeting_CubeSpawned != null)
+			{
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject); // apparently the solution.
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Destroy(Targeting_CubeSpawned.gameObject);
+				Targeting_CubeSpawned = null;
+			}
+			if (rockedOn)
+				ToggleLockon();
+		}
 
 		lastState = curState;
 		curState = _nextState;
 
 		// New things, added by Dakota 1/13 whatever PM
 		// Degub Stuff
-		if (lastState != curState)
-		{
-			if (degubber)
+		if (lastState != curState && degubber != null)
 				degubber.GetComponent<DebugMonitor>().UpdateText("New State: " + transform.tag + " " + curState.ToString());
-		}
-		//
 
 		return 1;
 	}
@@ -690,6 +750,11 @@ public class PuppetScript : MonoBehaviour
 	public int MoveCamera(Vector3 _dir)
 	{
 		return camScript.MoveCamera(_dir);
+	}
+
+	public int ResetCamera()
+	{
+		return camScript.ResetCamera();
 	}
 
 	public int ToggleLockon()
@@ -837,39 +902,45 @@ public class PuppetScript : MonoBehaviour
 			return rhScript.ResolveHit(_otherObject);
 		else
 			return -1;
-
-
 	}
 
+	// Cube!!!
 	public HitBox cube;
 	// Sam: activate our attack hitbox
-	void Attack()
-	{
-		if (cube)
-			cube.Attack();
-	}
+	void Attack() // Defender of the polyverse!
+	{// Cube!!!
+		if (cube) // defeat the dreaded cone!
+			cube.Attack(); // Uses three-dimensional pictures!
+	}// Cube.
 
-	//Sam: the enemy's hitbox that we are owned by
-	HitBox otherBox;
-	//Sam: tell the otherbox we are no longer among the living
-	void NotifyNextOfKin()
-	{
-		if (otherBox)
-			otherBox.RemoveFromList(gameObject);
-	}
-
-	public void SetOtherBox(HitBox other)
-	{
-		otherBox = other;
-	}
-
-	public void RemoveOtherBox()
-	{
-		otherBox = null;
-	}
 
 	public void PlaySwish()
 	{
 		Instantiate(swordSwish, transform.position, Quaternion.identity);
+	}
+
+	// IsState() functions
+	// checks the multiple states for various actions so we can do so in a single line.
+	public bool IsAttackState()
+	{
+		return (curState == State.ATK_KICK
+			|| curState == State.ATK_LTR
+			|| curState == State.ATK_RTL
+			|| curState == State.ATK_STAB
+			|| curState == State.ATK_VERT);
+	}
+
+	public bool IsDodgeState()
+	{
+		return (curState == State.DGE_BACK
+			|| curState == State.DGE_FORWARD
+			|| curState == State.DGE_RIGHT);
+	}
+
+	public bool IsGuardState()
+	{
+		return (curState == State.GRD_LEFT
+			|| curState == State.GRD_RIGHT
+			|| curState == State.GRD_TOP);
 	}
 }

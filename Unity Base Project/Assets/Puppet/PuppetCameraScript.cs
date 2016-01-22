@@ -25,6 +25,7 @@ public class PuppetCameraScript : MonoBehaviour
 	public float camSpeed;
 	private float last_camSpeed;
 	private float peekTmr = 0.0f;
+	private float resetTmr = 0.0f;
 
 	// Use this for initialization
 	void Start()
@@ -103,6 +104,20 @@ public class PuppetCameraScript : MonoBehaviour
 	{
 		if (Owner.tag == "Player")
 		{
+			if (resetTmr > 0.0f)
+			{
+				resetTmr -= Time.deltaTime;
+				float dt = Time.deltaTime * 20.0f;
+				Vector3 newRot = new Vector3(
+					Mathf.LerpAngle(camTarg.transform.eulerAngles.x, transform.eulerAngles.x, dt),
+					Mathf.LerpAngle(camTarg.transform.eulerAngles.y, transform.eulerAngles.y, dt),
+					Mathf.LerpAngle(camTarg.transform.eulerAngles.z, transform.eulerAngles.z, dt)
+					);
+				camTarg.transform.eulerAngles = newRot;
+				camRot = camTarg.transform.rotation;
+				if (resetTmr < 0.0f)
+					resetTmr = 0.0f;
+			}
 			
 			if (camOffsetRatio > 1.0f)
 				camOffsetRatio = 1.0f;
@@ -210,6 +225,11 @@ public class PuppetCameraScript : MonoBehaviour
 		return 1;
 	}
 
+	public int ResetCamera()
+	{
+		resetTmr = 0.25f;
+		return 1;
+	}
 
 	// ToggleLockon Function
 	// Toggles the lockon feature of the camera

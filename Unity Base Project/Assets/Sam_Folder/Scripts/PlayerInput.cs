@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -7,15 +8,19 @@ public class PlayerInput : MonoBehaviour
 	enum ATTACKS { NONE = 0, VERT, LTR, RTL }
 	ATTACKS lastAttack;
 
-	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.5f;
+	float deadZone = 0.25f, bufferTime = 0.0f, maxTime = 0.5f,
+		maxStam, curStam, regenRate = 1.0f;
 	public PuppetScript puppet;
 	//public GameObject swordSwish;
 	public GameObject guard;
+	public Image staminaBar;
+
 	MyStance stance;
 
 	// Use this for initialization
 	void Start()
 	{
+		curStam = maxStam = 5.0f;
 		puppet = gameObject.GetComponent<PuppetScript>();
 		lastAttack = ATTACKS.NONE;
 		if (guard)
@@ -25,6 +30,13 @@ public class PlayerInput : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		//if (curStam < maxStam)
+		//{
+		//	curStam += Time.deltaTime * regenRate;
+		//	if (curStam > maxStam)
+		//		curStam = maxStam;
+		//}
+		//staminaBar.fillAmount = curStam / maxStam;
 		HandleInput();
 		//stuff
 	}
@@ -41,19 +53,18 @@ public class PlayerInput : MonoBehaviour
 		Vector3 dir = new Vector3(lHorizontal, 0.0f, -lVertical);
 		puppet.Move(dir);
 
+		if(InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.LEFTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN)
+			&& !puppet.rockedOn)
+		{
+			puppet.ResetCamera();
+		}
+
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
 		{
 			SetLastNone();
 
-			if(guard)
+			if (guard)
 				guard.SetActive(true);
-			//bufferTime = 0.0f;
-			//if (Input.GetButton("P1_Button_Y"))
-			//	puppet.GuardUpwards();
-			//else if (Input.GetButton("P1_Button_X"))
-			//	puppet.GuardLeft();
-			//else if (Input.GetButton("P1_Button_B"))
-			//	puppet.GuardRight();
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.HELD))
 			{
@@ -96,12 +107,11 @@ public class PlayerInput : MonoBehaviour
 		//}
 		else
 		{
-			if(guard)
+			if (guard)
 				guard.SetActive(false);
 			//if (bufferTime <= 0.0f)
 			//{
-			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN)
-				|| InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
+			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet.rockedOn = !puppet.rockedOn;
 				puppet.ToggleLockon();
@@ -117,8 +127,14 @@ public class PlayerInput : MonoBehaviour
 
 			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.X, InputChecker.BUTTON_STATE.DOWN))
 			{
-				if (bufferTime >= 0.0f)
+				if (bufferTime >= 0.0f /*&& curStam >= 1.0f*/)
 				{
+					//if (!animation.isPlaying)
+					//{
+						//curStam -= 1.0f;
+						//if (curStam < 0.0f)
+						//	curStam = 0.0f;
+					//}
 					//int x = 5; //for debug
 					switch (lastAttack)
 					{
@@ -151,14 +167,21 @@ public class PlayerInput : MonoBehaviour
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet dodge
-				if (lHorizontal > deadZone)
-					puppet.DodgeRight();
-				else if (lHorizontal < -deadZone)
-					puppet.DodgeLeft();
-				else if (lVertical < -deadZone)
-					puppet.DodgeForward();
-				else
-					puppet.DodgeBackwards();
+				//if (curStam >= 2.0f)
+				//{
+				//	curStam -= 2.0f;
+				//	if (curStam < 0.0f)
+				//		curStam = 0.0f;
+
+					if (lHorizontal > deadZone)
+						puppet.DodgeRight();
+					else if (lHorizontal < -deadZone)
+						puppet.DodgeLeft();
+					else if (lVertical < -deadZone)
+						puppet.DodgeForward();
+					else
+						puppet.DodgeBackwards();
+				//}
 			}
 			//}
 			else

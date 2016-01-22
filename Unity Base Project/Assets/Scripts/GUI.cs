@@ -8,7 +8,8 @@ public class GUI : MonoBehaviour
 {
 	public Canvas theGUI;
 	public Canvas tutorial;
-	public Image guardLeft, guardRight, guardTop, balance;
+	public Image guardLeft, guardRight, guardTop;
+	public Image tally1, tally2, tally3;
 	private PuppetScript player;
 
 	public List<string> dances;
@@ -46,14 +47,37 @@ public class GUI : MonoBehaviour
 		else
 			guardRight.color = Color.white;
 
-		balance.fillAmount = player.curBalance / player.maxBalance;
+		if (player.curTallys == 3)
+		{
+			tally1.color = Color.white;
+			tally2.color = Color.white;
+			tally3.color = Color.white;
+		}
+		else if (player.curTallys == 2)
+		{
+			tally1.color = Color.white;
+			tally2.color = Color.white;
+			tally3.color = Color.black;
+		}
+		else if (player.curTallys == 1)
+		{
+			tally1.color = Color.white;
+			tally2.color = Color.black;
+			tally3.color = Color.black;
+		}
+		else if (player.curTallys == 0)
+		{
+			tally1.color = Color.black;
+			tally2.color = Color.black;
+			tally3.color = Color.black;
+		}
 
-		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.LEFTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN) && !action)
+		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN) && !action)
 		{
 			action = true;
 			theGUI.enabled = !theGUI.enabled;
 		}
-		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.LEFTSTICK_CLICK, InputChecker.BUTTON_STATE.UP))
+		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.UP))
 		{
 			action = false;
 		}

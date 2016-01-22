@@ -34,11 +34,15 @@ public class DemoAttack : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            animation.Play("Walk Left");
+            animation.Play("Block Left");
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-            animation.Play("Walk Right");
+            animation.Play("Block Right");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            animation.Play("Block");
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
