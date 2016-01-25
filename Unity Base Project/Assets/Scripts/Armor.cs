@@ -12,7 +12,7 @@ public class Armor : MonoBehaviour
 	public float LeftIntegrityDegredation;
 	public float RightIntegrityDegredation;
 	public float ChestIntegrityDegredation;
-	public Material TopPiece, LeftPiece, RightPiece, ChestPiece;
+	public MeshRenderer TopPiece, LeftPiece, RightPiece, ChestPiece;
 
 	// Use this for initialization
 	void Start()
@@ -22,10 +22,10 @@ public class Armor : MonoBehaviour
 		integrity[(int)ARMOR_PIECE.LEFT] = LeftIntegrity;
 		integrity[(int)ARMOR_PIECE.RIGHT] = RightIntegrity;
 		integrity[(int)ARMOR_PIECE.CHEST] = ChestIntegrity;
-		TopPiece.color = Color.green;
-		LeftPiece.color = Color.green;
-		RightPiece.color = Color.green;
-		ChestPiece.color = Color.green;
+		TopPiece.material.color = Color.green;
+		LeftPiece.material.color = Color.green;
+		RightPiece.material.color = Color.green;
+		ChestPiece.material.color = Color.green;
 	}
 
 	// Update is called once per frame
@@ -52,7 +52,7 @@ public class Armor : MonoBehaviour
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.TOP] -= TopIntegrityDegredation;
-					TopPiece.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.TOP] / TopIntegrity);
+					TopPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.TOP] / TopIntegrity);
 				}
 				break;
 			case ARMOR_PIECE.LEFT:
@@ -61,7 +61,7 @@ public class Armor : MonoBehaviour
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.LEFT] -= LeftIntegrityDegredation;
-					LeftPiece.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.LEFT] / LeftIntegrity);
+					LeftPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.LEFT] / LeftIntegrity);
 				}
 				break;
 			case ARMOR_PIECE.RIGHT:
@@ -70,7 +70,7 @@ public class Armor : MonoBehaviour
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.RIGHT] -= RightIntegrityDegredation;
-					RightPiece.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.RIGHT] / RightIntegrity);
+					RightPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.RIGHT] / RightIntegrity);
 				}
 				break;
 			case ARMOR_PIECE.CHEST:
@@ -79,7 +79,7 @@ public class Armor : MonoBehaviour
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.CHEST] -= ChestIntegrityDegredation;
-					ChestPiece.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.CHEST] / ChestIntegrity);
+					ChestPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.CHEST] / ChestIntegrity);
 				}
 				break;
 			default:

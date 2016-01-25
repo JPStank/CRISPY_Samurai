@@ -18,15 +18,14 @@ public class Boss_AI_Controller : MonoBehaviour
 	public bool inRange = false;
 	public bool minionSummoned = false;
 	public bool minionDead = false;
-	public bool healing = false;
+	public float StoppingDistance = 2.7f;
 	public GameObject minionSpawnLocation;
 	public GameObject retreatPoint;
 	public GameObject minion = null;
 	PuppetScript minionPuppet;
 	public Action currentAction;
 	public Armor armor;
-	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f, regenerationRate = 10.0f, phaseTransitionHealth = 75.0f;
-	float healTimer = 0.0f;
+	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
 	int nextAction = 0;
 
 	// Use this for initialization
@@ -44,13 +43,13 @@ public class Boss_AI_Controller : MonoBehaviour
 		protectiveAction.dances.Add("Twerk");
 		protectiveAction.dances.Add("Gangnam Style");
 		protectiveAction.dances.Add("Robot");
-		puppet.maxTallys = 4;
 		PopulateActions(phaseOneAttacks, ref phaseOne);
 		if (!repeatActions)
 			PopulateActions(phaseTwoAttacks, ref phaseTwo);
 		else
 			PopulateActions(phaseOneAttacks, ref phaseTwo);
 
+		currentAction = phaseOne[0];
 	}
 
 	// Update is called once per frame
@@ -195,10 +194,9 @@ public class Boss_AI_Controller : MonoBehaviour
 
 			if (angleToPlayer > 15.0f &&
 				!currentAction.isBehaving() &&
-				(gameObject.transform.position - player.transform.position).magnitude < agent.stoppingDistance &&
+				(gameObject.transform.position - player.transform.position).magnitude < StoppingDistance &&
 				(gameObject.transform.position - player.transform.position).magnitude > 0.78f)
 			{
-				Debug.Log((gameObject.transform.position - player.transform.position).magnitude);
 
 				// Angle the enemy towards the player
 				agent.updateRotation = false;
@@ -214,12 +212,10 @@ public class Boss_AI_Controller : MonoBehaviour
 				agent.updateRotation = true;
 			}
 
-			else if ((gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance
-				&& !currentAction.isBehaving()
-				&& !healing)
+			else if ((gameObject.transform.position - player.transform.position).magnitude > StoppingDistance
+				&& !currentAction.isBehaving())
 			{
 				// Move the enemy towards the player
-				agent.stoppingDistance = 2.7f;
 				agent.SetDestination(player.transform.position);
 				if (!animation.IsPlaying("Walk Forward"))
 				{
@@ -272,7 +268,6 @@ public class Boss_AI_Controller : MonoBehaviour
 			{
 				GameObject.Instantiate(minion, minionSpawnLocation.transform.position, Quaternion.identity);
 				minionPuppet = minion.GetComponent<PuppetScript>();
-				healing = true;
 				minionSummoned = true;
 				agent.SetDestination(retreatPoint.transform.position);
 			}
@@ -282,14 +277,14 @@ public class Boss_AI_Controller : MonoBehaviour
 
 	void PhaseTwo(float angleToPlayer)
 	{
-		if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+		if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > StoppingDistance)
 		{
 			inRange = false;
 		}
 		else
 		{
 			inRange = true;
-			//agent.Stop();
+			agent.Stop();
 		}
 
 		if (minionSummoned && !minionDead)
@@ -297,15 +292,6 @@ public class Boss_AI_Controller : MonoBehaviour
 			if (minionPuppet.curState == PuppetScript.State.DEAD)
 			{
 				minionDead = true;
-				healing = false;
-				armor.TopPiece.color = Color.green;
-				armor.LeftPiece.color = Color.green;
-				armor.RightPiece.color = Color.green;
-				armor.ChestPiece.color = Color.green;
-				armor.integrity[(int)Armor.ARMOR_PIECE.TOP] = armor.TopIntegrity;
-				armor.integrity[(int)Armor.ARMOR_PIECE.LEFT] = armor.LeftIntegrity;
-				armor.integrity[(int)Armor.ARMOR_PIECE.RIGHT] = armor.RightIntegrity;
-				armor.integrity[(int)Armor.ARMOR_PIECE.CHEST] = armor.ChestIntegrity;
 			}
 
 			if (agent.remainingDistance == 0.0f)
