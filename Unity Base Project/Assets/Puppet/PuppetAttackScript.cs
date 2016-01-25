@@ -31,6 +31,19 @@ public class PuppetAttackScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if (animation.IsPlaying("Right Slash"))
+		{
+			animation["Right Slash"].speed = attackSpeed;
+		}
+		else if (animation.IsPlaying("Down Slash"))
+		{
+			animation["Down Slash"].speed = attackSpeed;
+		}
+		else if (animation.IsPlaying("Left Slash"))
+		{
+			animation["Left Slash"].speed = attackSpeed;
+		}
+
 		UpdateTmrs(ref AtkTmrCur);
 
 	}
