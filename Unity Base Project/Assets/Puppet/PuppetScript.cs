@@ -1073,4 +1073,14 @@ public class PuppetScript : MonoBehaviour
 		else
 			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].recover;
 	}
+
+	public void Death()
+	{
+		Win_Loss theThing = GameObject.Find("WinLoss").GetComponent<Win_Loss>();
+
+		if (gameObject.tag == "Enemy")
+			theThing.Decrement();
+		else if (gameObject.tag == "Player")
+			theThing.YouLose();
+	}
 }
