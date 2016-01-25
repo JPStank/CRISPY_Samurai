@@ -6,76 +6,100 @@ using System.Collections.Generic;
 
 public class GUI : MonoBehaviour
 {
-	public Canvas theGUI;
-	public Canvas tutorial;
-	public Image guardLeft, guardRight, guardTop;
-	public Image tally1, tally2, tally3;
+	Canvas theGUI;
+	Canvas tutorial;
+	Image guardLeft, guardRight, guardTop;
+	Image tally1, tally2, tally3;
 	private PuppetScript player;
 
+	[HideInInspector]
 	public List<string> dances;
 
 	bool action = true;
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
 
+		theGUI = GameObject.Find("GUI").GetComponent<Canvas>();
+		tutorial = GameObject.Find("Tutorial").GetComponent<Canvas>();
+
+		if (theGUI)
+		{
+			guardLeft = GameObject.Find("GUI/Panel/Guard HUD/Guard Left").GetComponent<Image>();
+			guardRight = GameObject.Find("GUI/Panel/Guard HUD/Guard Right").GetComponent<Image>();
+			guardTop = GameObject.Find("GUI/Panel/Guard HUD/Guard Top").GetComponent<Image>();
+
+			tally1 = GameObject.Find("GUI/Panel/Tally1").GetComponent<Image>();
+			tally2 = GameObject.Find("GUI/Panel/Tally2").GetComponent<Image>();
+			tally3 = GameObject.Find("GUI/Panel/Tally3").GetComponent<Image>();
+		}
+
 		dances.Add("Twerk");
 		dances.Add("Gangnam Style");
-        dances.Add("Robot");
-        dances.Add("Thriller 1");
-        dances.Add("Thriller 2");
-        dances.Add("Thriller 3");
-        dances.Add("Thriller 4");
+		dances.Add("Robot");
+		dances.Add("Thriller 1");
+		dances.Add("Thriller 2");
+		dances.Add("Thriller 3");
+		dances.Add("Thriller 4");
 	}
-	
+
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
-		if (player.curState == PuppetScript.State.GRD_LEFT)
-			guardLeft.color = Color.red;
-		else
-			guardLeft.color = Color.white;
+		if (guardLeft && guardRight && guardTop)
+		{
+			if (player.curState == PuppetScript.State.GRD_LEFT)
+				guardLeft.color = Color.red;
+			else
+				guardLeft.color = Color.white;
 
-		if (player.curState == PuppetScript.State.GRD_TOP)
-			guardTop.color = Color.red;
-		else
-			guardTop.color = Color.white;
+			if (player.curState == PuppetScript.State.GRD_TOP)
+				guardTop.color = Color.red;
+			else
+				guardTop.color = Color.white;
 
-		if (player.curState == PuppetScript.State.GRD_RIGHT)
-			guardRight.color = Color.red;
-		else
-			guardRight.color = Color.white;
+			if (player.curState == PuppetScript.State.GRD_RIGHT)
+				guardRight.color = Color.red;
+			else
+				guardRight.color = Color.white;
+		}
 
-		if (player.curTallys == 3)
+		if (tally1 && tally2 && tally3)
 		{
-			tally1.color = Color.white;
-			tally2.color = Color.white;
-			tally3.color = Color.white;
-		}
-		else if (player.curTallys == 2)
-		{
-			tally1.color = Color.white;
-			tally2.color = Color.white;
-			tally3.color = Color.black;
-		}
-		else if (player.curTallys == 1)
-		{
-			tally1.color = Color.white;
-			tally2.color = Color.black;
-			tally3.color = Color.black;
-		}
-		else if (player.curTallys == 0)
-		{
-			tally1.color = Color.black;
-			tally2.color = Color.black;
-			tally3.color = Color.black;
+			if (player.curTallys == 3)
+			{
+				tally1.color = Color.white;
+				tally2.color = Color.white;
+				tally3.color = Color.white;
+			}
+			else if (player.curTallys == 2)
+			{
+				tally1.color = Color.white;
+				tally2.color = Color.white;
+				tally3.color = Color.black;
+			}
+			else if (player.curTallys == 1)
+			{
+				tally1.color = Color.white;
+				tally2.color = Color.black;
+				tally3.color = Color.black;
+			}
+			else if (player.curTallys == 0)
+			{
+				tally1.color = Color.black;
+				tally2.color = Color.black;
+				tally3.color = Color.black;
+			}
 		}
 
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN) && !action)
 		{
 			action = true;
-			theGUI.enabled = !theGUI.enabled;
+			if (theGUI)
+			{	
+				theGUI.enabled = !theGUI.enabled;
+			}
 		}
 		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.UP))
 		{
