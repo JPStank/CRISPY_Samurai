@@ -31,7 +31,7 @@ public class Win_Loss : MonoBehaviour
 		numToKill--;
 		if (numToKill <= 0)
 		{
-			if (winScreen == null)
+			if (winScreen == "")
 				Application.LoadLevel("Menu_Scene");
 			else
 				Application.LoadLevel(winScreen);
@@ -40,7 +40,7 @@ public class Win_Loss : MonoBehaviour
 
 	public void YouLose()
 	{
-		if (loseScreen == null)
+		if (loseScreen == "")
 			Application.LoadLevel("Hub_Scene");
 		else
 			Application.LoadLevel(loseScreen);

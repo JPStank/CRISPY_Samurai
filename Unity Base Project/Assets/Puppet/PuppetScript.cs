@@ -969,9 +969,11 @@ public class PuppetScript : MonoBehaviour
 
 	public void Death()
 	{
+		Win_Loss theThing = GameObject.Find("WinLoss").GetComponent<Win_Loss>();
+
 		if (gameObject.tag == "Enemy")
-			Win_Loss.instance.Decrement();
+			theThing.Decrement();
 		else if (gameObject.tag == "Player")
-			Win_Loss.instance.YouLose();
+			theThing.YouLose();
 	}
 }

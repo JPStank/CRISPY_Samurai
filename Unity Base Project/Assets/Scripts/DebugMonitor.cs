@@ -12,17 +12,17 @@ public class DebugMonitor : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		debugText = GameObject.Find("Debug_Canvas/Text Panel/Debug Text").GetComponent<Text>();
-		if (debugText)
-		{
-			UpdateText("Hello Debug!");
-		}
+		//debugText = GameObject.Find("Debug_Canvas/Text Panel/Debug Text").GetComponent<Text>();
+		//if (debugText)
+		//{
+		//	UpdateText("Hello Debug!");
+		//}
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		debugText = GameObject.Find("Debug_Canvas/Text Panel/Debug Text").GetComponent<Text>();
+		//debugText = GameObject.Find("Debug_Canvas/Text Panel/Debug Text").GetComponent<Text>();
 	}
 
 	public void UpdateText(string newText)
