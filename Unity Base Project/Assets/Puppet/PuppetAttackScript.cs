@@ -104,7 +104,7 @@ public class PuppetAttackScript : MonoBehaviour {
 		animation["Stab"].speed = attackSpeed;
 
 		animation.Play("Stab");
-		AtkTmrCur = animation["Stab"].length / animation["Left Slash"].speed;
+		AtkTmrCur = animation["Stab"].length / animation["Stab"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
