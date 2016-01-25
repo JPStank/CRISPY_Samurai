@@ -61,7 +61,6 @@ public class PuppetScript : MonoBehaviour
 	public Vector3 targOffset;
 	public Vector3 nextDir;
 	public AttackAnimationMods[] AnimMods;
-	public AttackAnimationMods[] AnimModsEnemy;
 	//public float AtkTmrMax;
 	public float DgeTmrMax;
 	public float GrdTmrMax;
@@ -165,18 +164,23 @@ public class PuppetScript : MonoBehaviour
 		//if (AtkTmrMax = 0.0f)
 		//AtkTmrMax = 1.0f;
 		if (AnimMods == null)
-			InitAnimMods();
-		if (AnimMods == null)
-			InitAnimModsEnemy();
+		{
+			if (tag == "Player")
+			{
+				InitAnimTable();
+				InitAnimMods();
+			}
+			else if (tag == "Enemy")
+			{
+				InitAnimTableEnemy();
+				InitAnimModsEnemy();
+			}
+		}
 		if (DgeTmrMax == 0.0f)
 			DgeTmrMax = 0.5f;
 		if (GrdTmrMax == 0.0f)
 			GrdTmrMax = 0.2f;
 
-		if (tag == "Player")
-			InitAnimTable();
-		else if (tag == "Enemy")
-			InitAnimTableEnemy();
 		InitStateTable();
 
 		moveTest = Vector3.zero;
@@ -225,7 +229,7 @@ public class PuppetScript : MonoBehaviour
 
 	void InitAnimModsEnemy()
 	{
-		AnimModsEnemy = new AttackAnimationMods[(int)AttackModType.NUM_MODTYPES]{
+		AnimMods = new AttackAnimationMods[(int)AttackModType.NUM_MODTYPES]{
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
@@ -233,12 +237,12 @@ public class PuppetScript : MonoBehaviour
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f}
 		};
 
-		//AnimModsEnemy[(int)AttackModType.LTR].windup = 1.0f;
-		//AnimModsEnemy[(int)AttackModType.LTR].swing = 0.2f;
-		//AnimModsEnemy[(int)AttackModType.LTR].recover = 1.0f;
-		//AnimModsEnemy[(int)AttackModType.RTL].windup = 1.0f;
-		//AnimModsEnemy[(int)AttackModType.RTL].swing = 0.2f;
-		//AnimModsEnemy[(int)AttackModType.RTL].recover = 1.0f;
+		//AnimMods[(int)AttackModType.LTR].windup = 1.0f;
+		//AnimMods[(int)AttackModType.LTR].swing = 0.2f;
+		//AnimMods[(int)AttackModType.LTR].recover = 1.0f;
+		//AnimMods[(int)AttackModType.RTL].windup = 1.0f;
+		//AnimMods[(int)AttackModType.RTL].swing = 0.2f;
+		//AnimMods[(int)AttackModType.RTL].recover = 1.0f;
 
 	}
 
@@ -1054,24 +1058,15 @@ public class PuppetScript : MonoBehaviour
 	// Animations call these functions at the correct time in order to adjust animation speed.
 	public void SetWindupMod(AttackModType _atkType)
 	{
-		if (tag == "Player")
 			attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
-		else
-			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].windup;
 	}
 	public void SetSwingMod(AttackModType _atkType)
 	{
-		if (tag == "Player")
 			attackScript.attackSpeed = AnimMods[(int)_atkType].swing;
-		else
-			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].swing;
 	}
 	public void SetRecoverMod(AttackModType _atkType)
 	{
-		if (tag == "Player")
 			attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
-		else
-			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].recover;
 	}
 
 	public void Death()
