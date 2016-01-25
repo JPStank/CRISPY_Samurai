@@ -966,4 +966,14 @@ public class PuppetScript : MonoBehaviour
 			|| curState == State.GRD_RIGHT
 			|| curState == State.GRD_TOP);
 	}
+
+	public void Death()
+	{
+		Win_Loss theThing = GameObject.Find("WinLoss").GetComponent<Win_Loss>();
+
+		if (gameObject.tag == "Enemy")
+			theThing.Decrement();
+		else if (gameObject.tag == "Player")
+			theThing.YouLose();
+	}
 }
