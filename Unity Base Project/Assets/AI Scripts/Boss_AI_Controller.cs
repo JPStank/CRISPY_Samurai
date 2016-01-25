@@ -13,7 +13,7 @@ public class Boss_AI_Controller : MonoBehaviour
 	public List<ATTACK_TYPE> phaseOneAttacks, phaseTwoAttacks;
 	public List<Action> phaseOne, phaseTwo;
 	public PHASE phase = PHASE.ONE;
-	ReactiveGuard healingAction;
+	ReactiveGuard protectiveAction;
 	public bool repeatActions;
 	public bool inRange = false;
 	public bool minionSummoned = false;
@@ -24,6 +24,7 @@ public class Boss_AI_Controller : MonoBehaviour
 	public GameObject minion = null;
 	PuppetScript minionPuppet;
 	public Action currentAction;
+	public Armor armor;
 	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f, regenerationRate = 10.0f, phaseTransitionHealth = 75.0f;
 	float healTimer = 0.0f;
 	int nextAction = 0;
@@ -34,16 +35,16 @@ public class Boss_AI_Controller : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
-		healingAction = ScriptableObject.CreateInstance<ReactiveGuard>();
-		healingAction.animation = animation;
-		healingAction.puppet = puppet;
-		healingAction.GuardTimerMax = guardTimer;
-		healingAction.playerPuppet = player.GetComponent<PuppetScript>();
-		healingAction.dances = new List<string>();
-		healingAction.dances.Add("Twerk");
-		healingAction.dances.Add("Gangnam Style");
-		healingAction.dances.Add("Robot");
-		puppet.maxTallys = 150;
+		protectiveAction = ScriptableObject.CreateInstance<ReactiveGuard>();
+		protectiveAction.animation = animation;
+		protectiveAction.puppet = puppet;
+		protectiveAction.GuardTimerMax = guardTimer;
+		protectiveAction.playerPuppet = player.GetComponent<PuppetScript>();
+		protectiveAction.dances = new List<string>();
+		protectiveAction.dances.Add("Twerk");
+		protectiveAction.dances.Add("Gangnam Style");
+		protectiveAction.dances.Add("Robot");
+		puppet.maxTallys = 4;
 		PopulateActions(phaseOneAttacks, ref phaseOne);
 		if (!repeatActions)
 			PopulateActions(phaseTwoAttacks, ref phaseTwo);
@@ -226,11 +227,11 @@ public class Boss_AI_Controller : MonoBehaviour
 					animation.Play("Walk Forward");
 				}
 
-				if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
-				{
-					//inRange = true;
-					animation.Play("Idle");
-				}
+				//if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
+				//{
+				//	//inRange = true;
+				//	animation.Play("Idle");
+				//}
 			}
 		}
 	}
@@ -244,7 +245,6 @@ public class Boss_AI_Controller : MonoBehaviour
 		else
 		{
 			inRange = true;
-			//agent.Stop();
 		}
 
 		if (inRange || currentAction.isBehaving())
@@ -266,7 +266,7 @@ public class Boss_AI_Controller : MonoBehaviour
 			SeekPlayer();
 		}
 
-		if (puppet.curTallys <= 75)
+		if (puppet.curTallys <= 2)
 		{
 			if (minion != null)
 			{
@@ -294,22 +294,24 @@ public class Boss_AI_Controller : MonoBehaviour
 
 		if (minionSummoned && !minionDead)
 		{
-			healTimer += Time.deltaTime;
-			if (healTimer >= regenerationRate)
-			{
-				healTimer = 0.0f;
-				puppet.curTallys++;
-			}
 			if (minionPuppet.curState == PuppetScript.State.DEAD)
 			{
 				minionDead = true;
 				healing = false;
+				armor.TopPiece.color = Color.green;
+				armor.LeftPiece.color = Color.green;
+				armor.RightPiece.color = Color.green;
+				armor.ChestPiece.color = Color.green;
+				armor.integrity[(int)Armor.ARMOR_PIECE.TOP] = armor.TopIntegrity;
+				armor.integrity[(int)Armor.ARMOR_PIECE.LEFT] = armor.LeftIntegrity;
+				armor.integrity[(int)Armor.ARMOR_PIECE.RIGHT] = armor.RightIntegrity;
+				armor.integrity[(int)Armor.ARMOR_PIECE.CHEST] = armor.ChestIntegrity;
 			}
 
 			if (agent.remainingDistance == 0.0f)
 			{
 				if (inRange)
-					healingAction.Execute();
+					protectiveAction.Execute();
 				else
 					SeekPlayer();
 			}

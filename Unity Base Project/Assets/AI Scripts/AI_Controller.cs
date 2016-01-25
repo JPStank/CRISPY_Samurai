@@ -447,6 +447,16 @@ public class AI_Controller : MonoBehaviour
 	//{
 	//	monitor.RemoveEnemy(attackID);
 	//}
+	
+	Vector3 MoveBack(float _distanceToMaintain)
+	{
+		Vector3 directionToRaycast = player.transform.position - gameObject.transform.position;
+		directionToRaycast.y = 0.0f;
+		Ray direction = new Ray(player.transform.position, directionToRaycast);
+		Vector3 location = direction.GetPoint(_distanceToMaintain);
+		location.y = gameObject.transform.position.y;
+		return location;
+	}
 
 	Vector3 MaintainDistance(float _distanceToMaintain)
 	{
