@@ -101,9 +101,15 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int Thrust(PuppetScript _sender)
     {
-        animation.Play("Down Slash");
-        //AtkTmrCur = animation.animation.clip.length;
-        return 1;
+		animation["Stab"].speed = attackSpeed;
+
+		animation.Play("Stab");
+		AtkTmrCur = animation["Stab"].length / animation["Left Slash"].speed;
+
+		// move us closer to the enemy please!
+		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
+
+		return 1;
     }
 
     // Kick function

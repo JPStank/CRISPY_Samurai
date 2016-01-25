@@ -93,18 +93,15 @@ public class GUI : MonoBehaviour
 			}
 		}
 
-		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN) && !action)
-		{
-			action = true;
-			if (theGUI)
-			{	
-				theGUI.enabled = !theGUI.enabled;
-			}
-		}
-		else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.UP))
-		{
-			action = false;
-		}
+		//if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN) && !action)
+		//{
+		//	action = true;
+		//	theGUI.enabled = !theGUI.enabled;
+		//}
+		//else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.UP))
+		//{
+		//	action = false;
+		//}
 
 		if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_L, InputChecker.BUTTON_STATE.DOWN))
 		{
