@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PuppetAttackScript : MonoBehaviour {
 
-    public float AtkTmrCur;
+    //public float AtkTmrCur;
 
     private PuppetScript Owner;
     //private Animator Animetor;
@@ -25,28 +25,54 @@ public class PuppetAttackScript : MonoBehaviour {
         //Animetor = _sender.Animetor;
 
         //AtkTmrMax = _sender.AtkTmrMax;
-        AtkTmrCur = 0.0f;
+        //AtkTmrCur = 0.0f;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-		UpdateTmrs(ref AtkTmrCur);
+		if (Owner.IsAttackState() && animation.isPlaying == false)
+		{
+			Owner.ChangeState(PuppetScript.State.IDLE);
+		}
+
+		if (animation.IsPlaying("Right Slash"))
+		{
+			animation["Right Slash"].speed = attackSpeed;
+		}
+		else if (animation.IsPlaying("Down Slash"))
+		{
+			animation["Down Slash"].speed = attackSpeed;
+		}
+		else if (animation.IsPlaying("Left Slash"))
+		{
+			animation["Left Slash"].speed = attackSpeed;
+		}
+		else if (animation.IsPlaying("Stab"))
+		{
+			animation["Stab"].speed = attackSpeed;
+		}
+		else if (animation.IsPlaying("Kick"))
+		{
+			animation["Kick"].speed = attackSpeed;
+		}
+
+		//UpdateTmrs(ref AtkTmrCur);
 
 	}
 
-    void UpdateTmrs(ref float _cur)
-    {
-        if (_cur > 0.0f)
-        {
-            _cur -= Time.deltaTime;
-            if (_cur <= 0.0f)
-            {
-                _cur = 0.0f;
-                Owner.ChangeState(PuppetScript.State.IDLE);
-            }
-        }
-    }
+	//void UpdateTmrs(ref float _cur)
+	//{
+	//	if (_cur > 0.0f)
+	//	{
+	//		_cur -= Time.deltaTime;
+	//		if (_cur <= 0.0f)
+	//		{
+	//			_cur = 0.0f;
+	//			Owner.ChangeState(PuppetScript.State.IDLE);
+	//		}
+	//	}
+	//}
 
     // Vertical Slash function
     // returns -1 on failure
@@ -56,7 +82,7 @@ public class PuppetAttackScript : MonoBehaviour {
         //Trigger animation
 		animation["Down Slash"].speed = attackSpeed;
         animation.Play("Down Slash");
-        AtkTmrCur = animation["Down Slash"].length / animation["Down Slash"].speed;
+        //AtkTmrCur = animation["Down Slash"].length / animation["Down Slash"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
@@ -72,7 +98,7 @@ public class PuppetAttackScript : MonoBehaviour {
 		animation["Right Slash"].speed = attackSpeed;
 
         animation.Play("Right Slash");
-        AtkTmrCur = animation["Right Slash"].length / animation["Right Slash"].speed;
+        //AtkTmrCur = animation["Right Slash"].length / animation["Right Slash"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
@@ -88,7 +114,7 @@ public class PuppetAttackScript : MonoBehaviour {
 		animation["Left Slash"].speed = attackSpeed;
 
         animation.Play("Left Slash");
-        AtkTmrCur = animation["Left Slash"].length / animation["Left Slash"].speed;
+        //AtkTmrCur = animation["Left Slash"].length / animation["Left Slash"].speed;
 
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
@@ -104,10 +130,10 @@ public class PuppetAttackScript : MonoBehaviour {
 		animation["Stab"].speed = attackSpeed;
 
 		animation.Play("Stab");
-		AtkTmrCur = animation["Stab"].length / animation["Stab"].speed;
+		//AtkTmrCur = animation["Stab"].length / animation["Left Slash"].speed;
 
 		// move us closer to the enemy please!
-		Owner.rigidbody.AddForce(Owner.transform.forward * 50000.0f);
+		Owner.rigidbody.AddForce(Owner.transform.forward * 100000.0f);
 
 		return 1;
     }

@@ -4,6 +4,18 @@ using System.Collections.Generic;
 
 public class PuppetScript : MonoBehaviour
 {
+	// modifiers to animation speeds
+	public struct AttackAnimationMods
+	{
+		public float windup;
+		public float swing;
+		public float recover;
+		public AttackAnimationMods(float _init)
+		{
+			windup = swing = recover = _init;
+		}
+	}
+
 	public GameObject painEffect;
 	public GameObject bloodHit;
 	public GameObject bloodPool;
@@ -27,6 +39,12 @@ public class PuppetScript : MonoBehaviour
 	{
 		FORWARD = 0, RIGHT, BACKWARD, LEFT
 	}
+	// Easy indexing into AttackAnimationMods array!
+	public enum AttackModType
+	{
+		VERT = 0, LTR, RTL,
+		KICK, STAB, NUM_MODTYPES
+	}
 	public State lastState;
 	public State curState;
 	public PuppetAttackScript attackScript;
@@ -42,6 +60,8 @@ public class PuppetScript : MonoBehaviour
 	public List<GameObject> badguys;
 	public Vector3 targOffset;
 	public Vector3 nextDir;
+	public AttackAnimationMods[] AnimMods;
+	public AttackAnimationMods[] AnimModsEnemy;
 	//public float AtkTmrMax;
 	public float DgeTmrMax;
 	public float GrdTmrMax;
@@ -144,6 +164,10 @@ public class PuppetScript : MonoBehaviour
 		def_camSpeed = camSpeed;
 		//if (AtkTmrMax = 0.0f)
 		//AtkTmrMax = 1.0f;
+		if (AnimMods == null)
+			InitAnimMods();
+		if (AnimMods == null)
+			InitAnimModsEnemy();
 		if (DgeTmrMax == 0.0f)
 			DgeTmrMax = 0.5f;
 		if (GrdTmrMax == 0.0f)
@@ -171,6 +195,53 @@ public class PuppetScript : MonoBehaviour
 		guardScript.Initialize(this);
 		rhScript.Initialize(this);
 	}
+
+	void InitAnimMods()
+	{
+		AnimMods = new AttackAnimationMods[(int)AttackModType.NUM_MODTYPES]{
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f}
+		};
+
+		AnimMods[(int)AttackModType.LTR].windup = 2.0f;
+		AnimMods[(int)AttackModType.LTR].swing = 2.5f;
+		AnimMods[(int)AttackModType.LTR].recover = 2.0f;
+		AnimMods[(int)AttackModType.RTL].windup = 2.0f;
+		AnimMods[(int)AttackModType.RTL].swing = 2.0f;
+		AnimMods[(int)AttackModType.RTL].recover = 3.0f;
+		AnimMods[(int)AttackModType.VERT].windup = 2.0f;
+		AnimMods[(int)AttackModType.VERT].swing = 2.8f;
+		AnimMods[(int)AttackModType.VERT].recover = 3.0f;
+		AnimMods[(int)AttackModType.KICK].windup = 2.0f;
+		//AnimMods[(int)AttackModType.KICK].swing = 0.1f;
+		AnimMods[(int)AttackModType.KICK].recover = 2.0f;
+		AnimMods[(int)AttackModType.STAB].windup = 1.0f;
+		AnimMods[(int)AttackModType.STAB].swing = 3.0f;
+		AnimMods[(int)AttackModType.STAB].recover = 2.0f;
+	}
+
+	void InitAnimModsEnemy()
+	{
+		AnimModsEnemy = new AttackAnimationMods[(int)AttackModType.NUM_MODTYPES]{
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f},
+			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f}
+		};
+
+		//AnimModsEnemy[(int)AttackModType.LTR].windup = 1.0f;
+		//AnimModsEnemy[(int)AttackModType.LTR].swing = 0.2f;
+		//AnimModsEnemy[(int)AttackModType.LTR].recover = 1.0f;
+		//AnimModsEnemy[(int)AttackModType.RTL].windup = 1.0f;
+		//AnimModsEnemy[(int)AttackModType.RTL].swing = 0.2f;
+		//AnimModsEnemy[(int)AttackModType.RTL].recover = 1.0f;
+
+	}
+
 	void InitAnimTable()
 	{
 		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
@@ -184,11 +255,17 @@ public class PuppetScript : MonoBehaviour
 		"Block Up Hit";
 		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
 		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_STAB] =
 		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
 		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
 		animTable[(int)State.ATK_VERT, (int)State.ATK_VERT] =
 		animTable[(int)State.ATK_RTL, (int)State.ATK_VERT] =
 		animTable[(int)State.ATK_LTR, (int)State.ATK_VERT] =
+		animTable[(int)State.IDLE, (int)State.ATK_STAB] =
+		animTable[(int)State.MOVING, (int)State.ATK_STAB] =
+		animTable[(int)State.ATK_VERT, (int)State.ATK_STAB] =
+		animTable[(int)State.ATK_RTL, (int)State.ATK_STAB] =
+		animTable[(int)State.ATK_LTR, (int)State.ATK_STAB] =
 		"React Front";
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
@@ -224,17 +301,23 @@ public class PuppetScript : MonoBehaviour
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
 		"Block Up Hit";
-		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
-		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
+		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_STAB] =
 		animTable[(int)State.IDLE, (int)State.ATK_VERT] =
 		animTable[(int)State.MOVING, (int)State.ATK_VERT] =
 			//animTableEnemy[(int)State.ATK_VERT, (int)State.ATK_VERT] =
 			//animTableEnemy[(int)State.ATK_RTL, (int)State.ATK_VERT] =
 			//animTableEnemy[(int)State.ATK_LTR, (int)State.ATK_VERT] =
+		animTable[(int)State.IDLE, (int)State.ATK_STAB] =
+		animTable[(int)State.MOVING, (int)State.ATK_STAB] =
+		animTable[(int)State.ATK_VERT, (int)State.ATK_STAB] =
+		animTable[(int)State.ATK_RTL, (int)State.ATK_STAB] =
+		animTable[(int)State.ATK_LTR, (int)State.ATK_STAB] =
 		"React Front";
-		animTable[(int)State.GRD_LEFT, (int)State.ATK_VERT] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_RTL] =
+		animTable[(int)State.GRD_TOP, (int)State.ATK_LTR] =
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_LTR] =
-		animTable[(int)State.GRD_RIGHT, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_RTL] =
 		animTable[(int)State.IDLE, (int)State.ATK_RTL] =
 		animTable[(int)State.MOVING, (int)State.ATK_RTL] =
@@ -965,6 +1048,30 @@ public class PuppetScript : MonoBehaviour
 		return (curState == State.GRD_LEFT
 			|| curState == State.GRD_RIGHT
 			|| curState == State.GRD_TOP);
+	}
+
+	// SetWindupMod(), SetSwingMod(), SetRecoverMod() functions
+	// Animations call these functions at the correct time in order to adjust animation speed.
+	public void SetWindupMod(AttackModType _atkType)
+	{
+		if (tag == "Player")
+			attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
+		else
+			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].windup;
+	}
+	public void SetSwingMod(AttackModType _atkType)
+	{
+		if (tag == "Player")
+			attackScript.attackSpeed = AnimMods[(int)_atkType].swing;
+		else
+			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].swing;
+	}
+	public void SetRecoverMod(AttackModType _atkType)
+	{
+		if (tag == "Player")
+			attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
+		else
+			attackScript.attackSpeed = AnimModsEnemy[(int)_atkType].recover;
 	}
 
 	public void Death()
