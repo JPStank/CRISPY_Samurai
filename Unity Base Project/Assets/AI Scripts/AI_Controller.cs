@@ -45,7 +45,7 @@ public class AI_Controller : MonoBehaviour
 	{
         if (windowTell == null)
         {
-            Debug.LogError("I NEED A WINDOW OF OPPORTUNITY EFFECT IN Window Tell PLS KTHX");
+            Debug.LogWarning("I NEED A WINDOW OF OPPORTUNITY EFFECT IN Window Tell PLS KTHX");
         }
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
