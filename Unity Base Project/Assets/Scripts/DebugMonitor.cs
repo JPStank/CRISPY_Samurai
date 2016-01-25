@@ -5,33 +5,39 @@ using UnityEngine.UI;
 
 public class DebugMonitor : MonoBehaviour
 {
-    public Text debugText;
+	public Text debugText;
 
-    int lineCounter = 1;
+	int lineCounter = 1;
 
 	// Use this for initialization
-	void Start ()
-    {
-        UpdateText("Hello Debug!");
+	void Start()
+	{
+		debugText = GameObject.Find("Debug_Canvas/Text Panel/Debug Text").GetComponent<Text>();
+		if (debugText)
+		{
+			UpdateText("Hello Debug!");
+		}
 	}
-	
+
 	// Update is called once per frame
-	void Update ()
-    {
-	    
+	void Update()
+	{
+		debugText = GameObject.Find("Debug_Canvas/Text Panel/Debug Text").GetComponent<Text>();
 	}
 
-    public void UpdateText(string newText)
-    {
-        lineCounter++;
-        debugText.text += ('\n' + newText);
+	public void UpdateText(string newText)
+	{
+		if (debugText)
+		{
+			lineCounter++;
+			debugText.text += ('\n' + newText);
 
-        if (lineCounter == 9)
-	    {
-            lineCounter--;
-            int loc = debugText.text.IndexOf('\n');
-            debugText.text = debugText.text.Remove(0, loc + 1);
-	    }
-        
-    }
+			if (lineCounter == 9)
+			{
+				lineCounter--;
+				int loc = debugText.text.IndexOf('\n');
+				debugText.text = debugText.text.Remove(0, loc + 1);
+			}
+		}
+	}
 }

@@ -56,6 +56,10 @@ public class PlayerInput_Alt : MonoBehaviour
 			&& !puppet.rockedOn)
 		{
 			puppet.ResetCamera();
+
+			GameObject thing = new GameObject();
+			thing.AddComponent<ParticleSystem>();
+			Instantiate(thing, puppet.transform.position, Quaternion.identity);
 		}
 
 		if (InputChecker.GetTrigger(InputChecker.PLAYER_NUMBER.ONE, InputChecker.TRIGGER.RIGHT) > 0.0f)
@@ -117,7 +121,7 @@ public class PlayerInput_Alt : MonoBehaviour
 				guard.SetActive(false);
 			//if (bufferTime <= 0.0f)
 			//{
-			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN))
+			if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.RIGHTSTICK_CLICK, InputChecker.BUTTON_STATE.DOWN))
 			{
 				//puppet.rockedOn = !puppet.rockedOn;
 				puppet.ToggleLockon();
@@ -168,6 +172,10 @@ public class PlayerInput_Alt : MonoBehaviour
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.B, InputChecker.BUTTON_STATE.DOWN))
 			{
 				puppet.SlashRTL();
+			}
+			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN))
+			{
+				puppet.Thrust();
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
 			{
