@@ -29,6 +29,9 @@ public class Win_Loss : MonoBehaviour
 	public void Decrement()
 	{
 		numToKill--;
+		GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().curTallys++;
+		if (GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().curTallys > 3.0f)
+			GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().curTallys = 3.0f;
 		if (numToKill <= 0)
 		{
 			if (winScreen == "")
