@@ -17,11 +17,18 @@ public class WindowOfOpportunity : Action
 
     public override COMPLETION_STATE Execute()
     {
+		if (!behaving)
+		{
+			behaving = true;
+			puppet.ChangeState(PuppetScript.State.IDLE);
+		}
+
         //if(puppet.curState != PuppetScript.State.FLINCH)
         timer += Time.deltaTime;
         if(timer >= TimerMax && puppet.curState != PuppetScript.State.FLINCH)
         {
             timer = 0;
+			behaving = false;
             return COMPLETION_STATE.COMPLETE;
         }
         return COMPLETION_STATE.IN_PROGRESS;
