@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Blood : MonoBehaviour
 {
 
-	public Image left, right, top, bottom;
+	private Image left, right, top, bottom;
 	PuppetScript player;
 
 	float lastBalance;
@@ -20,6 +20,12 @@ public class Blood : MonoBehaviour
 	void Start()
 	{
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>();
+
+		left = GameObject.Find("GUI/Panel/Blood/Left").GetComponent<Image>();
+		right = GameObject.Find("GUI/Panel/Blood/Right").GetComponent<Image>();
+		top = GameObject.Find("GUI/Panel/Blood/Top").GetComponent<Image>();
+		bottom = GameObject.Find("GUI/Panel/Blood/Bottom").GetComponent<Image>();
+
 		if (player)
 		{
 			lastBalance = player.curTallys;
@@ -31,7 +37,7 @@ public class Blood : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (player)
+		if (player && left && right && top && bottom)
 		{
 			if (lastBalance > player.curTallys)
 			{
@@ -49,7 +55,7 @@ public class Blood : MonoBehaviour
 			}
 		}
 
-		if (isVisible)
+		if (isVisible && left && right && top && bottom)
 		{
 			fadeTimer -= Time.deltaTime;
 

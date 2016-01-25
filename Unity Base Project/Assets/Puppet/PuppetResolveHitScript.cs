@@ -45,7 +45,17 @@ public class PuppetResolveHitScript : MonoBehaviour
 		Vector3 fromOtherDir = transform.position - _enemyObject.transform.position;
 		fromOtherDir.Normalize();
 
+		float backStab = Vector3.Dot(transform.forward, _enemyObject.transform.forward);
+		bool fromBehind = backStab > 0.1f;
+
 		string toPlay = Owner.animTable[(int)Owner.curState, (int)enemyState];
+
+		if (fromBehind && !Owner.cube.targets.Contains(_enemyObject))
+		{
+			toPlay = Owner.animTable[(int)PuppetScript.State.IDLE, (int)enemyState];
+			Debug.Log("Player got got");
+		}
+
 		if (toPlay != null)
 		{
 			animation.Play(toPlay);
@@ -117,7 +127,17 @@ public class PuppetResolveHitScript : MonoBehaviour
 		Vector3 fromOtherDir = transform.position - _playerObject.transform.position;
 		fromOtherDir.Normalize();
 
+		float backStab = Vector3.Dot(transform.forward, _playerObject.transform.forward);
+		bool fromBehind = backStab > 0.1f;
+
 		string toPlay = Owner.animTable[(int)Owner.curState, (int)otherState];
+
+		if (fromBehind && !Owner.cube.targets.Contains(_playerObject))
+		{
+			toPlay = Owner.animTable[(int)PuppetScript.State.IDLE, (int)otherState];
+			Debug.Log("Enemy got got");
+		}
+
 		if (toPlay != null)
 		{
 			animation.Play(toPlay);
