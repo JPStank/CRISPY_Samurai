@@ -4,6 +4,13 @@ using System.Collections;
 public class WindowOfOpportunity : Action 
 {
     public float TimerMax;
+    private GameObject windowTell = null;
+
+    public GameObject WindowTell
+    {
+        get { return windowTell; }
+        set { windowTell = value; }
+    }
     float timer = 0;
 	// Use this for initialization
 	void Start () {
@@ -21,6 +28,12 @@ public class WindowOfOpportunity : Action
 		{
 			behaving = true;
 			puppet.ChangeState(PuppetScript.State.IDLE);
+            if (windowTell)
+            {
+                GameObject tell = (GameObject)Instantiate(windowTell, puppet.gameObject.transform.position, Quaternion.identity);
+                tell.transform.SetParent(puppet.gameObject.transform);
+                tell.GetComponent<WindowOpenEffectBehavior>().GoTime(TimerMax);
+            }
 		}
 
         //if(puppet.curState != PuppetScript.State.FLINCH)

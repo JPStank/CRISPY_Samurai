@@ -38,9 +38,15 @@ public class AI_Controller : MonoBehaviour
 
 	public bool behaving;
 
+    public GameObject windowTell;
+
 	// Use this for initialization
 	void Start()
 	{
+        if (windowTell == null)
+        {
+            Debug.LogWarning("I NEED A WINDOW OF OPPORTUNITY EFFECT IN Window Tell PLS KTHX");
+        }
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
@@ -135,7 +141,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_SHORT:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-						move.animation = animation;
+                        move.WindowTell = windowTell;
+                        move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = shortTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -145,7 +152,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_MEDIUM:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-						move.animation = animation;
+                        move.WindowTell = windowTell;
+                        move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = mediumTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -155,7 +163,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_LONG:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-						move.animation = animation;
+                        move.WindowTell = windowTell;
+                        move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = longTimer;
 						move.type = Action.TYPE.WINDOW;
