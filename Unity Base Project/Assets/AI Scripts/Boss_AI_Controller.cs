@@ -27,6 +27,8 @@ public class Boss_AI_Controller : MonoBehaviour
 	public Armor armor;
 	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
 	int nextAction = 0;
+	float resetTimer = 0.0f;
+	public float resetTimerMax = 0.5f;
 
 	// Use this for initialization
 	void Start()
@@ -188,6 +190,7 @@ public class Boss_AI_Controller : MonoBehaviour
 
 	void SeekPlayer()
 	{
+
 		if (player && agent && puppet)
 		{
 			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
@@ -267,6 +270,7 @@ public class Boss_AI_Controller : MonoBehaviour
 		else
 		{
 			inRange = true;
+			resetTimer = 0.0f;
 			agent.Stop();
 		}
 
@@ -286,6 +290,13 @@ public class Boss_AI_Controller : MonoBehaviour
 
 		else
 		{
+			resetTimer += Time.deltaTime;
+			if (resetTimer > resetTimerMax)
+			{
+				resetTimer = 0.0f;
+				currentAction = phaseOne[0];
+				nextAction = 0;
+			}
 			SeekPlayer();
 		}
 
@@ -297,6 +308,8 @@ public class Boss_AI_Controller : MonoBehaviour
 				minionPuppet = thisGuy.GetComponent<PuppetScript>();
 				minionSummoned = true;
 				agent.SetDestination(retreatPoint.transform.position);
+				puppet.ChangeState(PuppetScript.State.MOVING);
+				animation.Play("Walk Forward");
 			}
 			phase = PHASE.TWO;
 		}
@@ -310,6 +323,7 @@ public class Boss_AI_Controller : MonoBehaviour
 		}
 		else
 		{
+			resetTimer = 0.0f;
 			inRange = true;
 			agent.Stop();
 		}
@@ -328,10 +342,18 @@ public class Boss_AI_Controller : MonoBehaviour
 			if(agent.remainingDistance > 0.0f)
 			{
 				agent.SetDestination(retreatPoint.transform.position);
+				if (!animation.IsPlaying("Walk Forward"))
+				{
+					puppet.ChangeState(PuppetScript.State.MOVING);
+					animation.Play("Walk Forward");
+				}
 			}
 
 			if (agent.remainingDistance == 0.0f)
 			{
+				if (puppet.curState == PuppetScript.State.MOVING)
+					puppet.ChangeState(PuppetScript.State.IDLE);
+
 				if (inRange)
 					protectiveAction.Execute();
 				else
@@ -358,6 +380,13 @@ public class Boss_AI_Controller : MonoBehaviour
 
 			else
 			{
+				resetTimer += Time.deltaTime;
+				if (resetTimer > resetTimerMax)
+				{
+					resetTimer = 0.0f;
+					currentAction = phaseTwo[0];
+					nextAction = 0;
+				}
 				SeekPlayer();
 			}
 		}
