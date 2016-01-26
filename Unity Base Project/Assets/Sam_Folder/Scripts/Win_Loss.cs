@@ -4,6 +4,7 @@ using System.Collections;
 public class Win_Loss : MonoBehaviour
 {
 	public int numToKill;
+	public bool ignoreNumToKill;
 	public string winScreen, loseScreen;
 	static Win_Loss myself;
 	// Use this for initialization
@@ -11,7 +12,7 @@ public class Win_Loss : MonoBehaviour
 	{
 		myself = this;
 	}
-	
+
 	// Update is called once per frame
 	//void Update () 
 	//{
@@ -25,19 +26,24 @@ public class Win_Loss : MonoBehaviour
 			return instance;
 		}
 	}
-	
+
 	public void Decrement()
 	{
 		numToKill--;
 		GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().curTallys++;
 		if (GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().curTallys > 3.0f)
 			GameObject.FindGameObjectWithTag("Player").GetComponent<PuppetScript>().curTallys = 3.0f;
-		if (numToKill <= 0)
+		if (!ignoreNumToKill)
 		{
-			if (winScreen == "")
-				Application.LoadLevel("Menu_Scene");
-			else
-				Application.LoadLevel(winScreen);
+			if (numToKill <= 0)
+			{
+				//if (winScreen == "")
+				//	Application.LoadLevel("Menu_Scene");
+				//else
+				//	Application.LoadLevel(winScreen);
+
+				YouWin();
+			}
 		}
 	}
 
@@ -47,5 +53,13 @@ public class Win_Loss : MonoBehaviour
 			Application.LoadLevel("Hub_Scene");
 		else
 			Application.LoadLevel(loseScreen);
+	}
+
+	public void YouWin()
+	{
+		if (winScreen == "")
+			Application.LoadLevel("Hub_Scene");
+		else
+			Application.LoadLevel(winScreen);
 	}
 }

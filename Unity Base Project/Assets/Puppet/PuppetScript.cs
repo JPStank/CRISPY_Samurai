@@ -546,20 +546,20 @@ public class PuppetScript : MonoBehaviour
 				badguys.Add(tempguy);
 			else if (tempguy == curTarg)
 			{
-					if (Targeting_CubeSpawned != null)
-					{
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Targeting_CubeSpawned = null;
-					}
-					if (rockedOn)
-						ToggleLockon();
+				if (Targeting_CubeSpawned != null)
+				{
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Targeting_CubeSpawned = null;
+				}
+				if (rockedOn)
+					ToggleLockon();
 			}
 		}
 		//curTarg = null;
@@ -589,7 +589,7 @@ public class PuppetScript : MonoBehaviour
 					Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
 					Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
 				}
-				else  if (!rockedOn)
+				else if (!rockedOn)
 				{
 					if (Targeting_CubeSpawned != null)
 					{
@@ -1060,24 +1060,28 @@ public class PuppetScript : MonoBehaviour
 	// Animations call these functions at the correct time in order to adjust animation speed.
 	public void SetWindupMod(AttackModType _atkType)
 	{
-			attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
+		attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
 	}
 	public void SetSwingMod(AttackModType _atkType)
 	{
-			attackScript.attackSpeed = AnimMods[(int)_atkType].swing;
+		attackScript.attackSpeed = AnimMods[(int)_atkType].swing;
 	}
 	public void SetRecoverMod(AttackModType _atkType)
 	{
-			attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
+		attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
 	}
 
 	public void Death()
 	{
 		Win_Loss theThing = GameObject.Find("WinLoss").GetComponent<Win_Loss>();
-
-		if (gameObject.tag == "Enemy")
-			theThing.Decrement();
-		else if (gameObject.tag == "Player")
-			theThing.YouLose();
+		if (theThing != null)
+		{
+			if (gameObject.name == "Boss Enemy") //quick n dirty
+				theThing.YouWin();
+			if (gameObject.tag == "Enemy")
+				theThing.Decrement();
+			else if (gameObject.tag == "Player")
+				theThing.YouLose();
+		}
 	}
 }

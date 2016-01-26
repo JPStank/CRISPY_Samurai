@@ -171,7 +171,7 @@ public class PlayerInput_Alt : MonoBehaviour
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.BUMPER_R, InputChecker.BUTTON_STATE.DOWN))
 			{
-				puppet.Thrust();
+				//puppet.Thrust();
 			}
 			else if (InputChecker.GetButton(InputChecker.PLAYER_NUMBER.ONE, InputChecker.CONTROLLER_BUTTON.A, InputChecker.BUTTON_STATE.DOWN))
 			{

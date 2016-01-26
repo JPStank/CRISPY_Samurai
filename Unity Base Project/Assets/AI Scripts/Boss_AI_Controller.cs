@@ -55,18 +55,22 @@ public class Boss_AI_Controller : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		Vector3 playerDirection = player.transform.position - gameObject.transform.position;
-		Vector3 AIForward = transform.forward;
-		float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
-
-		if (phase == PHASE.ONE)
+		if(puppet.curState != PuppetScript.State.DEAD)
 		{
-			PhaseOne(angleToPlayer);
-		}
+			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			playerDirection.y = 0.0f;
+			Vector3 AIForward = transform.forward;
+			float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-		if (phase == PHASE.TWO)
-		{
-			PhaseTwo(angleToPlayer);
+			if (phase == PHASE.ONE)
+			{
+				PhaseOne(angleToPlayer);
+			}
+
+			if (phase == PHASE.TWO)
+			{
+				PhaseTwo(angleToPlayer);
+			}
 		}
 	}
 
@@ -187,12 +191,13 @@ public class Boss_AI_Controller : MonoBehaviour
 		if (player && agent && puppet)
 		{
 			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			playerDirection.y = 0.0f;
 			Vector3 AIForward = transform.forward;
 			float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-			//Debug.Log(angleToPlayer + " Minion Script");
+			Debug.Log(angleToPlayer + " Seek Player");
 
-			if (angleToPlayer > 15.0f &&
+			if (angleToPlayer > 5.0f &&
 				!currentAction.isBehaving() &&
 				(gameObject.transform.position - player.transform.position).magnitude < StoppingDistance &&
 				(gameObject.transform.position - player.transform.position).magnitude > 0.78f)
@@ -232,15 +237,37 @@ public class Boss_AI_Controller : MonoBehaviour
 		}
 	}
 
+	void TurnToPlayer()
+	{
+		Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+		playerDirection.y = 0.0f;
+		Vector3 AIForward = transform.forward;
+		float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
+
+		// Angle the enemy towards the player
+		agent.updateRotation = false;
+		agent.updatePosition = false;
+		Vector3 playerPosition = player.transform.position;// behaviours[currentBehaviour].positionData;
+		Vector3 AIPosition = gameObject.transform.position;
+		playerPosition.y = AIPosition.y;
+		Vector3 toPlayer = playerPosition - AIPosition;
+		toPlayer.Normalize();
+		transform.forward = Vector3.RotateTowards(transform.forward, toPlayer, 3.0f * Time.deltaTime, 0.0f);
+		angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
+		agent.updatePosition = true;
+		agent.updateRotation = true;
+	}
+
 	void PhaseOne(float angleToPlayer)
 	{
-		if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+		if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > StoppingDistance)
 		{
 			inRange = false;
 		}
 		else
 		{
 			inRange = true;
+			agent.Stop();
 		}
 
 		if (inRange || currentAction.isBehaving())
@@ -266,8 +293,8 @@ public class Boss_AI_Controller : MonoBehaviour
 		{
 			if (minion != null)
 			{
-				GameObject.Instantiate(minion, minionSpawnLocation.transform.position, Quaternion.identity);
-				minionPuppet = minion.GetComponent<PuppetScript>();
+				GameObject thisGuy = (GameObject)(GameObject.Instantiate(minion, minionSpawnLocation.transform.position, Quaternion.identity));
+				minionPuppet = thisGuy.GetComponent<PuppetScript>();
 				minionSummoned = true;
 				agent.SetDestination(retreatPoint.transform.position);
 			}
@@ -277,7 +304,7 @@ public class Boss_AI_Controller : MonoBehaviour
 
 	void PhaseTwo(float angleToPlayer)
 	{
-		if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > StoppingDistance)
+		if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > StoppingDistance)
 		{
 			inRange = false;
 		}
@@ -289,9 +316,18 @@ public class Boss_AI_Controller : MonoBehaviour
 
 		if (minionSummoned && !minionDead)
 		{
+			
+			Debug.Log(minionPuppet.curState);
 			if (minionPuppet.curState == PuppetScript.State.DEAD)
 			{
 				minionDead = true;
+				nextAction = 0;
+				currentAction = phaseTwo[nextAction];
+			}
+
+			if(agent.remainingDistance > 0.0f)
+			{
+				agent.SetDestination(retreatPoint.transform.position);
 			}
 
 			if (agent.remainingDistance == 0.0f)
@@ -299,7 +335,7 @@ public class Boss_AI_Controller : MonoBehaviour
 				if (inRange)
 					protectiveAction.Execute();
 				else
-					SeekPlayer();
+					TurnToPlayer();
 			}
 
 		}
@@ -313,10 +349,10 @@ public class Boss_AI_Controller : MonoBehaviour
 					// Increment the action
 					nextAction++;
 
-					if (nextAction >= phaseOne.Count)
+					if (nextAction >= phaseTwo.Count)
 						nextAction = 0;
 
-					currentAction = phaseOne[nextAction];
+					currentAction = phaseTwo[nextAction];
 				}
 			}
 
@@ -327,4 +363,26 @@ public class Boss_AI_Controller : MonoBehaviour
 		}
 	}
 
+	#region ductTapeNbubbleGum
+	// Sam: Duct tape and bubblegum
+	void SetLastLTR()
+	{
+		//lastAttack = ATTACKS.LTR;
+	}
+
+	void SetLastRTL()
+	{
+		//lastAttack = ATTACKS.RTL;
+	}
+
+	void SetLastVert()
+	{
+		//lastAttack = ATTACKS.VERT;
+	}
+
+	void SetLastNone()
+	{
+		//lastAttack = ATTACKS.NONE;
+	}
+	#endregion
 }
