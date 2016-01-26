@@ -65,7 +65,9 @@ public class ReactiveGuard : Action
 		if(puppet.curState != PuppetScript.State.DANCE)
 			timer += Time.deltaTime;
 
-		if (timer >= GuardTimerMax && playerPuppet.curState == PuppetScript.State.IDLE)
+		if (timer >= GuardTimerMax && (playerPuppet.curState == PuppetScript.State.IDLE || playerPuppet.curState == PuppetScript.State.MOVING ||
+			playerPuppet.curState == PuppetScript.State.GRD_LEFT || playerPuppet.curState == PuppetScript.State.GRD_RIGHT ||
+			playerPuppet.curState == PuppetScript.State.GRD_TOP))
 		{
 			timer = 0.0f;
 			animation.Play("Idle");
