@@ -13,19 +13,19 @@ public class Boss_AI_Controller : MonoBehaviour
 	public List<ATTACK_TYPE> phaseOneAttacks, phaseTwoAttacks;
 	public List<Action> phaseOne, phaseTwo;
 	public PHASE phase = PHASE.ONE;
-	ReactiveGuard healingAction;
+	ReactiveGuard protectiveAction;
 	public bool repeatActions;
 	public bool inRange = false;
 	public bool minionSummoned = false;
 	public bool minionDead = false;
-	public bool healing = false;
+	public float StoppingDistance = 2.7f;
 	public GameObject minionSpawnLocation;
 	public GameObject retreatPoint;
 	public GameObject minion = null;
 	PuppetScript minionPuppet;
 	public Action currentAction;
-	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f, regenerationRate = 10.0f, phaseTransitionHealth = 75.0f;
-	float healTimer = 0.0f;
+	public Armor armor;
+	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
 	int nextAction = 0;
 
 	// Use this for initialization
@@ -34,39 +34,43 @@ public class Boss_AI_Controller : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
-		healingAction = ScriptableObject.CreateInstance<ReactiveGuard>();
-		healingAction.animation = animation;
-		healingAction.puppet = puppet;
-		healingAction.GuardTimerMax = guardTimer;
-		healingAction.playerPuppet = player.GetComponent<PuppetScript>();
-		healingAction.dances = new List<string>();
-		healingAction.dances.Add("Twerk");
-		healingAction.dances.Add("Gangnam Style");
-		healingAction.dances.Add("Robot");
-		puppet.maxTallys = 150;
+		protectiveAction = ScriptableObject.CreateInstance<ReactiveGuard>();
+		protectiveAction.animation = animation;
+		protectiveAction.puppet = puppet;
+		protectiveAction.GuardTimerMax = guardTimer;
+		protectiveAction.playerPuppet = player.GetComponent<PuppetScript>();
+		protectiveAction.dances = new List<string>();
+		protectiveAction.dances.Add("Twerk");
+		protectiveAction.dances.Add("Gangnam Style");
+		protectiveAction.dances.Add("Robot");
 		PopulateActions(phaseOneAttacks, ref phaseOne);
 		if (!repeatActions)
 			PopulateActions(phaseTwoAttacks, ref phaseTwo);
 		else
 			PopulateActions(phaseOneAttacks, ref phaseTwo);
 
+		currentAction = phaseOne[0];
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		Vector3 playerDirection = player.transform.position - gameObject.transform.position;
-		Vector3 AIForward = transform.forward;
-		float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
-
-		if (phase == PHASE.ONE)
+		if(puppet.curState != PuppetScript.State.DEAD)
 		{
-			PhaseOne(angleToPlayer);
-		}
+			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			playerDirection.y = 0.0f;
+			Vector3 AIForward = transform.forward;
+			float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-		if (phase == PHASE.TWO)
-		{
-			PhaseTwo(angleToPlayer);
+			if (phase == PHASE.ONE)
+			{
+				PhaseOne(angleToPlayer);
+			}
+
+			if (phase == PHASE.TWO)
+			{
+				PhaseTwo(angleToPlayer);
+			}
 		}
 	}
 
@@ -187,17 +191,17 @@ public class Boss_AI_Controller : MonoBehaviour
 		if (player && agent && puppet)
 		{
 			Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+			playerDirection.y = 0.0f;
 			Vector3 AIForward = transform.forward;
 			float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
 
-			//Debug.Log(angleToPlayer + " Minion Script");
+			Debug.Log(angleToPlayer + " Seek Player");
 
-			if (angleToPlayer > 15.0f &&
+			if (angleToPlayer > 5.0f &&
 				!currentAction.isBehaving() &&
-				(gameObject.transform.position - player.transform.position).magnitude < agent.stoppingDistance &&
+				(gameObject.transform.position - player.transform.position).magnitude < StoppingDistance &&
 				(gameObject.transform.position - player.transform.position).magnitude > 0.78f)
 			{
-				Debug.Log((gameObject.transform.position - player.transform.position).magnitude);
 
 				// Angle the enemy towards the player
 				agent.updateRotation = false;
@@ -213,12 +217,10 @@ public class Boss_AI_Controller : MonoBehaviour
 				agent.updateRotation = true;
 			}
 
-			else if ((gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance
-				&& !currentAction.isBehaving()
-				&& !healing)
+			else if ((gameObject.transform.position - player.transform.position).magnitude > StoppingDistance
+				&& !currentAction.isBehaving())
 			{
 				// Move the enemy towards the player
-				agent.stoppingDistance = 2.7f;
 				agent.SetDestination(player.transform.position);
 				if (!animation.IsPlaying("Walk Forward"))
 				{
@@ -226,25 +228,46 @@ public class Boss_AI_Controller : MonoBehaviour
 					animation.Play("Walk Forward");
 				}
 
-				if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
-				{
-					//inRange = true;
-					animation.Play("Idle");
-				}
+				//if (agent.remainingDistance < agent.stoppingDistance + 0.5f)
+				//{
+				//	//inRange = true;
+				//	animation.Play("Idle");
+				//}
 			}
 		}
 	}
 
+	void TurnToPlayer()
+	{
+		Vector3 playerDirection = player.transform.position - gameObject.transform.position;
+		playerDirection.y = 0.0f;
+		Vector3 AIForward = transform.forward;
+		float angleToPlayer = Vector3.Angle(AIForward.normalized, playerDirection.normalized);
+
+		// Angle the enemy towards the player
+		agent.updateRotation = false;
+		agent.updatePosition = false;
+		Vector3 playerPosition = player.transform.position;// behaviours[currentBehaviour].positionData;
+		Vector3 AIPosition = gameObject.transform.position;
+		playerPosition.y = AIPosition.y;
+		Vector3 toPlayer = playerPosition - AIPosition;
+		toPlayer.Normalize();
+		transform.forward = Vector3.RotateTowards(transform.forward, toPlayer, 3.0f * Time.deltaTime, 0.0f);
+		angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
+		agent.updatePosition = true;
+		agent.updateRotation = true;
+	}
+
 	void PhaseOne(float angleToPlayer)
 	{
-		if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+		if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > StoppingDistance)
 		{
 			inRange = false;
 		}
 		else
 		{
 			inRange = true;
-			//agent.Stop();
+			agent.Stop();
 		}
 
 		if (inRange || currentAction.isBehaving())
@@ -266,13 +289,12 @@ public class Boss_AI_Controller : MonoBehaviour
 			SeekPlayer();
 		}
 
-		if (puppet.curTallys <= 75)
+		if (puppet.curTallys <= 2)
 		{
 			if (minion != null)
 			{
-				GameObject.Instantiate(minion, minionSpawnLocation.transform.position, Quaternion.identity);
-				minionPuppet = minion.GetComponent<PuppetScript>();
-				healing = true;
+				GameObject thisGuy = (GameObject)(GameObject.Instantiate(minion, minionSpawnLocation.transform.position, Quaternion.identity));
+				minionPuppet = thisGuy.GetComponent<PuppetScript>();
 				minionSummoned = true;
 				agent.SetDestination(retreatPoint.transform.position);
 			}
@@ -282,36 +304,38 @@ public class Boss_AI_Controller : MonoBehaviour
 
 	void PhaseTwo(float angleToPlayer)
 	{
-		if (angleToPlayer > 15.0f || (gameObject.transform.position - player.transform.position).magnitude > agent.stoppingDistance)
+		if (angleToPlayer > 5.0f || (gameObject.transform.position - player.transform.position).magnitude > StoppingDistance)
 		{
 			inRange = false;
 		}
 		else
 		{
 			inRange = true;
-			//agent.Stop();
+			agent.Stop();
 		}
 
 		if (minionSummoned && !minionDead)
 		{
-			healTimer += Time.deltaTime;
-			if (healTimer >= regenerationRate)
-			{
-				healTimer = 0.0f;
-				puppet.curTallys++;
-			}
+			
+			Debug.Log(minionPuppet.curState);
 			if (minionPuppet.curState == PuppetScript.State.DEAD)
 			{
 				minionDead = true;
-				healing = false;
+				nextAction = 0;
+				currentAction = phaseTwo[nextAction];
+			}
+
+			if(agent.remainingDistance > 0.0f)
+			{
+				agent.SetDestination(retreatPoint.transform.position);
 			}
 
 			if (agent.remainingDistance == 0.0f)
 			{
 				if (inRange)
-					healingAction.Execute();
+					protectiveAction.Execute();
 				else
-					SeekPlayer();
+					TurnToPlayer();
 			}
 
 		}
@@ -325,10 +349,10 @@ public class Boss_AI_Controller : MonoBehaviour
 					// Increment the action
 					nextAction++;
 
-					if (nextAction >= phaseOne.Count)
+					if (nextAction >= phaseTwo.Count)
 						nextAction = 0;
 
-					currentAction = phaseOne[nextAction];
+					currentAction = phaseTwo[nextAction];
 				}
 			}
 

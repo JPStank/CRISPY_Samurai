@@ -157,6 +157,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 					bool armorBlocked = false;
 					if (Owner.armor != null)
 					{
+						Debug.Log("Armor Exists");
 						Armor.ARMOR_PIECE pieceAffected = Armor.ARMOR_PIECE.INVALID;
 						switch (otherState)
 						{
@@ -178,6 +179,9 @@ public class PuppetResolveHitScript : MonoBehaviour
 						else
 							Debug.Log("Invalid armor checking! Please debug and investigate!");
 					}
+
+					else
+						Debug.Log("Armor doesn't exist");
 					if (!armorBlocked)
 						Owner.curTallys--;
 				}
