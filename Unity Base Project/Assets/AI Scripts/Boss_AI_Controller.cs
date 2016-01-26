@@ -363,4 +363,26 @@ public class Boss_AI_Controller : MonoBehaviour
 		}
 	}
 
+	#region ductTapeNbubbleGum
+	// Sam: Duct tape and bubblegum
+	void SetLastLTR()
+	{
+		//lastAttack = ATTACKS.LTR;
+	}
+
+	void SetLastRTL()
+	{
+		//lastAttack = ATTACKS.RTL;
+	}
+
+	void SetLastVert()
+	{
+		//lastAttack = ATTACKS.VERT;
+	}
+
+	void SetLastNone()
+	{
+		//lastAttack = ATTACKS.NONE;
+	}
+	#endregion
 }
