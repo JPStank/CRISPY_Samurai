@@ -920,6 +920,13 @@ public class PuppetScript : MonoBehaviour
 
 	public int Thrust()
 	{
+        if (gameObject.tag == "Player")
+        {
+            if (currZen - 2.5f < 0.0f)
+            {
+                return 1;
+            }
+        }
 		if (ChangeState(State.ATK_STAB) == 1)
 			return attackScript.Thrust(this);
 		else

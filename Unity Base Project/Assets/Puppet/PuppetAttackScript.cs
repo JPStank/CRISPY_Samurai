@@ -127,6 +127,13 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int Thrust(PuppetScript _sender)
     {
+        if (_sender.gameObject.tag == "Player")
+        {
+            if (_sender.currZen - 2.5f < 0.0f)
+                return -1;
+            Owner.currZen -= 2.5f;
+        }
+
 		animation["Stab"].speed = attackSpeed;
 
 		animation.Play("Stab");
@@ -135,7 +142,7 @@ public class PuppetAttackScript : MonoBehaviour {
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 100000.0f);
 
-        Owner.currZen -= 2.5f;
+        //Owner.currZen -= 2.5f;
 
 		return 1;
     }
