@@ -299,10 +299,10 @@ public class PuppetScript : MonoBehaviour
 	void InitAnimTableEnemy()
 	{
 		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
-		animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
-		animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
-		animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
-		"Idle";
+		//animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
+		//animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
+		//animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
+		//"Idle";
 		animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
