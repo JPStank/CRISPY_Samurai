@@ -10,6 +10,7 @@ public class GUI : MonoBehaviour
 	Canvas tutorial;
 	Image guardLeft, guardRight, guardTop;
 	Image tally1, tally2, tally3;
+    public Image zen;
 	private PuppetScript player;
 
 	[HideInInspector]
@@ -47,6 +48,8 @@ public class GUI : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+        zen.fillAmount = player.currZen / player.maxZen;
+
 		if (guardLeft && guardRight && guardTop)
 		{
 			if (player.curState == PuppetScript.State.GRD_LEFT)

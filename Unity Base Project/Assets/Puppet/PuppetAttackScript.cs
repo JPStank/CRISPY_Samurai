@@ -135,6 +135,8 @@ public class PuppetAttackScript : MonoBehaviour {
 		// move us closer to the enemy please!
 		Owner.rigidbody.AddForce(Owner.transform.forward * 100000.0f);
 
+        Owner.currZen -= 2.5f;
+
 		return 1;
     }
 

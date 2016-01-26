@@ -25,6 +25,8 @@ public class PuppetScript : MonoBehaviour
 	public GameObject degubber;
 	public float curTallys = 3;
 	public float maxTallys = 3;
+    public float currZen = 10;
+    public float maxZen = 10;
 
 	public enum State
 	{
