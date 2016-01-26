@@ -69,7 +69,7 @@ public class PuppetGuardScript : MonoBehaviour {
     {
         GrdTmrCur = GrdTmrMax;
         lastGrdDir = PuppetScript.State.GRD_LEFT;
-        animation.Play("Block");
+        animation.Play("Block Left");
         return 1;
     }
 
@@ -80,7 +80,7 @@ public class PuppetGuardScript : MonoBehaviour {
     {
         GrdTmrCur = GrdTmrMax;
         lastGrdDir = PuppetScript.State.GRD_RIGHT;
-        animation.Play("Block");
+        animation.Play("Block Right");
         return 1;
     }
 
