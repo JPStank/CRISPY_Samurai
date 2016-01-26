@@ -724,7 +724,7 @@ public class PuppetScript : MonoBehaviour
 		if (stateTable[(int)curState, (int)_nextState] == false)
 			return -1;
 		if (_nextState == State.IDLE)
-			animation.Play("Idle");
+			animation.CrossFade("Idle", 0.1f);
 		if ((_nextState == State.GRD_TOP && curState != State.PARRY
 			&& curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT)
 			|| (_nextState == State.GRD_LEFT && curState != State.PARRY
@@ -797,19 +797,19 @@ public class PuppetScript : MonoBehaviour
 
 		if (_dir.magnitude > 0.01f && !rockedOn)
 		{
-			animation.Play("Walk Forward");
+			animation.CrossFade("Walk Forward");
 		}
 		else if (_dir.magnitude > 0.01f && rockedOn)
 		{
 			if (Mathf.Abs(_dir.x) > Mathf.Abs(_dir.z))
 			{
 				if (_dir.x < 0.0f)
-					animation.Play("Walk Left");
+                    animation.CrossFade("Walk Left");
 				else if (_dir.x > 0.0f)
-					animation.Play("Walk Right");
+                    animation.CrossFade("Walk Right");
 			}
 			else
-				animation.Play("Walk Forward");
+                animation.CrossFade("Walk Forward");
 		}
 		else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
 			animation.Play("Idle");

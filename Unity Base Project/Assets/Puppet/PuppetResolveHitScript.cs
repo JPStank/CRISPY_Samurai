@@ -5,6 +5,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 {
 
 	private PuppetScript Owner;
+	public GameObject sword, sparkySpark; //and the funky bunch
 
 	// Use this for initialization
 	void Start()
@@ -58,7 +59,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 
 		if (toPlay != null)
 		{
-			animation.Play(toPlay);
+			animation.CrossFade(toPlay, 0.1f);
 
 			if (toPlay == "Idle")
 				Owner.ChangeState(PuppetScript.State.IDLE);
@@ -117,6 +118,11 @@ public class PuppetResolveHitScript : MonoBehaviour
             else if (toPlay == "Block Up" || toPlay == "Block Up Hit" || toPlay == "Block Right" || toPlay == "Block Left")
             {
                 Owner.currZen += 1.0f;
+				//sparks n stuff
+				if(sparkySpark && sword)
+				{
+					Instantiate(sparkySpark, sword.transform.position, sword.transform.rotation);
+				}
             }
 		}
 		return 1;
@@ -145,7 +151,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 
 		if (toPlay != null)
 		{
-			animation.Play(toPlay);
+			animation.CrossFade(toPlay, 0.1f);
 
 			if (toPlay == "Idle")
 				Owner.ChangeState(PuppetScript.State.IDLE);
@@ -212,6 +218,15 @@ public class PuppetResolveHitScript : MonoBehaviour
 				// New things, added by Dakota 1/13 whatever PM
 				Owner.ChangeState(PuppetScript.State.FLINCH);
                 
+			}
+			else if (toPlay == "Block Up" || toPlay == "Block Up Hit" || toPlay == "Block Right" || toPlay == "Block Left")
+			{
+				Owner.currZen += 1.0f;
+				//sparks n stuff
+				if (sparkySpark && sword)
+				{
+					Instantiate(sparkySpark, sword.transform.position, sword.transform.rotation);
+				}
 			}
 		}
 		return 1;
