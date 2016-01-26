@@ -114,6 +114,10 @@ public class PuppetResolveHitScript : MonoBehaviour
 				// New things, added by Dakota 1/13 whatever PM
 				Owner.ChangeState(PuppetScript.State.FLINCH);
 			}
+            else if (toPlay == "Block Up" || toPlay == "Block Up Hit" || toPlay == "Block Right" || toPlay == "Block Left")
+            {
+                Owner.currZen += 1.0f;
+            }
 		}
 		return 1;
 	}
@@ -136,6 +140,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 		{
 			toPlay = Owner.animTable[(int)PuppetScript.State.IDLE, (int)otherState];
 			Debug.Log("Enemy got got");
+            otherScript.currZen += 5.0f;
 		}
 
 		if (toPlay != null)
@@ -184,6 +189,8 @@ public class PuppetResolveHitScript : MonoBehaviour
 						Debug.Log("Armor doesn't exist");
 					if (!armorBlocked)
 						Owner.curTallys--;
+
+                    otherScript.currZen += 2.0f;
 				}
 				if (Owner.curTallys <= 0.0f)
 				{
@@ -204,6 +211,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 
 				// New things, added by Dakota 1/13 whatever PM
 				Owner.ChangeState(PuppetScript.State.FLINCH);
+                
 			}
 		}
 		return 1;
