@@ -36,7 +36,7 @@ public class AI_Controller : MonoBehaviour
 	bool IAmDead = false;
 	int DeadLayer = 10;
 	float resetTimer = 0.0f;
-	public float resetTimerMax = 0.5f;
+	public float resetTimerMax = 1.0f;
 	public bool behaving;
 
     public GameObject windowTell;
