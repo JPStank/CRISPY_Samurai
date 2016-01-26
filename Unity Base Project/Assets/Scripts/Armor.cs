@@ -42,44 +42,55 @@ public class Armor : MonoBehaviour
 	/// <returns>bool - returns true if armor blocked the hit, false otherwise</returns>
 	public bool ProcessHit(ARMOR_PIECE piece)
 	{
+		Debug.Log("Processing " + piece);
+
 		bool armorBlocked = false;
 		float armorPercentage;
 		switch (piece)
 		{
 			case ARMOR_PIECE.TOP:
 				armorPercentage = Random.Range(0.0f, TopIntegrity);
+				Debug.Log(armorPercentage + " " + integrity[(int)ARMOR_PIECE.TOP]);
 				if (armorPercentage < integrity[(int)ARMOR_PIECE.TOP])
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.TOP] -= TopIntegrityDegredation;
-					TopPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.TOP] / TopIntegrity);
+					if (integrity[(int)ARMOR_PIECE.TOP] <= 0)
+						TopPiece.enabled = false;
 				}
 				break;
 			case ARMOR_PIECE.LEFT:
 				armorPercentage = Random.Range(0.0f, LeftIntegrity);
+				Debug.Log(armorPercentage + " " + integrity[(int)ARMOR_PIECE.LEFT]);
 				if (armorPercentage < integrity[(int)ARMOR_PIECE.LEFT])
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.LEFT] -= LeftIntegrityDegredation;
-					LeftPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.LEFT] / LeftIntegrity);
+					if (integrity[(int)ARMOR_PIECE.LEFT] <= 0)
+						LeftPiece.enabled = false;
 				}
 				break;
 			case ARMOR_PIECE.RIGHT:
 				armorPercentage = Random.Range(0.0f, RightIntegrity);
+				Debug.Log(armorPercentage + " " + integrity[(int)ARMOR_PIECE.RIGHT]);
 				if (armorPercentage < integrity[(int)ARMOR_PIECE.RIGHT])
 				{
+					
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.RIGHT] -= RightIntegrityDegredation;
-					RightPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.RIGHT] / RightIntegrity);
+					if (integrity[(int)ARMOR_PIECE.RIGHT] <= 0)
+						RightPiece.enabled = false;
 				}
 				break;
 			case ARMOR_PIECE.CHEST:
 				armorPercentage = Random.Range(0.0f, ChestIntegrity);
+				Debug.Log(armorPercentage + " " + integrity[(int)ARMOR_PIECE.CHEST]);
 				if (armorPercentage < integrity[(int)ARMOR_PIECE.CHEST])
 				{
 					armorBlocked = true;
 					integrity[(int)ARMOR_PIECE.CHEST] -= ChestIntegrityDegredation;
-					ChestPiece.material.color = Color.Lerp(Color.green, Color.clear, integrity[(int)ARMOR_PIECE.CHEST] / ChestIntegrity);
+					if (integrity[(int)ARMOR_PIECE.CHEST] <= 0)
+						ChestPiece.enabled = false;
 				}
 				break;
 			default:
