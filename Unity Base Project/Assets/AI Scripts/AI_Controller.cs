@@ -34,8 +34,9 @@ public class AI_Controller : MonoBehaviour
 	Vector3 destination;
 	public float shortTimer = 0.0f, mediumTimer = 0.0f, longTimer = 0.0f, guardTimer = 1.0f;
 	bool IAmDead = false;
-	public int DeadLayer = 10;
-
+	int DeadLayer = 10;
+	float resetTimer = 0.0f;
+	public float resetTimerMax = 0.5f;
 	public bool behaving;
 
     public GameObject windowTell;
@@ -291,6 +292,13 @@ public class AI_Controller : MonoBehaviour
 					// If I am not in range
 					else
 					{
+						resetTimer += Time.deltaTime;
+						if (resetTimer > resetTimerMax)
+						{
+							resetTimer = 0.0f;
+							currentAction = actions[0];
+							nextAction = 1;
+						}
 						// I will position myself so that I am able to attack the player
 						SeekPlayer();
 					}
