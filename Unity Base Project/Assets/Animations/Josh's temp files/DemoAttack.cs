@@ -28,21 +28,21 @@ public class DemoAttack : MonoBehaviour
     {
         if (animation.isPlaying == false)
         {
-            animation.Play("Idle");
+            animation.CrossFade("Idle", 0.2f);
         }
 
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            animation.Play("Block Left");
+            animation.CrossFade("Block Left", 0.1f);
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-            animation.Play("Block Right");
+            animation.CrossFade("Block Right", 0.25f);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            animation.Play("Block");
+            animation.CrossFade("Block", 0.2f);
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {

@@ -25,6 +25,8 @@ public class PuppetScript : MonoBehaviour
 	public GameObject degubber;
 	public float curTallys = 3;
 	public float maxTallys = 3;
+    public float currZen = 10;
+    public float maxZen = 10;
 
 	public enum State
 	{
@@ -554,20 +556,20 @@ public class PuppetScript : MonoBehaviour
 				badguys.Add(tempguy);
 			else if (tempguy == curTarg)
 			{
-					if (Targeting_CubeSpawned != null)
-					{
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Destroy(Targeting_CubeSpawned.gameObject);
-						DestroyImmediate(Targeting_CubeSpawned.gameObject);
-						Targeting_CubeSpawned = null;
-					}
-					if (rockedOn)
-						ToggleLockon();
+				if (Targeting_CubeSpawned != null)
+				{
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Destroy(Targeting_CubeSpawned.gameObject);
+					DestroyImmediate(Targeting_CubeSpawned.gameObject);
+					Targeting_CubeSpawned = null;
+				}
+				if (rockedOn)
+					ToggleLockon();
 			}
 		}
 		//curTarg = null;
@@ -597,7 +599,7 @@ public class PuppetScript : MonoBehaviour
 					Targeting_CubeSpawned.transform.position = curTarg.transform.position + targOffset;
 					Targeting_CubeSpawned.transform.SetParent(curTarg.transform);
 				}
-				else  if (!rockedOn)
+				else if (!rockedOn)
 				{
 					if (Targeting_CubeSpawned != null)
 					{
@@ -732,7 +734,7 @@ public class PuppetScript : MonoBehaviour
 		if (stateTable[(int)curState, (int)_nextState] == false)
 			return -1;
 		if (_nextState == State.IDLE)
-			animation.Play("Idle");
+			animation.CrossFade("Idle", 0.1f);
 		if ((_nextState == State.GRD_TOP && curState != State.PARRY
 			&& curState != State.GRD_TOP && curState != State.GRD_LEFT && curState != State.GRD_RIGHT)
 			|| (_nextState == State.GRD_LEFT && curState != State.PARRY
@@ -816,19 +818,19 @@ public class PuppetScript : MonoBehaviour
 
 		if (_dir.magnitude > 0.01f && !rockedOn)
 		{
-			animation.Play("Walk Forward");
+			animation.CrossFade("Walk Forward");
 		}
 		else if (_dir.magnitude > 0.01f && rockedOn)
 		{
 			if (Mathf.Abs(_dir.x) > Mathf.Abs(_dir.z))
 			{
 				if (_dir.x < 0.0f)
-					animation.Play("Walk Left");
+                    animation.CrossFade("Walk Left");
 				else if (_dir.x > 0.0f)
-					animation.Play("Walk Right");
+                    animation.CrossFade("Walk Right");
 			}
 			else
-				animation.Play("Walk Forward");
+                animation.CrossFade("Walk Forward");
 		}
 		else if (animation.isPlaying == false) // only revert to idle if not moving or playing another animation
 			animation.Play("Idle");
@@ -943,6 +945,13 @@ public class PuppetScript : MonoBehaviour
 	public int Thrust()
 	{
 		NextAttack = State.ATK_STAB;
+        if (gameObject.tag == "Player")
+        {
+            if (currZen - 2.5f < 0.0f)
+            {
+                return 1;
+            }
+        }
 		if (ChangeState(State.ATK_STAB) == 1)
 			return attackScript.Thrust(this);
 		else
@@ -1118,7 +1127,7 @@ public class PuppetScript : MonoBehaviour
 	}
 	public void SetSwingMod(AttackModType _atkType)
 	{
-			attackScript.attackSpeed = AnimMods[(int)_atkType].swing;
+		attackScript.attackSpeed = AnimMods[(int)_atkType].swing;
 	}
 	public void SetRecoverMod(AttackModType _atkType)
 	{
@@ -1169,10 +1178,14 @@ public class PuppetScript : MonoBehaviour
 	public void Death()
 	{
 		Win_Loss theThing = GameObject.Find("WinLoss").GetComponent<Win_Loss>();
-
-		if (gameObject.tag == "Enemy")
-			theThing.Decrement();
-		else if (gameObject.tag == "Player")
-			theThing.YouLose();
+		if (theThing != null)
+		{
+			if (gameObject.name == "Boss Enemy") //quick n dirty
+				theThing.YouWin();
+			if (gameObject.tag == "Enemy")
+				theThing.Decrement();
+			else if (gameObject.tag == "Player")
+				theThing.YouLose();
+		}
 	}
 }
