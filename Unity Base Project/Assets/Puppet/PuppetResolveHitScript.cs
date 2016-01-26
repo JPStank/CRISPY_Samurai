@@ -59,7 +59,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 
 		if (toPlay != null)
 		{
-			animation.Play(toPlay);
+			animation.CrossFade(toPlay, 0.1f);
 
 			if (toPlay == "Idle")
 				Owner.ChangeState(PuppetScript.State.IDLE);
@@ -151,7 +151,7 @@ public class PuppetResolveHitScript : MonoBehaviour
 
 		if (toPlay != null)
 		{
-			animation.Play(toPlay);
+			animation.CrossFade(toPlay, 0.1f);
 
 			if (toPlay == "Idle")
 				Owner.ChangeState(PuppetScript.State.IDLE);
