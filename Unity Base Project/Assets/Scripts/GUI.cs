@@ -48,7 +48,7 @@ public class GUI : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        zen.fillAmount = player.currZen / player.maxZen;
+        if (zen) zen.fillAmount = player.currZen / player.maxZen;
 
 		if (guardLeft && guardRight && guardTop)
 		{
