@@ -249,12 +249,15 @@ public class PuppetScript : MonoBehaviour
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f}
 		};
 
+		//AnimMods[(int)AttackModType.VERT].windup = 1.0f;
+		//AnimMods[(int)AttackModType.VERT].swing = 0.2f;
+		AnimMods[(int)AttackModType.VERT].recover = 3.0f;
 		//AnimMods[(int)AttackModType.LTR].windup = 1.0f;
 		//AnimMods[(int)AttackModType.LTR].swing = 0.2f;
-		//AnimMods[(int)AttackModType.LTR].recover = 1.0f;
+		AnimMods[(int)AttackModType.LTR].recover = 0.1f;
 		//AnimMods[(int)AttackModType.RTL].windup = 1.0f;
 		//AnimMods[(int)AttackModType.RTL].swing = 0.2f;
-		//AnimMods[(int)AttackModType.RTL].recover = 1.0f;
+		AnimMods[(int)AttackModType.RTL].recover = 0.1f;
 
 	}
 
@@ -1093,9 +1096,9 @@ public class PuppetScript : MonoBehaviour
 	// Animations call these functions at the correct time in order to adjust animation speed.
 	public void SetWindupMod(AttackModType _atkType)
 	{
-		if (Input_AltScript != null) // no combos
+		if (InputScript == null) // no combos
 			attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
-		else if (InputScript != null)
+		else
 		{
 			if (NextAttack != State.IDLE)
 			{
@@ -1131,9 +1134,9 @@ public class PuppetScript : MonoBehaviour
 	}
 	public void SetRecoverMod(AttackModType _atkType)
 	{
-		if (Input_AltScript != null) // no combos
+		if (InputScript == null) // no combos
 			attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
-		else if (InputScript != null)
+		else
 		{
 			if (NextAttack != State.IDLE)
 			{
