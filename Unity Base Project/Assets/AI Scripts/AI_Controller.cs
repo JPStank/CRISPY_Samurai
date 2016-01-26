@@ -39,15 +39,15 @@ public class AI_Controller : MonoBehaviour
 	public float resetTimerMax = 1.0f;
 	public bool behaving;
 
-    public GameObject windowTell;
+	public GameObject windowTell;
 
 	// Use this for initialization
 	void Start()
 	{
-        if (windowTell == null)
-        {
-            Debug.LogWarning("I NEED A WINDOW OF OPPORTUNITY EFFECT IN Window Tell PLS KTHX");
-        }
+		if (windowTell == null)
+		{
+			Debug.LogWarning("I NEED A WINDOW OF OPPORTUNITY EFFECT IN Window Tell PLS KTHX");
+		}
 		player = GameObject.FindGameObjectWithTag("Player");
 		agent = GetComponent<NavMeshAgent>();
 		puppet = GetComponent<PuppetScript>();
@@ -142,8 +142,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_SHORT:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-                        move.WindowTell = windowTell;
-                        move.animation = animation;
+						move.WindowTell = windowTell;
+						move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = shortTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -153,8 +153,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_MEDIUM:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-                        move.WindowTell = windowTell;
-                        move.animation = animation;
+						move.WindowTell = windowTell;
+						move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = mediumTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -164,8 +164,8 @@ public class AI_Controller : MonoBehaviour
 				case ATTACK_TYPE.WINDOW_LONG:
 					{
 						WindowOfOpportunity move = ScriptableObject.CreateInstance<WindowOfOpportunity>();
-                        move.WindowTell = windowTell;
-                        move.animation = animation;
+						move.WindowTell = windowTell;
+						move.animation = animation;
 						move.puppet = puppet;
 						move.TimerMax = longTimer;
 						move.type = Action.TYPE.WINDOW;
@@ -182,7 +182,7 @@ public class AI_Controller : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if(!IAmDead && gameObject.layer == DeadLayer)
+		if (!IAmDead && gameObject.layer == DeadLayer)
 		{
 			IAmDead = true;
 			monitor.RemoveEnemy(attackID);
@@ -245,7 +245,7 @@ public class AI_Controller : MonoBehaviour
 				if (myTurn)
 					movingToDistance = false;
 
-				
+
 
 				#region myTurn
 				// If it is my turn
@@ -292,10 +292,13 @@ public class AI_Controller : MonoBehaviour
 					// If I am not in range
 					else
 					{
-						resetTimer += Time.deltaTime;
-						if (resetTimer > resetTimerMax)
+						if ((gameObject.transform.position - player.transform.position).magnitude > (stoppingDistance * 1.5f))
 						{
-							resetTimer = 0.0f;
+							//resetTimer += Time.deltaTime;
+							//if (resetTimer > resetTimerMax)
+							//{
+							//	resetTimer = 0.0f;
+							//}
 							currentAction = actions[0];
 							nextAction = 1;
 						}
@@ -307,7 +310,7 @@ public class AI_Controller : MonoBehaviour
 
 				#region notMyTurn
 				// If it is not my turn
-				if(!myTurn)
+				if (!myTurn)
 				{
 					//Debug.Log("Not My Turn");
 					// Maintaining proper distance
@@ -330,14 +333,14 @@ public class AI_Controller : MonoBehaviour
 						// Update my timers
 						tooCloseTimer += Time.deltaTime;
 
-						if(!animation.IsPlaying("Walk Forward"))
+						if (!animation.IsPlaying("Walk Forward"))
 						{
 							puppet.ChangeState(PuppetScript.State.MOVING);
 							animation.Play("Walk Forward");
 						}
 
 						// If I am too close to the player for too long (try to walk through the player)
-						if(playerDirection.magnitude < 0.87f && tooCloseTimer >= 0.5f)
+						if (playerDirection.magnitude < 0.87f && tooCloseTimer >= 0.5f)
 						{
 							destination = MaintainDistance(distanceToMaintain);
 							tooCloseTimer = 0.0f;
@@ -347,7 +350,7 @@ public class AI_Controller : MonoBehaviour
 						agent.SetDestination(destination);
 
 						// If I have reached my destination or I have gone too far
-						if (agent.remainingDistance == 0.0f || 
+						if (agent.remainingDistance == 0.0f ||
 							(playerDirection.magnitude > distanceToMaintain && playerDirection.magnitude < distanceToMaintain + 1.0f))
 						{
 							movingToDistance = false;
@@ -416,7 +419,7 @@ public class AI_Controller : MonoBehaviour
 		}
 
 		// If it is not my turn
-		if(!myTurn)
+		if (!myTurn)
 		{
 			// If I am not looking at the player
 			if (angleToPlayer > 5.0f && !currentAction.isBehaving())
@@ -464,7 +467,7 @@ public class AI_Controller : MonoBehaviour
 	//{
 	//	monitor.RemoveEnemy(attackID);
 	//}
-	
+
 	Vector3 MoveBack(float _distanceToMaintain)
 	{
 		Vector3 directionToRaycast = player.transform.position - gameObject.transform.position;

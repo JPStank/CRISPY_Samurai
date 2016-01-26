@@ -254,10 +254,10 @@ public class PuppetScript : MonoBehaviour
 		AnimMods[(int)AttackModType.VERT].recover = 3.0f;
 		//AnimMods[(int)AttackModType.LTR].windup = 1.0f;
 		//AnimMods[(int)AttackModType.LTR].swing = 0.2f;
-		AnimMods[(int)AttackModType.LTR].recover = 0.1f;
+		AnimMods[(int)AttackModType.LTR].recover = 3.0f;
 		//AnimMods[(int)AttackModType.RTL].windup = 1.0f;
 		//AnimMods[(int)AttackModType.RTL].swing = 0.2f;
-		AnimMods[(int)AttackModType.RTL].recover = 0.1f;
+		AnimMods[(int)AttackModType.RTL].recover = 3.0f;
 
 	}
 
