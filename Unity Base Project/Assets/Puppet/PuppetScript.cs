@@ -61,6 +61,9 @@ public class PuppetScript : MonoBehaviour
 	public Vector3 targOffset;
 	public Vector3 nextDir;
 	public AttackAnimationMods[] AnimMods;
+	public PlayerInput_Alt Input_AltScript;
+	public PlayerInput InputScript;
+	public State NextAttack; // for combos!
 	//public float AtkTmrMax;
 	public float DgeTmrMax;
 	public float GrdTmrMax;
@@ -176,6 +179,13 @@ public class PuppetScript : MonoBehaviour
 				InitAnimModsEnemy();
 			}
 		}
+		NextAttack = State.IDLE; // cant set to null =(
+
+		if (Input_AltScript == null)
+			Input_AltScript = GetComponent<PlayerInput_Alt>();
+		if (InputScript == null)
+			InputScript = GetComponent<PlayerInput>();
+
 		if (DgeTmrMax == 0.0f)
 			DgeTmrMax = 0.5f;
 		if (GrdTmrMax == 0.0f)
@@ -210,21 +220,21 @@ public class PuppetScript : MonoBehaviour
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f}
 		};
 
-		AnimMods[(int)AttackModType.LTR].windup = 2.0f;
-		AnimMods[(int)AttackModType.LTR].swing = 2.5f;
-		AnimMods[(int)AttackModType.LTR].recover = 2.0f;
-		AnimMods[(int)AttackModType.RTL].windup = 2.0f;
-		AnimMods[(int)AttackModType.RTL].swing = 2.0f;
-		AnimMods[(int)AttackModType.RTL].recover = 3.0f;
-		AnimMods[(int)AttackModType.VERT].windup = 2.0f;
-		AnimMods[(int)AttackModType.VERT].swing = 2.8f;
-		AnimMods[(int)AttackModType.VERT].recover = 3.0f;
-		AnimMods[(int)AttackModType.KICK].windup = 2.0f;
-		//AnimMods[(int)AttackModType.KICK].swing = 0.1f;
-		AnimMods[(int)AttackModType.KICK].recover = 2.0f;
-		AnimMods[(int)AttackModType.STAB].windup = 1.0f;
-		AnimMods[(int)AttackModType.STAB].swing = 3.0f;
-		AnimMods[(int)AttackModType.STAB].recover = 2.0f;
+			AnimMods[(int)AttackModType.LTR].windup = 2.0f;
+			AnimMods[(int)AttackModType.LTR].swing = 2.5f;
+			AnimMods[(int)AttackModType.LTR].recover = 2.0f;
+			AnimMods[(int)AttackModType.RTL].windup = 2.0f;
+			AnimMods[(int)AttackModType.RTL].swing = 2.0f;
+			AnimMods[(int)AttackModType.RTL].recover = 3.0f;
+			AnimMods[(int)AttackModType.VERT].windup = 2.0f;
+			AnimMods[(int)AttackModType.VERT].swing = 2.8f;
+			AnimMods[(int)AttackModType.VERT].recover = 3.0f;
+			AnimMods[(int)AttackModType.KICK].windup = 2.0f;
+			//AnimMods[(int)AttackModType.KICK].swing = 0.1f;
+			AnimMods[(int)AttackModType.KICK].recover = 2.0f;
+			AnimMods[(int)AttackModType.STAB].windup = 1.0f;
+			AnimMods[(int)AttackModType.STAB].swing = 3.0f;
+			AnimMods[(int)AttackModType.STAB].recover = 2.0f;
 	}
 
 	void InitAnimModsEnemy()
@@ -753,6 +763,17 @@ public class PuppetScript : MonoBehaviour
 				ToggleLockon();
 		}
 
+		//if (_nextState == State.ATK_VERT
+		//	|| _nextState == State.ATK_LTR
+		//	|| _nextState == State.ATK_RTL
+		//	|| _nextState == State.ATK_STAB
+		//	|| _nextState == State.ATK_KICK)
+		//{
+		//	NextAttack = _nextState;
+		//}
+		//else
+		//	NextAttack = State.IDLE; // cant set to null =(
+
 		lastState = curState;
 		curState = _nextState;
 
@@ -894,6 +915,7 @@ public class PuppetScript : MonoBehaviour
 
 	public int SlashVert()
 	{
+		NextAttack = State.ATK_VERT;
 		if (ChangeState(State.ATK_VERT) == 1)
 			return attackScript.SlashVert(this);
 		else
@@ -902,6 +924,7 @@ public class PuppetScript : MonoBehaviour
 
 	public int SlashLTR()
 	{
+		NextAttack = State.ATK_LTR;
 		if (ChangeState(State.ATK_LTR) == 1)
 			return attackScript.SlashLTR(this);
 		else
@@ -910,6 +933,7 @@ public class PuppetScript : MonoBehaviour
 
 	public int SlashRTL()
 	{
+		NextAttack = State.ATK_RTL;
 		if (ChangeState(State.ATK_RTL) == 1)
 			return attackScript.SlashRTL(this);
 		else
@@ -918,6 +942,7 @@ public class PuppetScript : MonoBehaviour
 
 	public int Thrust()
 	{
+		NextAttack = State.ATK_STAB;
 		if (ChangeState(State.ATK_STAB) == 1)
 			return attackScript.Thrust(this);
 		else
@@ -926,6 +951,7 @@ public class PuppetScript : MonoBehaviour
 
 	public int Kick()
 	{
+		NextAttack = State.ATK_KICK;
 		if (ChangeState(State.ATK_KICK) == 1)
 			return attackScript.Kick(this);
 		else
@@ -1058,7 +1084,37 @@ public class PuppetScript : MonoBehaviour
 	// Animations call these functions at the correct time in order to adjust animation speed.
 	public void SetWindupMod(AttackModType _atkType)
 	{
+		if (Input_AltScript != null) // no combos
 			attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
+		else if (InputScript != null)
+		{
+			if (NextAttack != State.IDLE)
+			{
+				switch (NextAttack)
+				{
+					case State.ATK_VERT:
+						{
+							//attackScript.attackSpeed = 2.0f;
+							animation["Down Slash"].time = 0.22f;
+							NextAttack = State.IDLE;
+							break;
+						}
+					case State.ATK_LTR:
+						{
+							//attackScript.attackSpeed = 2.0f;
+							animation["Right Slash"].time = 0.21f;
+							NextAttack = State.IDLE;
+							break;
+						}
+					case State.ATK_RTL:
+						{
+							//attackScript.attackSpeed = 1000.0f;
+							//NextAttack = State.IDLE;
+							break;
+						}
+				}
+			}
+		}
 	}
 	public void SetSwingMod(AttackModType _atkType)
 	{
@@ -1066,7 +1122,48 @@ public class PuppetScript : MonoBehaviour
 	}
 	public void SetRecoverMod(AttackModType _atkType)
 	{
+		if (Input_AltScript != null) // no combos
 			attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
+		else if (InputScript != null)
+		{
+			if (NextAttack != State.IDLE)
+			{
+				switch (NextAttack)
+				{
+					case State.ATK_VERT:
+						{
+							//ChangeState(State.IDLE);
+							//SlashVert();
+							attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
+							break;
+						}
+					case State.ATK_LTR:
+						{
+							ChangeState(State.IDLE);
+							SlashVert();
+							break;
+						}
+					case State.ATK_RTL:
+						{
+							ChangeState(State.IDLE);
+							SlashLTR();
+							break;
+						}
+					case State.ATK_STAB:
+						{
+							ChangeState(State.IDLE);
+							Thrust();
+							break;
+						}
+					case State.ATK_KICK:
+						{
+							ChangeState(State.IDLE);
+							Kick();
+							break;
+						}
+				}
+			}
+		}
 	}
 
 	public void Death()
