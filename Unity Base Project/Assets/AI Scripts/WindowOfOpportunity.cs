@@ -32,6 +32,7 @@ public class WindowOfOpportunity : Action
             {
                 GameObject tell = (GameObject)Instantiate(windowTell, puppet.gameObject.transform.position, Quaternion.identity);
                 tell.transform.SetParent(puppet.gameObject.transform);
+				animation.Play("React Front");
                 tell.GetComponent<WindowOpenEffectBehavior>().GoTime(TimerMax);
             }
 		}

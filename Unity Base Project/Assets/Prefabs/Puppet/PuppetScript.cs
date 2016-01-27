@@ -249,12 +249,15 @@ public class PuppetScript : MonoBehaviour
 			new AttackAnimationMods{windup = 1.0f, swing = 1.0f, recover = 1.0f}
 		};
 
+		//AnimMods[(int)AttackModType.VERT].windup = 1.0f;
+		//AnimMods[(int)AttackModType.VERT].swing = 0.2f;
+		AnimMods[(int)AttackModType.VERT].recover = 3.0f;
 		//AnimMods[(int)AttackModType.LTR].windup = 1.0f;
 		//AnimMods[(int)AttackModType.LTR].swing = 0.2f;
-		//AnimMods[(int)AttackModType.LTR].recover = 1.0f;
+		AnimMods[(int)AttackModType.LTR].recover = 3.0f;
 		//AnimMods[(int)AttackModType.RTL].windup = 1.0f;
 		//AnimMods[(int)AttackModType.RTL].swing = 0.2f;
-		//AnimMods[(int)AttackModType.RTL].recover = 1.0f;
+		AnimMods[(int)AttackModType.RTL].recover = 3.0f;
 
 	}
 
@@ -309,10 +312,10 @@ public class PuppetScript : MonoBehaviour
 	void InitAnimTableEnemy()
 	{
 		animTable = new string[(int)State.NUMSTATES, (int)State.NUMSTATES];
-		animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
-		animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
-		animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
-		"Idle";
+		//animTable[(int)State.ATK_VERT, (int)State.GRD_TOP] =
+		//animTable[(int)State.ATK_RTL, (int)State.GRD_LEFT] =
+		//animTable[(int)State.ATK_LTR, (int)State.GRD_RIGHT] =
+		//"Idle";
 		animTable[(int)State.GRD_TOP, (int)State.ATK_VERT] =
 		animTable[(int)State.GRD_LEFT, (int)State.ATK_RTL] =
 		animTable[(int)State.GRD_RIGHT, (int)State.ATK_LTR] =
@@ -1093,9 +1096,9 @@ public class PuppetScript : MonoBehaviour
 	// Animations call these functions at the correct time in order to adjust animation speed.
 	public void SetWindupMod(AttackModType _atkType)
 	{
-		if (Input_AltScript != null) // no combos
+		if (InputScript == null) // no combos
 			attackScript.attackSpeed = AnimMods[(int)_atkType].windup;
-		else if (InputScript != null)
+		else
 		{
 			if (NextAttack != State.IDLE)
 			{
@@ -1131,9 +1134,9 @@ public class PuppetScript : MonoBehaviour
 	}
 	public void SetRecoverMod(AttackModType _atkType)
 	{
-		if (Input_AltScript != null) // no combos
+		if (InputScript == null) // no combos
 			attackScript.attackSpeed = AnimMods[(int)_atkType].recover;
-		else if (InputScript != null)
+		else
 		{
 			if (NextAttack != State.IDLE)
 			{
