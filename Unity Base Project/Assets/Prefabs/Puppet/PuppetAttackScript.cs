@@ -81,7 +81,7 @@ public class PuppetAttackScript : MonoBehaviour {
     {
         //Trigger animation
 		animation["Down Slash"].speed = attackSpeed;
-        animation.Play("Down Slash");
+        animation.CrossFade("Down Slash", 0.1f);
         //AtkTmrCur = animation["Down Slash"].length / animation["Down Slash"].speed;
 
 		// move us closer to the enemy please!
@@ -97,7 +97,7 @@ public class PuppetAttackScript : MonoBehaviour {
     {
 		animation["Right Slash"].speed = attackSpeed;
 
-        animation.Play("Right Slash");
+        animation.CrossFade("Right Slash", 0.1f);
         //AtkTmrCur = animation["Right Slash"].length / animation["Right Slash"].speed;
 
 		// move us closer to the enemy please!
@@ -113,7 +113,7 @@ public class PuppetAttackScript : MonoBehaviour {
     {
 		animation["Left Slash"].speed = attackSpeed;
 
-        animation.Play("Left Slash");
+        animation.CrossFade("Left Slash", 0.1f);
         //AtkTmrCur = animation["Left Slash"].length / animation["Left Slash"].speed;
 
 		// move us closer to the enemy please!
@@ -129,14 +129,14 @@ public class PuppetAttackScript : MonoBehaviour {
     {
         if (_sender.gameObject.tag == "Player")
         {
-            if (_sender.currZen - 2.5f < 0.0f)
-                return -1;
+            //if (_sender.currZen - 2.5f < 0.0f)
+            //    return -1;
             Owner.currZen -= 2.5f;
         }
 
 		animation["Stab"].speed = attackSpeed;
 
-		animation.Play("Stab");
+        animation.CrossFade("Stab", 0.1f);
 		//AtkTmrCur = animation["Stab"].length / animation["Left Slash"].speed;
 
 		// move us closer to the enemy please!
@@ -152,7 +152,7 @@ public class PuppetAttackScript : MonoBehaviour {
     // returns 1 on success
     public int Kick(PuppetScript _sender)
     {
-        animation.Play("Down Slash");
+        animation.CrossFade("Down Slash", 0.1f);
         //AtkTmrCur = Animetor.animation.clip.length;
         return 1;
     }
